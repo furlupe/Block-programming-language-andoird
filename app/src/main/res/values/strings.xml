@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">codeblocks</string>
+    <string name="value">0</string>
+    <string name="name">Name</string>
+    <string name="create">Create variable</string>
+    <string name="run">Run</string>
+</resources>
