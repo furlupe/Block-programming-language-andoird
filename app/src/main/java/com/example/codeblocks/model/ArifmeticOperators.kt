@@ -8,7 +8,7 @@ enum class ArifmeticOperators(val operator: String, val priority: Int) {
 }
 
 fun getArifmeticOperator(s: String): ArifmeticOperators =
-    when(s) {
+    when (s) {
         "(" -> ArifmeticOperators.OPEN_BRACKET
         ")" -> ArifmeticOperators.CLOSED_BRACKET
         "+" -> ArifmeticOperators.PLUS

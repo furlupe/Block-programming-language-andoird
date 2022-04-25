@@ -16,13 +16,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // добавить команду создания переменной
-        fun createVariable(name: String, value: String) = this.code.add( Create(name, value) )
+        fun createVariable(name: String, value: String) = this.code.add(Create(name, value))
 
         //  добавить команду присвоения нового значения
-        fun assignVariable(name: String, value: String) = this.code.add( Assign(name, value) )
+        fun assignVariable(name: String, value: String) = this.code.add(Assign(name, value))
 
-        fun makeIfCondition(comparator: String, left: String, right: String, innerBlock: MutableList<Command>) =
-            this.code.add( If(comparator, left, right, innerBlock) )
+        fun makeIfCondition(
+            comparator: String,
+            left: String,
+            right: String,
+            innerBlock: MutableList<Command>
+        ) =
+            this.code.add(If(comparator, left, right, innerBlock))
 
         val createButton: Button = findViewById(R.id.button)
         createButton.setOnClickListener {

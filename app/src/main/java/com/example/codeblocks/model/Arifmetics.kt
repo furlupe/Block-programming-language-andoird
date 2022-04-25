@@ -13,7 +13,7 @@ object Arifmetics {
         val output: MutableList<String> = mutableListOf() // выходная строка
         val stack = ArrayDeque<String>() // стек для операторов
 
-        var i = 0;
+        var i = 0
         while (i < expression.length) {
             var c: String = expression[i].toString()
 
@@ -25,16 +25,15 @@ object Arifmetics {
                     c += expression[i]
                 }
                 // добавить в выходную строку операнд
-                output.add(c);
+                output.add(c)
 
                 // проверка на операторы
             } else {
                 // получить ArifmeticOperator по значению строки
-                val op = getArifmeticOperator(c)
-                when (op) {
+                when (val op = getArifmeticOperator(c)) {
                     OPEN_BRACKET -> stack.addLast("(")
                     CLOSED_BRACKET -> {
-                        while (!stack.last().equals("(")) {
+                        while (stack.last() != "(") {
                             // если стек опустел раньше нахождения "(", значит ариф. запись была не верной
                             if (stack.count() == 0) {
                                 throw Exception("Wrong expression")
@@ -58,7 +57,7 @@ object Arifmetics {
                     NOT_AN_OPERATION -> throw Exception("$c is not an operator")
                 }
             }
-            i++;
+            i++
         }
         // заносим оставшиеся операции из стека в выходную строку
         while (stack.count() > 0) {
@@ -73,36 +72,39 @@ object Arifmetics {
 
     // обработать арифметическое выражение
     fun evaluateExpression(expression: String, variables: MutableMap<String, Int>): Int {
-        val rpn = Arifmetics.createRPN(expression)
-        println(rpn)
+        val rpn = createRPN(expression)
+        //println(rpn)
         val stack = ArrayDeque<Int>()
 
-        for(operator in rpn) {
+        for (operator in rpn) {
             if (operator.isDigitsOnly()) {
                 stack.addLast(Integer.parseInt(operator))
 
-            } else if (operator.matches("^[a-zA-Z][a-zA-Z0-9]*".toRegex())) {
+                continue
+            }
+            if (operator.matches("^[a-zA-Z][a-zA-Z0-9]*".toRegex())) {
                 if (!variables.containsKey(operator)) {
                     throw Exception("$operator does not exist")
                 }
                 val op = variables[operator] ?: throw Exception("$operator is null")
                 stack.addLast(op)
 
-            } else {
-                val op = getArifmeticOperator(operator)
+                continue
+            }
 
-                val a = stack.removeLast()
-                val b = stack.removeLast()
+            val op = getArifmeticOperator(operator)
 
-                println("$b $op $a")
+            val a = stack.removeLast()
+            val b = stack.removeLast()
 
-                when(op) {
-                    PLUS -> stack.addLast(b + a)
-                    MINUS -> stack.addLast(b - a)
-                    FRACTION -> stack.addLast(b / a)
-                    MULTIPLY -> stack.addLast(b * a)
-                    NOT_AN_OPERATION, OPEN_BRACKET, CLOSED_BRACKET -> Exception("$operator is not an operator")
-                }
+            //println("$b $op $a")
+
+            when (op) {
+                PLUS -> stack.addLast(b + a)
+                MINUS -> stack.addLast(b - a)
+                FRACTION -> stack.addLast(b / a)
+                MULTIPLY -> stack.addLast(b * a)
+                NOT_AN_OPERATION, OPEN_BRACKET, CLOSED_BRACKET -> throw Exception("$operator is not an operator")
             }
         }
 

@@ -9,7 +9,7 @@ enum class Comparators(sign: String) {
 }
 
 fun getComparator(sign: String): Comparators =
-    when(sign) {
+    when (sign) {
         "<" -> Comparators.LESS
         ">" -> Comparators.GREATER
         "=" -> Comparators.EQUAL

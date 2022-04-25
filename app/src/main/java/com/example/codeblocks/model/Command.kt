@@ -9,33 +9,34 @@ interface Command {
     fun execute(_variables: MutableMap<String, Int>) {}
 }
 
-class Create(_name: String, _value: String): Command {
+class Create(_name: String, _value: String) : Command {
     private val name: String = _name
     private val value: String = _value
 
     override fun execute(_variables: MutableMap<String, Int>) {
-        if (_variables.containsKey(this.name)) {
-            throw Exception("${this.name} already exists.")
+        if (_variables.containsKey(name)) {
+            throw Exception("$name already exists.")
         }
 
-        _variables[this.name] = Arifmetics.evaluateExpression(value, _variables)
+        _variables[name] = Arifmetics.evaluateExpression(value, _variables)
     }
 }
 
-class Assign(_name: String, _value: String): Command {
+class Assign(_name: String, _value: String) : Command {
     private val name: String = _name
     private val value: String = _value
 
     override fun execute(_variables: MutableMap<String, Int>) {
-        if (! _variables.containsKey(this.name)) {
-            throw Exception("${this.name} does not exist.")
+        if (!_variables.containsKey(name)) {
+            throw Exception("$name does not exist.")
         }
 
-        _variables[this.name] = Arifmetics.evaluateExpression(value, _variables)
+        _variables[name] = Arifmetics.evaluateExpression(value, _variables)
     }
 }
 
-class If(_comparator: String, _left: String, _right: String, _commands: MutableList<Command>): Command {
+class If(_comparator: String, _left: String, _right: String, _commands: MutableList<Command>) :
+    Command {
 
     private val inside: MutableList<Command> = _commands
 
@@ -44,12 +45,12 @@ class If(_comparator: String, _left: String, _right: String, _commands: MutableL
     private val right: String = _right
 
     override fun execute(_variables: MutableMap<String, Int>) {
-        var isExecutable: Boolean = false
+        var isExecutable = false
 
-        val countedLeft: Int = Arifmetics.evaluateExpression(this.left, _variables)
-        val countedRight: Int = Arifmetics.evaluateExpression(this.right, _variables)
+        val countedLeft: Int = Arifmetics.evaluateExpression(left, _variables)
+        val countedRight: Int = Arifmetics.evaluateExpression(right, _variables)
 
-        when(this.comparator) {
+        when (comparator) {
             LESS -> isExecutable = (countedLeft < countedRight)
             GREATER -> isExecutable = (countedLeft > countedRight)
             EQUAL -> isExecutable = (countedLeft == countedRight)
@@ -58,15 +59,17 @@ class If(_comparator: String, _left: String, _right: String, _commands: MutableL
             GREATER_OR_EQUAL -> isExecutable = (countedLeft >= countedRight)
         }
 
-        if (isExecutable == true) {
-            for(command in this.inside) {
+        if (isExecutable) {
+            for (command in inside) {
                 command.execute(_variables)
             }
         }
     }
 }
 
-class Print(_toPrint: String, _showText: (toPrint: String) -> Unit): Command {
+// для выполнения кода Print, в него необходимо передать лямбда-функцию из mainActivity,
+// которая содержит в себе работу с textView из activity_main.xml
+class Print(_toPrint: String, _showText: (toPrint: String) -> Unit) : Command {
 
     private val toPrint: String = _toPrint
     private val showText: (toPrint: String) -> Unit = _showText
@@ -74,17 +77,33 @@ class Print(_toPrint: String, _showText: (toPrint: String) -> Unit): Command {
     override fun execute(_variables: MutableMap<String, Int>) {
 
         // если передали просто строку, которую нужно вывести (т.е. та строка, что имеет в себе символы откр. и закр. (") )...
-        if (this.toPrint.matches("^\".*\"".toRegex())) {
+        if (toPrint.matches("^\".*\"".toRegex())) {
             // ...то вывести ее без кавычек
-            this.showText(this.toPrint.substring(1, this.toPrint.length - 1))
-        // иначе нам передали либо переменную, либо неправильно заданную строку
+            showText(toPrint.substring(1, toPrint.length - 1))
+            // иначе нам передали либо переменную, либо неправильно заданную строку
         } else {
             // если такой переменной нет, то выдаем ошибку
-            if(! _variables.containsKey(this.toPrint)) {
-                throw Exception("${this.toPrint} does not exist")
+            if (!_variables.containsKey(toPrint)) {
+                throw Exception("$toPrint does not exist")
             }
             // если есть, то выводим ее значение
-            this.showText(_variables[this.toPrint].toString())
+            showText(_variables[toPrint].toString())
         }
+    }
+}
+
+// по аналогии с Print, в Input нужно передать лямбда-функцию из mainActivity,
+// которая вызывает окно с текстовым полем для ввода данных и возвращает введенные данные
+class Input(_variable: String, _inputText: () -> String) : Command {
+
+    private val variable = _variable
+    private val inputText: () -> String = _inputText
+
+    override fun execute(_variables: MutableMap<String, Int>) {
+        val value = inputText()
+        if (!_variables.containsKey(variable)) {
+            throw Exception("$variable does not exist")
+        }
+        _variables[variable] = Arifmetics.evaluateExpression(value, _variables)
     }
 }
