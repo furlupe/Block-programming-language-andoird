@@ -1,7 +1,5 @@
 package com.example.codeblocks.model
 
-import java.lang.Exception
-
 import com.example.codeblocks.model.Comparators.*
 
 interface Command {
