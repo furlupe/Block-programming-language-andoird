@@ -1,6 +1,5 @@
 package com.example.codeblocks.model
 
-import android.widget.TextView
 import java.lang.Exception
 
 import com.example.codeblocks.model.Comparators.*
@@ -35,7 +34,7 @@ class Assign(_name: String, _value: String) : Command {
     }
 }
 
-class If(_comparator: String, _left: String, _right: String, _commands: MutableList<Command>) :
+open class If(_left: String, _comparator: String, _right: String, _commands: MutableList<Command>) :
     Command {
 
     private val inside: MutableList<Command> = _commands
@@ -44,22 +43,27 @@ class If(_comparator: String, _left: String, _right: String, _commands: MutableL
     private val left: String = _left
     private val right: String = _right
 
-    override fun execute(_variables: MutableMap<String, Int>) {
-        var isExecutable = false
+    fun checkIfExecutable(_variables: MutableMap<String, Int>): Boolean {
+        val isExecutable: Boolean
 
         val countedLeft: Int = Arifmetics.evaluateExpression(left, _variables)
         val countedRight: Int = Arifmetics.evaluateExpression(right, _variables)
 
-        when (comparator) {
-            LESS -> isExecutable = (countedLeft < countedRight)
-            GREATER -> isExecutable = (countedLeft > countedRight)
-            EQUAL -> isExecutable = (countedLeft == countedRight)
-            NOT_EQUAL -> isExecutable = (countedLeft != countedRight)
-            LESS_OR_EQUAL -> isExecutable = (countedLeft <= countedRight)
-            GREATER_OR_EQUAL -> isExecutable = (countedLeft >= countedRight)
+        isExecutable = when (comparator) {
+            LESS -> (countedLeft < countedRight)
+            GREATER -> (countedLeft > countedRight)
+            EQUAL -> (countedLeft == countedRight)
+            NOT_EQUAL -> (countedLeft != countedRight)
+            LESS_OR_EQUAL -> (countedLeft <= countedRight)
+            GREATER_OR_EQUAL -> (countedLeft >= countedRight)
         }
 
-        if (isExecutable) {
+        return isExecutable
+    }
+
+    override fun execute(_variables: MutableMap<String, Int>) {
+
+        if (checkIfExecutable(_variables)) {
             for (command in inside) {
                 command.execute(_variables)
             }
@@ -69,17 +73,22 @@ class If(_comparator: String, _left: String, _right: String, _commands: MutableL
 
 // для выполнения кода Print, в него необходимо передать лямбда-функцию из mainActivity,
 // которая содержит в себе работу с textView из activity_main.xml
-class Print(_toPrint: String, _showText: (toPrint: String) -> Unit) : Command {
+class Print(
+    _toPrint: String,
+    _showText: (toPrint: String, end: String) -> Unit,
+    _end: String = "\n"
+) : Command {
 
     private val toPrint: String = _toPrint
-    private val showText: (toPrint: String) -> Unit = _showText
+    private val end = _end
+    private val showText: (toPrint: String, end: String) -> Unit = _showText
 
     override fun execute(_variables: MutableMap<String, Int>) {
 
         // если передали просто строку, которую нужно вывести (т.е. та строка, что имеет в себе символы откр. и закр. (") )...
         if (toPrint.matches("^\".*\"".toRegex())) {
             // ...то вывести ее без кавычек
-            showText(toPrint.substring(1, toPrint.length - 1))
+            showText(toPrint.substring(1, toPrint.length - 1), end)
             // иначе нам передали либо переменную, либо неправильно заданную строку
         } else {
             // если такой переменной нет, то выдаем ошибку
@@ -87,7 +96,7 @@ class Print(_toPrint: String, _showText: (toPrint: String) -> Unit) : Command {
                 throw Exception("$toPrint does not exist")
             }
             // если есть, то выводим ее значение
-            showText(_variables[toPrint].toString())
+            showText(_variables[toPrint].toString(), end)
         }
     }
 }
@@ -105,5 +114,25 @@ class Input(_variable: String, _inputText: () -> String) : Command {
             throw Exception("$variable does not exist")
         }
         _variables[variable] = Arifmetics.evaluateExpression(value, _variables)
+    }
+}
+
+class While(_left: String, _comparator: String, _right: String, _commands: MutableList<Command>) :
+    Command {
+    private val inside = _commands
+
+    private val left = _left
+    private val right = _right
+    private val comparator = _comparator
+
+    override fun execute(_variables: MutableMap<String, Int>) {
+        val isExecutable = If(left, comparator, right, inside).checkIfExecutable(_variables)
+
+        if (isExecutable) {
+            for (command in inside) {
+                command.execute(_variables)
+            }
+            execute(_variables)
+        }
     }
 }

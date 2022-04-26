@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import com.example.codeblocks.databinding.AssignVariableDialogBinding
 import com.example.codeblocks.databinding.CreateVariableDialogBinding
 import com.example.codeblocks.model.*
@@ -84,6 +85,27 @@ class MainActivity : AppCompatActivity() {
         })*/
 
         runButton.setOnClickListener {
+            /*code.add(If("50", "<=", "60", mutableListOf(Print("\"Sussy\"", { toPrint: String, end: String ->
+
+                val tv: TextView = findViewById(R.id.textView)
+
+                var output: String = tv.text.toString()
+                output += "$toPrint$end"
+
+                tv.text = output
+
+            }), Create("amogus", "60+50"))))
+            code.add(Create("a", "0"))
+            code.add(While("a", "<", "10", mutableListOf(Print("a", { toPrint: String, end: String ->
+
+                val tv: TextView = findViewById(R.id.textView)
+
+                var output: String = tv.text.toString()
+                output += "$toPrint$end"
+
+                tv.text = output
+
+            }, " "), Assign("a", "a+1"))))*/
             Interpretator.run(code)
         }
 
