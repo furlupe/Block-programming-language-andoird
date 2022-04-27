@@ -5,10 +5,12 @@ import java.lang.Exception
 import com.example.codeblocks.model.ArifmeticOperators.*
 
 object Arifmetics {
-    fun createRPN(expression: String): MutableList<String> {
-        if (expression.isEmpty()) {
+    fun createRPN(_expression: String): MutableList<String> {
+        if (_expression.isEmpty()) {
             throw Exception("Присвойте переменной значение")
         }
+
+        val expression = _expression.replace(" ", "") // изабвляемся от лишних пробелов
 
         val output: MutableList<String> = mutableListOf() // выходная строка
         val stack = ArrayDeque<String>() // стек для операторов
@@ -82,6 +84,7 @@ object Arifmetics {
 
                 continue
             }
+
             if (operator.matches("^[a-zA-Z][a-zA-Z0-9]*".toRegex())) {
                 if (!variables.containsKey(operator)) {
                     throw Exception("$operator does not exist")
