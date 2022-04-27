@@ -18,11 +18,14 @@ object Arifmetics {
         var i = 0
         while (i < expression.length) {
             var c: String = expression[i].toString()
-
+            var dot = true
             // если прочитанный символ число или буква
             if (c[0].isLetterOrDigit()) {
                 // если число многоразрядное, или переменная имеет название длины > 1
-                while (i + 1 < expression.length && expression[i + 1].isLetterOrDigit()) {
+                while (i + 1 < expression.length && (expression[i + 1].isLetterOrDigit() || (expression[i+1] == '.' && dot))) {
+                    if (expression[i+1] == '.')
+                        dot = false
+
                     i++
                     c += expression[i]
                 }
@@ -73,14 +76,15 @@ object Arifmetics {
     }
 
     // обработать арифметическое выражение
-    fun evaluateExpression(expression: String, variables: MutableMap<String, Int>): Int {
+    fun evaluateExpression(expression: String, variables: MutableMap<String, Double>): Double {
         val rpn = createRPN(expression)
-        //println(rpn)
-        val stack = ArrayDeque<Int>()
+        println(rpn)
+        val stack = ArrayDeque<Double>()
 
         for (operator in rpn) {
-            if (operator.isDigitsOnly()) {
-                stack.addLast(Integer.parseInt(operator))
+
+            if (operator.isDigitsOnly() || operator.matches("^(?:[1-9]\\d*|0)\\.\\d+".toRegex())) {
+                stack.addLast(operator.toDouble())
 
                 continue
             }
@@ -100,7 +104,7 @@ object Arifmetics {
             val a = stack.removeLast()
             val b = stack.removeLast()
 
-            //println("$b $op $a")
+            println("$b $op $a")
 
             when (op) {
                 PLUS -> stack.addLast(b + a)

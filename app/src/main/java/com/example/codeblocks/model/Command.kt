@@ -3,14 +3,14 @@ package com.example.codeblocks.model
 import com.example.codeblocks.model.Comparators.*
 
 interface Command {
-    fun execute(_variables: MutableMap<String, Int>) {}
+    fun execute(_variables: MutableMap<String, Double>) {}
 }
 
 class Create(_name: String, _value: String) : Command {
     private val name: String = _name
     private val value: String = _value
 
-    override fun execute(_variables: MutableMap<String, Int>) {
+    override fun execute(_variables: MutableMap<String, Double>) {
         if (_variables.containsKey(name)) {
             throw Exception("$name already exists.")
         }
@@ -23,7 +23,7 @@ class Assign(_name: String, _value: String) : Command {
     private val name: String = _name
     private val value: String = _value
 
-    override fun execute(_variables: MutableMap<String, Int>) {
+    override fun execute(_variables: MutableMap<String, Double>) {
         if (!_variables.containsKey(name)) {
             throw Exception("$name does not exist.")
         }
@@ -41,11 +41,11 @@ open class If(_left: String, _comparator: String, _right: String, _commands: Mut
     private val left: String = _left
     private val right: String = _right
 
-    fun checkIfExecutable(_variables: MutableMap<String, Int>): Boolean {
+    fun checkIfExecutable(_variables: MutableMap<String, Double>): Boolean {
         val isExecutable: Boolean
 
-        val countedLeft: Int = Arifmetics.evaluateExpression(left, _variables)
-        val countedRight: Int = Arifmetics.evaluateExpression(right, _variables)
+        val countedLeft = Arifmetics.evaluateExpression(left, _variables)
+        val countedRight = Arifmetics.evaluateExpression(right, _variables)
 
         isExecutable = when (comparator) {
             LESS -> (countedLeft < countedRight)
@@ -59,7 +59,7 @@ open class If(_left: String, _comparator: String, _right: String, _commands: Mut
         return isExecutable
     }
 
-    override fun execute(_variables: MutableMap<String, Int>) {
+    override fun execute(_variables: MutableMap<String, Double>) {
 
         if (checkIfExecutable(_variables)) {
             for (command in inside) {
@@ -81,13 +81,13 @@ class Print(
     private val end = _end
     private val showText: (toPrint: String, end: String) -> Unit = _showText
 
-    override fun execute(_variables: MutableMap<String, Int>) {
+    override fun execute(_variables: MutableMap<String, Double>) {
 
         // проверяем, является ли переданное значени строкой ("что-то" или 'что-то')
         if (toPrint.matches("^(?:\"(?=.*\")|\'(?=.*\')).*".toRegex())) {
             // ...то вывести ее без кавычек
             showText(toPrint.substring(1, toPrint.length - 1), end)
-        // иначе нам передали либо переменную, либо неправильно заданную строку
+            // иначе нам передали либо переменную, либо неправильно заданную строку
         } else {
             // если такой переменной нет, то выдаем ошибку
             if (!_variables.containsKey(toPrint)) {
@@ -106,7 +106,7 @@ class Input(_variable: String, _inputText: () -> String) : Command {
     private val variable = _variable
     private val inputText: () -> String = _inputText
 
-    override fun execute(_variables: MutableMap<String, Int>) {
+    override fun execute(_variables: MutableMap<String, Double>) {
         val value = inputText()
         if (!_variables.containsKey(variable)) {
             throw Exception("$variable does not exist")
@@ -123,7 +123,7 @@ class While(_left: String, _comparator: String, _right: String, _commands: Mutab
     private val right = _right
     private val comparator = _comparator
 
-    override fun execute(_variables: MutableMap<String, Int>) {
+    override fun execute(_variables: MutableMap<String, Double>) {
         val isExecutable = If(left, comparator, right, inside).checkIfExecutable(_variables)
 
         if (isExecutable) {

@@ -2,10 +2,10 @@ package com.example.codeblocks.model
 
 import java.lang.Exception
 
-enum class Comparators(sign: String) {
-    LESS("<"), GREATER(">"),
-    EQUAL("="), NOT_EQUAL("!="),
-    LESS_OR_EQUAL("<="), GREATER_OR_EQUAL(">=")
+enum class Comparators() {
+    LESS, GREATER,
+    EQUAL, NOT_EQUAL,
+    LESS_OR_EQUAL, GREATER_OR_EQUAL
 }
 
 fun getComparator(sign: String): Comparators =
