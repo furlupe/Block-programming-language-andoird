@@ -3,6 +3,7 @@ package com.example.codeblocks
 import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.codeblocks.databinding.AssignVariableDialogBinding
 import com.example.codeblocks.databinding.CreateVariableDialogBinding
@@ -104,7 +105,19 @@ class MainActivity : AppCompatActivity() {
 
                 tv.text = output
 
-            }, " "), Assign("a", "a+1"))))*/
+            }, " "), Assign("a", "a+1"))))
+            code.add(Assign("a", "15"))
+            code.add(Create("b", "a*2"))
+            code.add(If("50", "<=", "60", mutableListOf(Print("\"Sussy new\"", { toPrint: String, end: String ->
+
+                val tv: TextView = findViewById(R.id.textView)
+
+                var output: String = tv.text.toString()
+                output += "$toPrint$end"
+
+                tv.text = output
+
+            }), Create("fortnite", "60+50"))))*/
             Interpretator.run(code)
         }
 
