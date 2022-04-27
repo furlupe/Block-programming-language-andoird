@@ -1,7 +1,6 @@
 package com.example.codeblocks.model
 
 import androidx.core.text.isDigitsOnly
-import java.lang.Exception
 import com.example.codeblocks.model.ArifmeticOperators.*
 
 object Arifmetics {
@@ -19,12 +18,21 @@ object Arifmetics {
         while (i < expression.length) {
             var c: String = expression[i].toString()
             var dot = true
+            var openedBracket = false
+            var closedBracket = false
             // если прочитанный символ число или буква
             if (c[0].isLetterOrDigit()) {
                 // если число многоразрядное, или переменная имеет название длины > 1
-                while (i + 1 < expression.length && (expression[i + 1].isLetterOrDigit() || (expression[i+1] == '.' && dot))) {
-                    if (expression[i+1] == '.')
-                        dot = false
+                while (i + 1 < expression.length && (expression[i + 1].isLetterOrDigit() ||
+                            (expression[i + 1] == '.' && dot)
+                            || (expression[i + 1] == '[' && !openedBracket)
+                            || (expression[i + 1] == ']' && !closedBracket))
+                ) {
+                    when (expression[i + 1]) {
+                        '.' -> dot = false
+                        '[' -> openedBracket = true
+                        ']' -> closedBracket = true
+                    }
 
                     i++
                     c += expression[i]
@@ -81,15 +89,18 @@ object Arifmetics {
         println(rpn)
         val stack = ArrayDeque<Double>()
 
+        val doubleRegex = "^(?:[1-9]\\d*|0)\\.\\d+".toRegex()
+        val variableRegex = "^[a-zA-Z][a-zA-Z0-9]*".toRegex()
+
         for (operator in rpn) {
 
-            if (operator.isDigitsOnly() || operator.matches("^(?:[1-9]\\d*|0)\\.\\d+".toRegex())) {
+            if (operator.isDigitsOnly() || operator.matches(doubleRegex)) {
                 stack.addLast(operator.toDouble())
 
                 continue
             }
 
-            if (operator.matches("^[a-zA-Z][a-zA-Z0-9]*".toRegex())) {
+            if (operator.matches(variableRegex)) {
                 if (!variables.containsKey(operator)) {
                     throw Exception("$operator does not exist")
                 }
@@ -117,4 +128,5 @@ object Arifmetics {
 
         return stack.last()
     }
+
 }

@@ -87,14 +87,10 @@ class Print(
         if (toPrint.matches("^(?:\"(?=.*\")|\'(?=.*\')).*".toRegex())) {
             // ...то вывести ее без кавычек
             showText(toPrint.substring(1, toPrint.length - 1), end)
-            // иначе нам передали либо переменную, либо неправильно заданную строку
+            // иначе нам передали либо переменную, либо ариф. выражение, либо неправильную строку
         } else {
-            // если такой переменной нет, то выдаем ошибку
-            if (!_variables.containsKey(toPrint)) {
-                throw Exception("$toPrint does not exist")
-            }
             // если есть, то выводим ее значение
-            showText(_variables[toPrint].toString(), end)
+            showText(Arifmetics.evaluateExpression(toPrint, _variables).toString(), end)
         }
     }
 }
