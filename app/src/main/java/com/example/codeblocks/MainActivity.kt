@@ -3,8 +3,10 @@ package com.example.codeblocks
 import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import com.example.codeblocks.databinding.AssignVariableDialogBinding
 import com.example.codeblocks.databinding.CreateVariableDialogBinding
 import com.example.codeblocks.model.*
@@ -15,6 +17,32 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val plusIf: Button = findViewById(R.id.ifPlus)
+
+        val popupMenu = androidx.appcompat.widget.PopupMenu(this, plusIf)
+        popupMenu.inflate(R.menu.layout_popup_menu)
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.If -> {
+                    //create
+                    true
+                }
+                R.id.Arifmetic -> {
+                    //create
+                    true
+                }
+                R.id.Init -> {
+                    //create
+                    true
+                }
+                else -> false
+            }
+        }
+
+        plusIf.setOnClickListener {
+            popupMenu.show()
+        }
 
         // добавить команду создания переменной
         fun createVariable(name: String, value: String) = this.code.add(Create(name, value))
