@@ -41,6 +41,10 @@ open class If(_left: String, _comparator: String, _right: String, _commands: Mut
     private val left: String = _left
     private val right: String = _right
 
+    fun addCommandInside(_command: Command) {
+        inside.add(_command)
+    }
+
     fun checkIfExecutable(_variables: MutableMap<String, Double>): Boolean {
         val isExecutable: Boolean
 
@@ -87,14 +91,10 @@ class Print(
         if (toPrint.matches("^(?:\"(?=.*\")|\'(?=.*\')).*".toRegex())) {
             // ...то вывести ее без кавычек
             showText(toPrint.substring(1, toPrint.length - 1), end)
-            // иначе нам передали либо переменную, либо неправильно заданную строку
+            // иначе нам передали либо переменную, либо ариф. выражение, либо неправильную строку
         } else {
-            // если такой переменной нет, то выдаем ошибку
-            if (!_variables.containsKey(toPrint)) {
-                throw Exception("$toPrint does not exist")
-            }
             // если есть, то выводим ее значение
-            showText(_variables[toPrint].toString(), end)
+            showText(Arifmetics.evaluateExpression(toPrint, _variables).toString(), end)
         }
     }
 }
