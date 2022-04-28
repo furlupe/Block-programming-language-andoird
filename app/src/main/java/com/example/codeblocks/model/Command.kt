@@ -32,7 +32,7 @@ class Assign(_name: String, _value: String) : Command {
     }
 }
 
-open class If(_left: String, _comparator: String, _right: String, _commands: MutableList<Command>) :
+open class If(_left: String, _comparator: String, _right: String, _commands: MutableList<Command> = mutableListOf()) :
     Command {
 
     private val inside: MutableList<Command> = _commands

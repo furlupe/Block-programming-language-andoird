@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import com.example.codeblocks.databinding.AssignVariableDialogBinding
 import com.example.codeblocks.databinding.CreateVariableDialogBinding
+import com.example.codeblocks.databinding.BlockIfDialogBinding
 import com.example.codeblocks.model.*
 
 class MainActivity : AppCompatActivity() {
@@ -18,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val plusIf: Button = findViewById(R.id.ifPlus)
+       /* val plusIf: Button = findViewById(R.id.ifPlus)
 
         val popupMenu = androidx.appcompat.widget.PopupMenu(this, plusIf)
         popupMenu.inflate(R.menu.layout_popup_menu)
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         plusIf.setOnClickListener {
             popupMenu.show()
-        }
+        }*/
 
         // добавить команду создания переменной
         fun createVariable(name: String, value: String) = this.code.add(Create(name, value))
@@ -51,12 +52,33 @@ class MainActivity : AppCompatActivity() {
         fun assignVariable(name: String, value: String) = this.code.add(Assign(name, value))
 
         fun makeIfCondition(
-            comparator: String,
             left: String,
+            comparator: String,
             right: String,
             innerBlock: MutableList<Command>
         ) =
-            this.code.add(If(comparator, left, right, innerBlock))
+            this.code.add(If(left, comparator, right, innerBlock))
+
+        val ifButton: Button = findViewById(R.id.blockIf)
+        ifButton.setOnClickListener {
+            val view = layoutInflater.inflate(R.layout.block_if_dialog, null, false)
+            val viewBinding = BlockIfDialogBinding.bind(view)
+
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Pick two variable and a comparator")
+            builder.setView(view)
+
+            builder.setPositiveButton("Create") { _, _ ->
+                val left = viewBinding.varNameLeft.text.toString()
+                val right = viewBinding.varNameRight.text.toString()
+                val comparator = viewBinding.comparator.text.toString()
+
+                makeIfCondition(left, comparator, right, mutableListOf<Command>(Assign("a", "b")))
+            }
+
+            builder.setNegativeButton("Cancel") { _, _ -> }
+            builder.show()
+        }
 
         val createButton: Button = findViewById(R.id.button)
         createButton.setOnClickListener {
