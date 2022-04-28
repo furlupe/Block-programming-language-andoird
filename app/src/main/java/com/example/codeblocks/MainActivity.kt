@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.codeblocks.databinding.AssignVariableDialogBinding
 import com.example.codeblocks.databinding.CreateVariableDialogBinding
+import com.example.codeblocks.databinding.BlockIfDialogBinding
 import com.example.codeblocks.model.*
 
 class MainActivity : AppCompatActivity() {
