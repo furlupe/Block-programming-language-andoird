@@ -27,8 +27,9 @@ class MainActivity : AppCompatActivity() {
             left: String,
             right: String,
             innerBlock: MutableList<Command>
-        ) =
-            this.code.add(If(comparator, left, right, innerBlock))
+        ) {
+            this.code.add( If(comparator, left, right, innerBlock) )
+        }
 
         val createButton: Button = findViewById(R.id.button)
         createButton.setOnClickListener {
@@ -118,6 +119,11 @@ class MainActivity : AppCompatActivity() {
                 tv.text = output
 
             }), Create("fortnite", "60+50"))))*/
+
+            /* val op = If("a", "<", "b", mutableListOf())
+            code.add( op )
+            op.addCommandInside( Create("c", "15") ) */ // --> вот так добавлять команды в внутр. блоки
+
             Interpretator.run(code)
         }
 

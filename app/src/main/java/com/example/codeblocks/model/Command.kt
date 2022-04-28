@@ -32,7 +32,7 @@ class Assign(_name: String, _value: String) : Command {
     }
 }
 
-open class If(_left: String, _comparator: String, _right: String, _commands: MutableList<Command>) :
+open class If(_left: String, _comparator: String, _right: String, _commands: MutableList<Command> = mutableListOf()) :
     Command {
 
     private val inside: MutableList<Command> = _commands
@@ -40,6 +40,10 @@ open class If(_left: String, _comparator: String, _right: String, _commands: Mut
     private val comparator: Comparators = getComparator(_comparator)
     private val left: String = _left
     private val right: String = _right
+
+    fun addCommandInside(_command: Command) {
+        inside.add(_command)
+    }
 
     fun checkIfExecutable(_variables: MutableMap<String, Double>): Boolean {
         val isExecutable: Boolean
