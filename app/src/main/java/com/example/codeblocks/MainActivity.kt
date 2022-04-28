@@ -23,12 +23,12 @@ class MainActivity : AppCompatActivity() {
         fun assignVariable(name: String, value: String) = this.code.add(Assign(name, value))
 
         fun makeIfCondition(
-            comparator: String,
             left: String,
+            comparator: String,
             right: String,
             innerBlock: MutableList<Command>
         ) {
-            this.code.add( If(comparator, left, right, innerBlock) )
+            this.code.add( If(left, comparator, right, innerBlock) )
         }
 
         val createButton: Button = findViewById(R.id.button)
