@@ -26,10 +26,30 @@ class MainActivity : AppCompatActivity() {
         fun makeIfCondition(
             left: String,
             comparator: String,
-            right: String,
-            innerBlock: MutableList<Command>
+            right: String
         ) {
-            this.code.add( If(left, comparator, right, innerBlock) )
+            this.code.add( If(left, comparator, right) )
+        }
+
+        val blockIdButton: Button = findViewById(R.id.blockIf)
+        blockIdButton.setOnClickListener {
+            val view = layoutInflater.inflate(R.layout.block_if_dialog, null, false)
+            val viewBinding = BlockIfDialogBinding.bind(view)
+
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Pick two variables and a comparator")
+            builder.setView(view)
+
+            builder.setPositiveButton("Create") { _, _ ->
+                val left = viewBinding.varNameLeft.text.toString()
+                val right = viewBinding.varNameRight.text.toString()
+                val comparator = viewBinding.comparator.text.toString()
+
+                makeIfCondition(left, comparator, right)
+            }
+
+            builder.setNegativeButton("Cancel") { _, _ -> }
+            builder.show()
         }
 
         val createButton: Button = findViewById(R.id.button)
