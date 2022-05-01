@@ -84,13 +84,14 @@ object Arifmetics {
     }
 
     // обработать арифметическое выражение
-    fun evaluateExpression(expression: String, variables: MutableMap<String, Double>): Double {
+    fun evaluateExpression(expression: String, variables: MutableMap<String, Double>, arrays: MutableMap<String, MutableList<Double>>): Double {
         val rpn = createRPN(expression)
         println(rpn)
         val stack = ArrayDeque<Double>()
 
         val doubleRegex = "^(?:[1-9]\\d*|0)\\.\\d+".toRegex()
         val variableRegex = "^[a-zA-Z][a-zA-Z0-9]*".toRegex()
+        val arrayRegex = "^($variableRegex)\\[(\\w+)\\]".toRegex()
 
         for (operator in rpn) {
 
@@ -105,6 +106,18 @@ object Arifmetics {
                     throw Exception("$operator does not exist")
                 }
                 val op = variables[operator] ?: throw Exception("$operator is null")
+                stack.addLast(op)
+
+                continue
+            }
+
+            if (operator.matches(arrayRegex)) {
+                val (name, index) = arrayRegex.find(operator)!!.destructured
+                if (!arrays.containsKey(name)) {
+                    throw Exception("$operator does not exist")
+                }
+
+                val op = arrays[name]!![evaluateExpression(index, variables, arrays).toInt()]
                 stack.addLast(op)
 
                 continue

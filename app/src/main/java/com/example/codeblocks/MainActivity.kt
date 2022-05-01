@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // добавить команду создания переменной
-        fun createVariable(name: String, value: String) = this.code.add(Create(name, value))
+        fun createVariable(name: String, value: String) = this.code.add(Variable(name, value))
 
         //  добавить команду присвоения нового значения
         fun assignVariable(name: String, value: String) = this.code.add(Assign(name, value))
@@ -86,44 +86,14 @@ class MainActivity : AppCompatActivity() {
         })*/
 
         runButton.setOnClickListener {
-            /*code.add(If("50", "<=", "60", mutableListOf(Print("\"Sussy\"", { toPrint: String, end: String ->
-
-                val tv: TextView = findViewById(R.id.textView)
-
-                var output: String = tv.text.toString()
-                output += "$toPrint$end"
-
-                tv.text = output
-
-            }), Create("amogus", "60+50"))))
-            code.add(Create("a", "0"))
-            code.add(While("a", "<", "10", mutableListOf(Print("a", { toPrint: String, end: String ->
-
-                val tv: TextView = findViewById(R.id.textView)
-
-                var output: String = tv.text.toString()
-                output += "$toPrint$end"
-
-                tv.text = output
-
-            }, " "), Assign("a", "a+1"))))
-            code.add(Assign("a", "15"))
-            code.add(Create("b", "a*2"))
-            code.add(If("50", "<=", "60", mutableListOf(Print("\"Sussy new\"", { toPrint: String, end: String ->
-
-                val tv: TextView = findViewById(R.id.textView)
-
-                var output: String = tv.text.toString()
-                output += "$toPrint$end"
-
-                tv.text = output
-
-            }), Create("fortnite", "60+50"))))*/
 
             /* val op = If("a", "<", "b", mutableListOf())
             code.add( op )
             op.addCommandInside( Create("c", "15") ) */ // --> вот так добавлять команды в внутр. блоки
 
+            code.add( MyArray("test", "10+15", "10, 228, 13.5, 0.0, 0.001") )
+            code.add( Assign("test[0]", "115+20*test[1]") )
+            //code.add ( Variable("v", "test[0]+12") )
             Interpretator.run(code)
         }
 
