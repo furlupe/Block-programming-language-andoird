@@ -2,16 +2,21 @@ package com.example.codeblocks
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doAfterTextChanged
 import com.example.codeblocks.databinding.AssignVariableDialogBinding
-import com.example.codeblocks.databinding.CreateVariableDialogBinding
 import com.example.codeblocks.databinding.BlockIfDialogBinding
+import com.example.codeblocks.databinding.CreateVariableDialogBinding
+import com.example.codeblocks.databinding.VariableViewBinding
 import com.example.codeblocks.model.*
 
+
 class MainActivity : AppCompatActivity() {
-    var code: MutableList<Command> = mutableListOf()
+    val code: MutableList<Command> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +35,30 @@ class MainActivity : AppCompatActivity() {
         ) {
             this.code.add( If(left, comparator, right) )
         }
+
+        ///////////////////////////////
+
+      /*  val plusButton: Button = findViewById(R.id.ifPlus)
+        plusButton.setOnClickListener{
+            val container = findViewById<LinearLayout>(R.id.container)
+            val view = layoutInflater.inflate(R.layout.toggle_edit_text, null, false)
+            container.addView(view)
+*/
+
+//            val editText1 = findViewById<EditText>(R.id.variable1)
+//            Toast.makeText(this, editText1.text, Toast.LENGTH_SHORT).show()
+
+
+        /*    val createButton1: Button = findViewById(R.id.toggle)
+            createButton1.setOnClickListener{
+                val editText1 = findViewById<EditText>(R.id.variable1)
+                val name = editText1.text.toString()
+                val editText2 = findViewById<EditText>(R.id.variable2)
+                val value = editText2.text.toString()
+
+                createVariable(name, value)
+            }
+        }*/
 
         val blockIdButton: Button = findViewById(R.id.blockIf)
         blockIdButton.setOnClickListener {
@@ -52,24 +81,41 @@ class MainActivity : AppCompatActivity() {
             builder.show()
         }
 
-        val createButton: Button = findViewById(R.id.button)
+////////////////////////////////////////
+        val createButton: Button = findViewById(R.id.variables)
         createButton.setOnClickListener {
-            val view = layoutInflater.inflate(R.layout.create_variable_dialog, null, false)
-            val viewBinding = CreateVariableDialogBinding.bind(view)
+            val view = VariableView(this)
+            val binding = VariableViewBinding.bind(view)
+            val container = findViewById<LinearLayout>(R.id.container)
+            container.addView(view)
 
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Pick a name and a value")
-            builder.setView(view)
+            val operation = Create(binding.variable1.text.toString(), binding.variable2.text.toString())
+            binding.variable1.addTextChangedListener(object: TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
 
-            builder.setPositiveButton("Create") { _, _ ->
-                val name = viewBinding.varName.text.toString()
-                val value = viewBinding.value.text.toString()
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
 
-                createVariable(name, value)
-            }
+                override fun afterTextChanged(p0: Editable?) {
+                    operation.assignName(binding.variable1.text.toString())
+                }
 
-            builder.setNegativeButton("Cancel") { _, _ -> }
-            builder.show()
+            })
+
+            binding.variable2.addTextChangedListener(object: TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    operation.assignValue(binding.variable2.text.toString())
+                }
+
+            })
+            code.add(operation)
         }
 
         val assignButton: Button = findViewById(R.id.assign)
@@ -107,6 +153,7 @@ class MainActivity : AppCompatActivity() {
         })*/
 
         runButton.setOnClickListener {
+
             /*code.add(If("50", "<=", "60", mutableListOf(Print("\"Sussy\"", { toPrint: String, end: String ->
 
                 val tv: TextView = findViewById(R.id.textView)

@@ -8,4 +8,10 @@
     <string name="assign">Assign</string>
     <string name="variable">Variable</string>
     <string name="comparator">Comparator</string>
+    <string name="equal">=</string>
+    <string name="OK">Ok</string>
+    <string name="Plus">+</string>
+    <string name="IF">If</string>
+    <string name="text_start">Start</string>
+    <string name="variables">VARIABLE</string>
 </resources>

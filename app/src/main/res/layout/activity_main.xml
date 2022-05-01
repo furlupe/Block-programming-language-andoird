@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/main">
 
     <Button
         android:id="@+id/button"
@@ -51,20 +52,77 @@
         android:layout_height="44dp"
         android:layout_marginEnd="152dp"
         android:layout_marginBottom="188dp"
-        android:text="If"
+        android:text="@string/IF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 
     <Button
         android:id="@+id/ifPlus"
         android:layout_width="40dp"
         android:layout_height="43dp"
-        android:text="+"
+        android:text="@string/Plus"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.361"
+        app:layout_constraintHorizontal_bias="0.043"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.248" />
+        app:layout_constraintVertical_bias="0.023" />
+
+    <ScrollView
+        android:layout_width="376dp"
+        android:layout_height="398dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.226">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAutofill="auto"
+                android:orientation="vertical" />
+        </HorizontalScrollView>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/variables"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:rotation="-90"
+        android:text="@string/variables"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.66"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-24dp" />
+
+
+    <!-- <LinearLayout
+         android:layout_height="match_parent"
+         android:layout_width="match_parent"
+         android:orientation="vertical">
+
+        &lt;!&ndash; <com.example.codeblocks.BlockCommandView
+             android:id="@+id/blockCommand"
+             android:layout_width="298dp"
+             android:layout_height="65dp"
+             android:background="@color/purple_200"
+             android:orientation="vertical" />
+         <View
+             android:id="@+id/mainContainer"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"/>&ndash;&gt;
+
+
+     </LinearLayout>-->
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
