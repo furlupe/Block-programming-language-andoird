@@ -6,7 +6,7 @@ interface Command {
     fun execute(_variables: MutableMap<String, Double>) {}
 }
 
-class Create(_name: String, _value: String) : Command {
+class Variable(_name: String, _value: String) : Command {
     var name = _name
     var value = _value
 

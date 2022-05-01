@@ -3,64 +3,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dip">
+    android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="260dp"
-        android:layout_height="50dp"
-        android:background="@drawable/layout_bg"
+        android:layout_width="233dp"
+        android:layout_height="70dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/create_bg"
         tools:ignore="MissingConstraints">
 
         <EditText
-            android:id="@+id/variable1"
-            android:layout_width="71dp"
-            android:layout_height="35dp"
+            android:id="@+id/variableName"
+            android:layout_width="81dp"
+            android:layout_height="32dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginEnd="36dp"
-            android:layout_marginBottom="7dp"
-            android:layout_toStartOf="@+id/variable2"
+            android:layout_marginStart="11dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/text_bg"
+            android:gravity="center"
             android:hint="@string/variable" />
 
         <TextView
             android:id="@+id/equal"
-            android:layout_width="38dp"
+            android:layout_width="53dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="-1dp"
-            android:layout_toStartOf="@+id/variable2"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="-14dp"
+            android:layout_marginBottom="6dp"
+            android:layout_toStartOf="@+id/variableValue"
+            android:layout_toEndOf="@+id/variableName"
             android:gravity="center"
             android:text="@string/equal"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:textColor="@color/black"/>
 
         <EditText
-            android:id="@+id/variable2"
+            android:id="@+id/variableValue"
             android:layout_width="94dp"
             android:layout_height="36dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="7dp"
-            android:layout_marginEnd="45dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="7dp"
             android:background="@drawable/text_bg"
+            android:gravity="center"
             android:hint="@string/value" />
 
-        <Button
-            android:id="@+id/toggle"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="1dp"
-            android:background="@drawable/layout_bg"
-            android:checked="false"
-            android:paddingEnd="10dip"
-            android:text="@string/OK"
-            tools:ignore="RtlSymmetry" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="6dp"
+            android:text="@string/create_variable"
+            android:textColor="@color/black"/>
+
 
         <!--   <TextView
                android:id="@+id/text_view"
@@ -75,6 +82,7 @@
                android:textStyle="bold" />-->
 
     </RelativeLayout>
+
     <!--
     <EditText
         android:layout_width="match_parent"

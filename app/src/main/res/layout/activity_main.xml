@@ -8,34 +8,14 @@
     android:id="@+id/main">
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="116dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="144dp"
-        android:layout_marginBottom="124dp"
-        android:text="@string/create"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
         android:id="@+id/runButton"
-        android:layout_width="104dp"
-        android:layout_height="91dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="124dp"
+        android:layout_width="106dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="288dp"
+        android:layout_marginBottom="664dp"
         android:text="@string/run"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/assign"
-        android:layout_width="112dp"
-        android:layout_height="55dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="124dp"
-        android:text="@string/assign"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/textView"
@@ -46,37 +26,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/blockIf"
-        android:layout_width="115dp"
-        android:layout_height="44dp"
-        android:layout_marginEnd="152dp"
-        android:layout_marginBottom="188dp"
-        android:text="@string/IF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-
-    <Button
-        android:id="@+id/ifPlus"
-        android:layout_width="40dp"
-        android:layout_height="43dp"
-        android:text="@string/Plus"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.043"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
 
     <ScrollView
-        android:layout_width="376dp"
-        android:layout_height="398dp"
+        android:layout_width="372dp"
+        android:layout_height="510dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.226">
+        app:layout_constraintVertical_bias="0.38">
 
         <HorizontalScrollView
             android:layout_width="match_parent"
@@ -93,16 +52,17 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/variables"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:rotation="-90"
-        android:text="@string/variables"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.66"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-24dp" />
+        android:id="@+id/addCommand"
+        android:layout_width="49dp"
+        android:layout_height="49dp"
+        android:text="@string/Plus"
+        android:textSize="20sp"
+        android:gravity="center"
+        app:layout_constraintEnd_toStartOf="@+id/runButton"
+        app:layout_constraintHorizontal_bias="0.962"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="18dp"
+        tools:ignore="MissingConstraints" />
 
 
     <!-- <LinearLayout
