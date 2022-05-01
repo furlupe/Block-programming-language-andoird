@@ -149,17 +149,37 @@ class Print(
 
 // по аналогии с Print, в Input нужно передать лямбда-функцию из mainActivity,
 // которая вызывает окно с текстовым полем для ввода данных и возвращает введенные данные
-class Input(_variable: String, _inputText: () -> String) : Command {
+class Input(_name: String, _inputText: () -> String) : Command {
 
-    private val variable = _variable
+    private val name = _name
     private val inputText: () -> String = _inputText
+
+    private val variableRegex = "^[a-zA-Z][a-zA-Z0-9]*".toRegex()
+    private val arrayRegex = "^($variableRegex)\\[(\\w+)\\]".toRegex()
 
     override fun execute(_variables: MutableMap<String, Double>, _arrays: MutableMap<String, MutableList<Double>>) {
         val value = inputText()
-        if (!_variables.containsKey(variable)) {
-            throw Exception("$variable does not exist")
+        if (name.matches(variableRegex)) {
+            if (!_variables.containsKey(name)) {
+                throw Exception("$name does not exist.")
+            }
+
+            _variables[name] = Arifmetics.evaluateExpression(value, _variables, _arrays)
+            return
         }
-        _variables[variable] = Arifmetics.evaluateExpression(value, _variables, _arrays)
+
+        if (name.matches(arrayRegex)) {
+            val (name, index) = arrayRegex.find(name)!!.destructured
+            if (!_arrays.containsKey(name)) {
+                throw Exception("$name does not exist")
+            }
+
+            _arrays[name]!![Arifmetics.evaluateExpression(index, _variables, _arrays).toInt()] = Arifmetics.evaluateExpression(value, _variables, _arrays)
+            return
+        }
+
+        throw Exception("Invalid name: $name")
+
     }
 }
 
