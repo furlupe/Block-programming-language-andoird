@@ -10,7 +10,7 @@ object Interpretator {
         for (command in code) {
             command.execute(variables, arrays)
         }
-        println("$variables, $arrays")
+        println("$variables, $arrays\n$code")
         this.variables.clear()
         this.arrays.clear()
     }

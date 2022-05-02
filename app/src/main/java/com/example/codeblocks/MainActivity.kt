@@ -3,6 +3,7 @@ package com.example.codeblocks
 import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.codeblocks.databinding.AssignVariableDialogBinding
 import com.example.codeblocks.databinding.CreateVariableDialogBinding
@@ -10,6 +11,15 @@ import com.example.codeblocks.model.*
 
 class MainActivity : AppCompatActivity() {
     var code: MutableList<Command> = mutableListOf()
+    val toPrintFunction = { toPrint: String, end: String ->
+        val tv: TextView = findViewById(R.id.textView)
+
+        var output = tv.text.toString()
+        output += "$end$toPrint"
+
+        tv.text = output
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,8 +99,6 @@ class MainActivity : AppCompatActivity() {
             /* val op = If("a", "<", "b", mutableListOf())
             code.add( op )
             op.addCommandInside( Create("c", "15") ) */ // --> вот так добавлять команды в внутр. блоки
-
-            //code.add ( Variable("v", "test[0]+12") )
 
             Interpretator.run(code)
         }

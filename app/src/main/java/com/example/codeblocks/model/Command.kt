@@ -3,22 +3,26 @@ package com.example.codeblocks.model
 import com.example.codeblocks.model.Comparators.*
 
 interface Command {
+
+    var name: String
+
     fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ) {
     }
+
 }
 
 class Variable(_name: String, _value: String) : Command {
-    private var name: String = _name
+    override var name: String = _name
     private var value: String = _value
 
-    fun setName(_name: String) {
+    fun setname(_name: String) {
         name = _name
     }
 
-    fun setValue(_value: String) {
+    fun setvalue(_value: String) {
         value = _value
     }
 
@@ -26,7 +30,7 @@ class Variable(_name: String, _value: String) : Command {
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ) {
-        if (_variables.containsKey(name)) {
+        if (_variables.containsKey(name) || _arrays.containsKey(name)) {
             throw Exception("$name already exists.")
         }
         _variables[name] = Arifmetics.evaluateExpression(value, _variables, _arrays)
@@ -34,7 +38,7 @@ class Variable(_name: String, _value: String) : Command {
 }
 
 class MyArray(_name: String, _size: String, _inside: String = "") : Command {
-    private val name = _name
+    override var name = _name
     private val nonProcessedSize = _size
     private val inside = _inside.split("\\s*,\\s*".toRegex())
 
@@ -44,7 +48,7 @@ class MyArray(_name: String, _size: String, _inside: String = "") : Command {
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ) {
-        if (_arrays.containsKey(name)) {
+        if (_arrays.containsKey(name) || _arrays.containsKey(name)) {
             throw Exception("$name already exist")
         }
 
@@ -70,11 +74,11 @@ class MyArray(_name: String, _size: String, _inside: String = "") : Command {
 }
 
 class Assign(_name: String, _value: String) : Command {
-    private val name: String = _name
+    override var name: String = _name
     private val value: String = _value
 
     private val variableRegex = "^[a-zA-Z][a-zA-Z0-9]*".toRegex()
-    private val arrayRegex = "^($variableRegex)\\[(\\w+)\\]".toRegex()
+    private val arrayRegex = "^($variableRegex)\\[(\\w+)]".toRegex()
 
     override fun execute(
         _variables: MutableMap<String, Double>,
@@ -112,6 +116,8 @@ open class If(
     _commands: MutableList<Command> = mutableListOf()
 ) :
     Command {
+
+    override var name = ""
 
     private val inside: MutableList<Command> = _commands
 
@@ -165,6 +171,8 @@ class Print(
     _end: String = "\n"
 ) : Command {
 
+    override var name = ""
+
     private val toPrint: String = _toPrint
     private val end = _end
     private val showText: (toPrint: String, end: String) -> Unit = _showText
@@ -190,11 +198,11 @@ class Print(
 // которая вызывает окно с текстовым полем для ввода данных и возвращает введенные данные
 class Input(_name: String, _inputText: () -> String) : Command {
 
-    private val name = _name
+    override var name = _name
     private val inputText: () -> String = _inputText
 
     private val variableRegex = "^[a-zA-Z][a-zA-Z0-9]*".toRegex()
-    private val arrayRegex = "^($variableRegex)\\[(\\w+)\\]".toRegex()
+    private val arrayRegex = "^($variableRegex)\\[(\\w+)]".toRegex()
 
     override fun execute(
         _variables: MutableMap<String, Double>,
@@ -227,25 +235,63 @@ class Input(_name: String, _inputText: () -> String) : Command {
 }
 
 class While(_left: String, _comparator: String, _right: String, _commands: MutableList<Command>) :
-    Command {
-    private val inside = _commands
+    Command, If(_left, _comparator, _right, _commands) {
 
-    private val left = _left
-    private val right = _right
-    private val comparator = _comparator
+    private val inside = _commands
 
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ) {
-        val isExecutable =
-            If(left, comparator, right, inside).checkIfExecutable(_variables, _arrays)
 
-        if (isExecutable) {
+        if (checkIfExecutable(_variables, _arrays)) {
             for (command in inside) {
                 command.execute(_variables, _arrays)
             }
             execute(_variables, _arrays)
+        }
+    }
+}
+
+class For(
+    _before: MutableList<Command>,
+
+    _left: String,
+    _comparator: String,
+    _right: String,
+
+    _eachIter: Command,
+    _inside: MutableList<Command>
+) : Command, If(_left, _comparator, _right, _inside) {
+    override var name = ""
+
+    private val before = _before
+    private val eachIter = _eachIter
+    private val inside = _inside
+
+    override fun execute(
+        _variables: MutableMap<String, Double>,
+        _arrays: MutableMap<String, MutableList<Double>>
+    ) {
+
+        val toDelete = mutableListOf<String>()
+        for (command in before) {
+            if (command is Variable || command is MyArray) {
+                toDelete.add(command.name)
+            }
+            command.execute(_variables, _arrays)
+        }
+
+        while (checkIfExecutable(_variables, _arrays)) {
+            for (command in inside) {
+                command.execute(_variables, _arrays)
+            }
+            eachIter.execute(_variables, _arrays)
+        }
+
+        for (n in toDelete) {
+            _variables.remove(n)
+            _arrays.remove(n)
         }
     }
 }
