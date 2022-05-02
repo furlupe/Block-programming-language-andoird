@@ -84,7 +84,11 @@ object Arifmetics {
     }
 
     // обработать арифметическое выражение
-    fun evaluateExpression(expression: String, variables: MutableMap<String, Double>, arrays: MutableMap<String, MutableList<Double>>): Double {
+    fun evaluateExpression(
+        expression: String,
+        variables: MutableMap<String, Double>,
+        arrays: MutableMap<String, MutableList<Double>>
+    ): Double {
         val rpn = createRPN(expression)
         println(rpn)
         val stack = ArrayDeque<Double>()

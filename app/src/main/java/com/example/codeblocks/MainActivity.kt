@@ -3,7 +3,6 @@ package com.example.codeblocks
 import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.codeblocks.databinding.AssignVariableDialogBinding
 import com.example.codeblocks.databinding.CreateVariableDialogBinding
@@ -28,7 +27,7 @@ class MainActivity : AppCompatActivity() {
             right: String,
             innerBlock: MutableList<Command>
         ) {
-            this.code.add( If(left, comparator, right, innerBlock) )
+            this.code.add(If(left, comparator, right, innerBlock))
         }
 
         val createButton: Button = findViewById(R.id.button)
@@ -91,9 +90,8 @@ class MainActivity : AppCompatActivity() {
             code.add( op )
             op.addCommandInside( Create("c", "15") ) */ // --> вот так добавлять команды в внутр. блоки
 
-            code.add( MyArray("test", "10+15", "10, 228, 13.5, 0.0, 0.001") )
-            code.add( Assign("test[0]", "115+20*test[1]") )
             //code.add ( Variable("v", "test[0]+12") )
+
             Interpretator.run(code)
         }
 
