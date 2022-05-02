@@ -6,4 +6,9 @@
         <attr name="hint" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="TrashCanView">
+        <attr name="defaultIcon" format="reference"/>
+        <attr name="onHoverIcon" format="reference"/>
+    </declare-styleable>
+
 </resources>

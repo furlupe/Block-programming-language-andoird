@@ -1,4 +1,4 @@
-package com.example.codeblocks.views
+package com.example.codeblocks.views.blocks
 
 import android.content.Context
 import android.util.AttributeSet

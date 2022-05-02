@@ -1,4 +1,4 @@
-package com.example.codeblocks.views
+package com.example.codeblocks.views.blocks
 
 import android.content.Context
 import android.util.AttributeSet
@@ -12,6 +12,6 @@ class CreateVariableView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr){
 
-    private val binding = CreateVariableViewBinding.inflate(LayoutInflater.from(context), this)
+   private val binding = CreateVariableViewBinding.inflate(LayoutInflater.from(context), this)
 
 }

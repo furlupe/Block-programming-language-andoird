@@ -3,6 +3,7 @@ package com.example.codeblocks
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -13,8 +14,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.example.codeblocks.databinding.ActivityMainBinding
 import com.example.codeblocks.model.*
-import com.example.codeblocks.views.AssignVariableView
-import com.example.codeblocks.views.CreateVariableView
+import com.example.codeblocks.views.blocks.AssignVariableView
+import com.example.codeblocks.views.blocks.CreateVariableView
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -30,7 +31,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        val runButton: Button = findViewById(R.id.runButton)
+//        val runButton: Button = findViewById(R.id.runButton)
 
         // для выполнения кода Print, в него необходимо передать лямбда-функцию из mainActivity, которая содержит в себе работу с textView из activity_main.xml
         /*this.code.add( Print("\"some text\"") { toPrint: String ->
@@ -131,14 +131,14 @@ class MainActivity : AppCompatActivity() {
 
         })*/
 
-        runButton.setOnClickListener {
+//        runButton.setOnClickListener {
 
             /* val op = If("a", "<", "b", mutableListOf())
             code.add( op )
             op.addCommandInside( Create("c", "15") ) */ // --> вот так добавлять команды в внутр. блоки
 
-            Interpretator.run(code)
-        }
+//            Interpretator.run(code)
+//        }
 
     }
 
@@ -152,6 +152,20 @@ class MainActivity : AppCompatActivity() {
         if(toggle.onOptionsItemSelected(item)) {
             return true
         }
+        when(item.itemId) {
+            R.id.action_run ->{
+                /* val op = If("a", "<", "b", mutableListOf())
+                code.add( op )
+                op.addCommandInside( Create("c", "15") ) */ // --> вот так добавлять команды в внутр. блоки
+
+                Interpretator.run(code)
+            }
+        }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
     }
 }

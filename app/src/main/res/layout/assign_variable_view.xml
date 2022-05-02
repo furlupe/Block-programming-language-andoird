@@ -24,7 +24,7 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/text_bg"
             android:gravity="center"
-            android:hint="@string/variable" />
+            android:hint="@string/name" />
 
         <TextView
             android:id="@+id/equal"
