@@ -28,8 +28,16 @@ class Variable(_name: String, _value: String) : Command {
 }
 
 class Assign(_name: String, _value: String) : Command {
-    private val name: String = _name
-    private val value: String = _value
+    var name: String = _name
+    var value: String = _value
+
+    fun assignName(_name: String) {
+        name = _name
+    }
+
+    fun assignValue(_value: String) {
+        value = _value
+    }
 
     override fun execute(_variables: MutableMap<String, Double>) {
         if (!_variables.containsKey(name)) {

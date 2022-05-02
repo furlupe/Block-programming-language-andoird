@@ -15,7 +15,9 @@
     <string name="text_start">Start</string>
     <string name="variables">VARIABLE</string>
     <string name="create_variable">Create Variable</string>
-    <string name="assign_variable">Assign variable</string>
+    <string name="assign_variable">Assign Variable</string>
     <string name="create_variable_n">Create\nvariable</string>
     <string name="assign_variable_n">Assign\nvariable</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 </resources>

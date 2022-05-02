@@ -3,93 +3,119 @@ package com.example.codeblocks
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.MenuItem
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.codeblocks.databinding.CommandDialogBinding
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import com.example.codeblocks.databinding.ActivityMainBinding
 import com.example.codeblocks.model.*
+import com.example.codeblocks.views.AssignVariableView
 import com.example.codeblocks.views.CreateVariableView
-
+import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
+
     val code: MutableList<Command> = mutableListOf()
+
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var toggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
 
-        ///////////////////////////////
-    /*    val blockIdButton: Button = findViewById(R.id.blockIf)
-        blockIdButton.setOnClickListener {
-            val view = layoutInflater.inflate(R.layout.block_if_dialog, null, false)
-            val viewBinding = BlockIfDialogBinding.bind(view)
+        val drawerLayout: DrawerLayout = binding.drawerLayout
+        val navView: NavigationView = findViewById(R.id.nav_view)
 
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Pick two variables and a comparator")
-            builder.setView(view)
+        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
-            builder.setPositiveButton("Create") { _, _ ->
-                val left = viewBinding.varNameLeft.text.toString()
-                val right = viewBinding.varNameRight.text.toString()
-                val comparator = viewBinding.comparator.text.toString()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-                makeIfCondition(left, comparator, right)
+        println("ok")
+        navView.setNavigationItemSelectedListener {
+
+            when(it.itemId) {
+                R.id.nav_create_var -> {
+                    val view = CreateVariableView(this)
+                    val binding = com.example.codeblocks.databinding.CreateVariableViewBinding.bind(view)
+                    val container = findViewById<LinearLayout>(R.id.container)
+                    container.addView(view)
+
+                    val operation = Variable(binding.variableName.text.toString(), binding.variableValue.text.toString())
+                    binding.variableName.addTextChangedListener(object: TextWatcher {
+                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun afterTextChanged(p0: Editable?) {
+                            operation.assignName(binding.variableName.text.toString())
+                        }
+
+                    })
+
+                    binding.variableValue.addTextChangedListener(object: TextWatcher {
+                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun afterTextChanged(p0: Editable?) {
+                            operation.assignValue(binding.variableValue.text.toString())
+                        }
+
+                    })
+                    code.add(operation)
+                }
+                R.id.nav_assign_var -> {
+                    val view = AssignVariableView(this)
+                    val binding = com.example.codeblocks.databinding.AssignVariableViewBinding.bind(view)
+                    val container = findViewById<LinearLayout>(R.id.container)
+                    container.addView(view)
+
+                    val operation = Assign(binding.variableName.text.toString(), binding.variableValue.text.toString())
+                    binding.variableName.addTextChangedListener(object: TextWatcher {
+                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun afterTextChanged(p0: Editable?) {
+                            operation.assignName(binding.variableName.text.toString())
+                        }
+
+                    })
+
+                    binding.variableValue.addTextChangedListener(object: TextWatcher {
+                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun afterTextChanged(p0: Editable?) {
+                            operation.assignValue(binding.variableValue.text.toString())
+                        }
+
+                    })
+                    code.add(operation)
+                }
             }
-
-            builder.setNegativeButton("Cancel") { _, _ -> }
-            builder.show()
-        }*/
-
-////////////////////////////////////////
-        val addCommand: Button = findViewById(R.id.addCommand)
-        addCommand.setOnClickListener{
-            val view = layoutInflater.inflate(R.layout.command_dialog, null, false)
-            val viewBinding = CommandDialogBinding.bind(view)
-
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Pick command to add")
-            builder.setView(view)
-
-            
+            true
         }
-
-       /* val createButton: Button = findViewById(R.id.variables)
-        createButton.setOnClickListener {
-            val view = CreateVariableView(this)
-            val binding = com.example.codeblocks.databinding.CreateVariableViewBinding.bind(view)
-            val container = findViewById<LinearLayout>(R.id.container)
-            container.addView(view)
-
-            val operation = Variable(binding.variableName.text.toString(), binding.variableValue.text.toString())
-            binding.variableName.addTextChangedListener(object: TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                    operation.assignName(binding.variableName.text.toString())
-                }
-
-            })
-
-            binding.variableValue.addTextChangedListener(object: TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                    operation.assignValue(binding.variableValue.text.toString())
-                }
-
-            })
-            code.add(operation)
-        }*/
-
 
         val runButton: Button = findViewById(R.id.runButton)
 
@@ -114,5 +140,18 @@ class MainActivity : AppCompatActivity() {
             Interpretator.run(code)
         }
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        if(toggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

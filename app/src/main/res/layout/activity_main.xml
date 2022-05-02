@@ -1,88 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:id="@+id/main">
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <Button
-        android:id="@+id/runButton"
-        android:layout_width="106dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="288dp"
-        android:layout_marginBottom="664dp"
-        android:text="@string/run"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="384dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <include
+        android:id="@+id/app_bar_main"
+        layout="@layout/content_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
-    <ScrollView
-        android:layout_width="372dp"
-        android:layout_height="510dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.38">
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:importantForAutofill="auto"
-                android:orientation="vertical" />
-        </HorizontalScrollView>
-
-    </ScrollView>
-
-    <Button
-        android:id="@+id/addCommand"
-        android:layout_width="49dp"
-        android:layout_height="49dp"
-        android:text="@string/Plus"
-        android:textSize="20sp"
-        android:gravity="center"
-        app:layout_constraintEnd_toStartOf="@+id/runButton"
-        app:layout_constraintHorizontal_bias="0.962"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="18dp"
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="140dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/activity_main_drawer"
         tools:ignore="MissingConstraints" />
 
-
-    <!-- <LinearLayout
-         android:layout_height="match_parent"
-         android:layout_width="match_parent"
-         android:orientation="vertical">
-
-        &lt;!&ndash; <com.example.codeblocks.BlockCommandView
-             android:id="@+id/blockCommand"
-             android:layout_width="298dp"
-             android:layout_height="65dp"
-             android:background="@color/purple_200"
-             android:orientation="vertical" />
-         <View
-             android:id="@+id/mainContainer"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"/>&ndash;&gt;
-
-
-     </LinearLayout>-->
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
