@@ -6,7 +6,7 @@
     <string name="run">Run</string>
     <string name="textview">TextView</string>
     <string name="assign">Assign</string>
-    <string name="variable">Variable</string>
+    <string name="variable">Var</string>
     <string name="comparator">Comparator</string>
     <string name="equal">=</string>
     <string name="OK">Ok</string>
