@@ -53,9 +53,23 @@ open class If(_left: String, _comparator: String, _right: String, _commands: Mut
 
     private val inside: MutableList<Command> = _commands
 
-    private val comparator: Comparators = getComparator(_comparator)
-    private val left: String = _left
-    private val right: String = _right
+
+
+    var comparator: Comparators = getComparator(_comparator)
+    var left: String = _left
+    var right: String = _right
+
+    fun assignLeft(_left: String) {
+        left = _left
+    }
+
+    fun assignComparator(_comparator: String) {
+        comparator = getComparator(_comparator)
+    }
+
+    fun assignRight(_right: String) {
+        right = _right
+    }
 
     fun addCommandInside(_command: Command) {
         inside.add(_command)

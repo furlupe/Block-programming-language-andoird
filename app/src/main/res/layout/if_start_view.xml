@@ -10,38 +10,60 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         tools:ignore="MissingConstraints">
+
         <ImageView
             android:layout_width="304dp"
             android:layout_height="88dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_create_variable" />
+            app:srcCompat="@drawable/ic_if_start" />
 
         <EditText
-            android:id="@+id/variableName"
-            android:layout_width="120dp"
-            android:layout_height="40dp"
+            android:id="@+id/left_operand"
+            android:layout_width="113dp"
+            android:layout_height="39dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="177dp"
             android:layout_marginBottom="24dp"
-            android:hint="@string/name"
+            android:hint="@string/left_operand"
             android:textColor="#582909"
             android:textColorHint="#582909"
             android:textSize="18sp" />
 
-        <EditText
-            android:id="@+id/variableValue"
-            android:layout_width="120dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="177dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="24dp"
+        <Button
+            android:id="@+id/button_sign"
+            android:layout_width="48dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="128dp"
+            android:layout_marginTop="27dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="24dp"
-            android:hint="@string/value"
+            android:background="#F3C4F1"
+            android:text="@string/equal"
+            android:textColor="#582909"
+            android:textColorHint="#582909"
+            android:textSize="25sp"
+            tools:ignore="SmallSp"/>
+
+        <EditText
+            android:id="@+id/right_operand"
+            android:layout_width="113dp"
+            android:layout_height="39dp"
+            android:layout_marginStart="182dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="24dp"
+            android:hint="@string/right_operand"
             android:textColor="#582909"
             android:textColorHint="#582909"
             android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/if_plus_command"
+            android:layout_width="44dp"
+            android:layout_height="35dp"
+            android:text="@string/Plus" />
     </RelativeLayout>
 
 </merge>

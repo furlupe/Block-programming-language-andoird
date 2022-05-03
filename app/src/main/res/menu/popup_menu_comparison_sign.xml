@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/less"
+            android:title="@string/sign_less"/>
+        <item
+            android:id="@+id/greater"
+            android:title="@string/sign_greater"/>
+        <item
+            android:id="@+id/equal"
+            android:title="@string/sign_equal"/>
+        <item
+            android:id="@+id/not_equal"
+            android:title="@string/sign_not_equal"/>
+        <item
+            android:id="@+id/less_or_equal"
+            android:title="@string/sign_less_or_equal"/>
+        <item
+            android:id="@+id/greater_or_equal"
+            android:title="@string/sign_greater_or_equal" />
+    </group>
+
+</menu>

@@ -20,4 +20,13 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="clear">Clear</string>
+    <string name="left_operand">Left</string>
+    <string name="right_operand">Right</string>
+    <string name="sign_less"><![CDATA[<]]></string>
+    <string name="sign_greater"><![CDATA[>]]></string>
+    <string name="sign_equal">==</string>
+    <string name="sign_not_equal">!=</string>
+    <string name="sign_less_or_equal"><![CDATA[<=]]></string>
+    <string name="sign_greater_or_equal"><![CDATA[>=]]></string>
+    <string name="if_condition">If Condition</string>
 </resources>

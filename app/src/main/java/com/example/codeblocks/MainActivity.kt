@@ -1,5 +1,6 @@
 package com.example.codeblocks
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,9 +14,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.example.codeblocks.databinding.ActivityMainBinding
+import com.example.codeblocks.databinding.IfStartViewBinding
 import com.example.codeblocks.model.*
 import com.example.codeblocks.views.blocks.AssignVariableView
 import com.example.codeblocks.views.blocks.CreateVariableView
+import com.example.codeblocks.views.blocks.IfEndView
+import com.example.codeblocks.views.blocks.IfStartView
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
 
+    @SuppressLint("CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,7 +46,6 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        println("ok")
         navView.setNavigationItemSelectedListener {
 
             when(it.itemId) {
@@ -108,6 +112,108 @@ class MainActivity : AppCompatActivity() {
 
                         override fun afterTextChanged(p0: Editable?) {
                             operation.assignValue(binding.variableValue.text.toString())
+                        }
+
+                    })
+                    code.add(operation)
+                }
+
+                R.id.nav_if -> {
+                    val viewStart = IfStartView(this)
+                    val viewEnd = IfEndView(this)
+                    val binding = IfStartViewBinding.bind(viewStart)
+                    val container = findViewById<LinearLayout>(R.id.container)
+                    container.addView(viewStart)
+                    container.addView(viewEnd)
+
+                    val ifPlusCommand: Button = findViewById(R.id.if_plus_command)
+
+                    val popupMenu1 = PopupMenu(this, ifPlusCommand)
+                    popupMenu1.inflate(R.menu.activity_main_drawer)
+                    popupMenu1.setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.nav_create_var -> {
+                                true
+                            }
+                            R.id.nav_assign_var -> {
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+
+                    ifPlusCommand.setOnClickListener {
+                        popupMenu1.show()
+                    }
+
+                    val signButton: Button = findViewById(R.id.button_sign)
+
+                    val operation = If(binding.leftOperand.text.toString(), "=", binding.rightOperand.text.toString())
+
+                    val popupMenu2 = PopupMenu(this, signButton)
+                    popupMenu2.inflate(R.menu.popup_menu_comparison_sign)
+                    popupMenu2.setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.less -> {
+                                operation.assignComparator("<")
+                                signButton.text = "<"
+                                true
+                            }
+                            R.id.greater -> {
+                                operation.assignComparator(">")
+                                signButton.text = ">"
+                                true
+                            }
+                            R.id.equal -> {
+                                operation.assignComparator("=")
+                                signButton.text = "="
+                                true
+                            }
+                            R.id.not_equal -> {
+                                operation.assignComparator("!=")
+                                signButton.text = "!="
+                                true
+                            }
+                            R.id.less_or_equal -> {
+                                operation.assignComparator("<=")
+                                signButton.text = "<="
+                                true
+                            }
+                            R.id.greater_or_equal -> {
+                                operation.assignComparator(">=")
+                                signButton.text = ">="
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+
+                    signButton.setOnClickListener {
+                        popupMenu2.show()
+                    }
+
+                    binding.leftOperand.addTextChangedListener(object: TextWatcher {
+                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun afterTextChanged(p0: Editable?) {
+                            operation.assignLeft(binding.leftOperand.text.toString())
+                        }
+
+                    })
+
+                    binding.rightOperand.addTextChangedListener(object: TextWatcher {
+                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun afterTextChanged(p0: Editable?) {
+                            operation.assignRight(binding.rightOperand.text.toString())
                         }
 
                     })
