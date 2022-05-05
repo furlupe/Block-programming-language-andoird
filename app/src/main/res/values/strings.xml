@@ -29,4 +29,5 @@
     <string name="sign_less_or_equal"><![CDATA[<=]]></string>
     <string name="sign_greater_or_equal"><![CDATA[>=]]></string>
     <string name="if_condition">If Condition</string>
+    <string name="condition">Condition</string>
 </resources>

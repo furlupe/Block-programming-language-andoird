@@ -48,58 +48,31 @@ class Assign(_name: String, _value: String) : Command {
     }
 }
 
-open class If(_left: String, _comparator: String, _right: String, _commands: MutableList<Command> = mutableListOf()) :
+open class If(
+    _condition: String,
+    _commands: MutableList<Command> = mutableListOf()
+) :
     Command {
 
     private val inside: MutableList<Command> = _commands
-
-
-
-    var comparator: Comparators = getComparator(_comparator)
-    var left: String = _left
-    var right: String = _right
-
-    fun assignLeft(_left: String) {
-        left = _left
-    }
-
-    fun assignComparator(_comparator: String) {
-        comparator = getComparator(_comparator)
-    }
-
-    fun assignRight(_right: String) {
-        right = _right
-    }
+    private var condition = _condition
 
     fun addCommandInside(_command: Command) {
         inside.add(_command)
     }
 
-    fun checkIfExecutable(_variables: MutableMap<String, Double>): Boolean {
-        val isExecutable: Boolean
-
-        val countedLeft = Arifmetics.evaluateExpression(left, _variables)
-        val countedRight = Arifmetics.evaluateExpression(right, _variables)
-
-        isExecutable = when (comparator) {
-            LESS -> (countedLeft < countedRight)
-            GREATER -> (countedLeft > countedRight)
-            EQUAL -> (countedLeft == countedRight)
-            NOT_EQUAL -> (countedLeft != countedRight)
-            LESS_OR_EQUAL -> (countedLeft <= countedRight)
-            GREATER_OR_EQUAL -> (countedLeft >= countedRight)
-        }
-
-        return isExecutable
-    }
-
-    override fun execute(_variables: MutableMap<String, Double>) {
-
-        if (checkIfExecutable(_variables)) {
+    override fun execute(
+        _variables: MutableMap<String, Double>
+    ) {
+        if (LogicalArifmetic.evalWhole(condition, _variables)) {
             for (command in inside) {
                 command.execute(_variables)
             }
         }
+    }
+
+    fun changeCondition(_condition: String) {
+        condition = _condition
     }
 }
 
@@ -145,7 +118,7 @@ class Input(_variable: String, _inputText: () -> String) : Command {
     }
 }
 
-class While(_left: String, _comparator: String, _right: String, _commands: MutableList<Command>) :
+/*class While(_left: String, _comparator: String, _right: String, _commands: MutableList<Command>) :
     Command {
     private val inside = _commands
 
@@ -162,5 +135,5 @@ class While(_left: String, _comparator: String, _right: String, _commands: Mutab
             }
             execute(_variables)
         }
-    }
-}
+    }*/
+//}

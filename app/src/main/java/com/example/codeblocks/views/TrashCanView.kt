@@ -28,7 +28,6 @@ class TrashCanView @JvmOverloads constructor(
     override fun setOnDragListener(dragListener: OnDragListener) {
         val wrapper = OnDragListener { view, dragEvent ->
             val action = dragEvent.action
-            // Whether the dragged object can be handled by the trash.
             val result = dragListener.onDrag(view, dragEvent)
             if (action == DragEvent.ACTION_DRAG_ENDED) {
                 setState(STATE_DEFAULT)
