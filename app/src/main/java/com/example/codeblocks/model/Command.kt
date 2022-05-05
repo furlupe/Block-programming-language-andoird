@@ -1,7 +1,5 @@
 package com.example.codeblocks.model
 
-import com.example.codeblocks.model.Comparators.*
-
 interface Command {
 
     var name: String
@@ -110,9 +108,7 @@ class Assign(_name: String, _value: String) : Command {
 }
 
 open class If(
-    _left: String,
-    _comparator: String,
-    _right: String,
+    _condition: String,
     _commands: MutableList<Command> = mutableListOf()
 ) :
     Command {
@@ -120,42 +116,21 @@ open class If(
     override var name = ""
 
     private val inside: MutableList<Command> = _commands
-
-    private val comparator: Comparators = getComparator(_comparator)
-    private val left: String = _left
-    private val right: String = _right
+    private var condition = _condition
 
     fun addCommandInside(_command: Command) {
         inside.add(_command)
     }
 
-    fun checkIfExecutable(
-        _variables: MutableMap<String, Double>,
-        _arrays: MutableMap<String, MutableList<Double>>
-    ): Boolean {
-        val isExecutable: Boolean
-
-        val countedLeft = Arifmetics.evaluateExpression(left, _variables, _arrays)
-        val countedRight = Arifmetics.evaluateExpression(right, _variables, _arrays)
-
-        isExecutable = when (comparator) {
-            LESS -> (countedLeft < countedRight)
-            GREATER -> (countedLeft > countedRight)
-            EQUAL -> (countedLeft == countedRight)
-            NOT_EQUAL -> (countedLeft != countedRight)
-            LESS_OR_EQUAL -> (countedLeft <= countedRight)
-            GREATER_OR_EQUAL -> (countedLeft >= countedRight)
-        }
-
-        return isExecutable
+    fun changeCondition(_condition: String) {
+        condition = _condition
     }
 
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ) {
-
-        if (checkIfExecutable(_variables, _arrays)) {
+        if (LogicalArifmetic.evalWhole(condition, _variables, _arrays)) {
             for (command in inside) {
                 command.execute(_variables, _arrays)
             }
@@ -202,7 +177,7 @@ class Input(_name: String, _inputText: () -> String) : Command {
     private val inputText: () -> String = _inputText
 
     private val variableRegex = "^[a-zA-Z][a-zA-Z0-9]*".toRegex()
-    private val arrayRegex = "^($variableRegex)\\[(\\w+)]".toRegex()
+    private val arrayRegex = "^($variableRegex)\\[(.+)]".toRegex()
 
     override fun execute(
         _variables: MutableMap<String, Double>,
@@ -234,17 +209,19 @@ class Input(_name: String, _inputText: () -> String) : Command {
     }
 }
 
-class While(_left: String, _comparator: String, _right: String, _commands: MutableList<Command>) :
-    Command, If(_left, _comparator, _right, _commands) {
+class While(_condition: String, _commands: MutableList<Command>) :
+    Command {
 
+    override var name: String = ""
+
+    private val condition = _condition
     private val inside = _commands
 
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ) {
-
-        if (checkIfExecutable(_variables, _arrays)) {
+        if (LogicalArifmetic.evalWhole(condition, _variables, _arrays)) {
             for (command in inside) {
                 command.execute(_variables, _arrays)
             }
@@ -253,6 +230,7 @@ class While(_left: String, _comparator: String, _right: String, _commands: Mutab
     }
 }
 
+/*
 class For(
     _before: MutableList<Command>,
 
@@ -295,3 +273,4 @@ class For(
         }
     }
 }
+*/

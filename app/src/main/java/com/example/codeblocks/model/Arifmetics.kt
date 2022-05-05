@@ -15,25 +15,23 @@ object Arifmetics {
         val stack = ArrayDeque<String>() // стек для операторов
 
         var i = 0
+
+        var openedBracket = false
+
         while (i < expression.length) {
             var c: String = expression[i].toString()
-            var dot = true
-            var openedBracket = false
-            var closedBracket = false
             // если прочитанный символ число или буква
-            if (c[0].isLetterOrDigit()) {
+            if (c[0].isLetterOrDigit() || openedBracket) {
                 // если число многоразрядное, или переменная имеет название длины > 1
                 while (i + 1 < expression.length && (expression[i + 1].isLetterOrDigit() ||
-                            (expression[i + 1] == '.' && dot)
-                            || (expression[i + 1] == '[' && !openedBracket)
-                            || (expression[i + 1] == ']' && !closedBracket))
+                            (expression[i + 1] == '.')
+                            || (expression[i + 1] == '[') || openedBracket)
                 ) {
-                    when (expression[i + 1]) {
-                        '.' -> dot = false
-                        '[' -> openedBracket = true
-                        ']' -> closedBracket = true
+                    openedBracket = when (expression[i + 1]) {
+                        '[' -> true
+                        ']' -> false
+                        else -> openedBracket
                     }
-
                     i++
                     c += expression[i]
                 }
@@ -90,15 +88,15 @@ object Arifmetics {
         arrays: MutableMap<String, MutableList<Double>>
     ): Double {
         val rpn = createRPN(expression)
-        println(rpn)
         val stack = ArrayDeque<Double>()
+
+        println(rpn)
 
         val doubleRegex = "^(?:[1-9]\\d*|0)\\.\\d+".toRegex()
         val variableRegex = "^[a-zA-Z][a-zA-Z0-9]*".toRegex()
-        val arrayRegex = "^($variableRegex)\\[(\\w+)\\]".toRegex()
+        val arrayRegex = "^($variableRegex)\\[(.+)\\]".toRegex()
 
         for (operator in rpn) {
-
             if (operator.isDigitsOnly() || operator.matches(doubleRegex)) {
                 stack.addLast(operator.toDouble())
 
@@ -120,7 +118,6 @@ object Arifmetics {
                 if (!arrays.containsKey(name)) {
                     throw Exception("$operator does not exist")
                 }
-
                 val op = arrays[name]!![evaluateExpression(index, variables, arrays).toInt()]
                 stack.addLast(op)
 
@@ -128,11 +125,8 @@ object Arifmetics {
             }
 
             val op = getArifmeticOperator(operator)
-
             val a = stack.removeLast()
             val b = stack.removeLast()
-
-            println("$b $op $a")
 
             when (op) {
                 PLUS -> stack.addLast(b + a)

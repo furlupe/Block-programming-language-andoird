@@ -11,6 +11,6 @@ fun getLogicOperator(_op: Char) = when(_op) {
         '~' -> LogicOperators.EQUAL_LOGIC
         '(' -> LogicOperators.OPEN_BRACKET
         ')' -> LogicOperators.CLOSED_BRACKET
-        '!' -> LogicOperators.NEGATE
+        '_' -> LogicOperators.NEGATE
         else -> LogicOperators.NOT_AN_OPERATOR
 }

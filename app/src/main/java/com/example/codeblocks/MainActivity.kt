@@ -32,12 +32,10 @@ class MainActivity : AppCompatActivity() {
         fun assignVariable(name: String, value: String) = this.code.add(Assign(name, value))
 
         fun makeIfCondition(
-            left: String,
-            comparator: String,
-            right: String,
+            condition: String,
             innerBlock: MutableList<Command>
         ) {
-            this.code.add(If(left, comparator, right, innerBlock))
+            this.code.add(If(condition, innerBlock))
         }
 
         val createButton: Button = findViewById(R.id.button)
@@ -99,7 +97,6 @@ class MainActivity : AppCompatActivity() {
             /* val op = If("a", "<", "b", mutableListOf())
             code.add( op )
             op.addCommandInside( Create("c", "15") ) */ // --> вот так добавлять команды в внутр. блоки
-
             Interpretator.run(code)
         }
 
