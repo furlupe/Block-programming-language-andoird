@@ -1,14 +1,20 @@
 package com.example.codeblocks.model
 
-import com.example.codeblocks.model.Comparators.*
-
 interface Command {
-    fun execute(_variables: MutableMap<String, Double>) {}
+
+    var name: String
+
+    fun execute(
+        _variables: MutableMap<String, Double>,
+        _arrays: MutableMap<String, MutableList<Double>>
+    ) {
+    }
+
 }
 
 class Variable(_name: String, _value: String) : Command {
-    var name = _name
-    var value = _value
+    override var name = _name
+    private var value = _value
 
     fun assignName(_name: String) {
         name = _name
@@ -18,18 +24,56 @@ class Variable(_name: String, _value: String) : Command {
         value = _value
     }
 
-    override fun execute(_variables: MutableMap<String, Double>) {
-        if (_variables.containsKey(name)) {
+    override fun execute(
+        _variables: MutableMap<String, Double>,
+        _arrays: MutableMap<String, MutableList<Double>>
+    ) {
+        if (_variables.containsKey(name) || _arrays.containsKey(name)) {
             throw Exception("$name already exists.")
         }
-
-        _variables[name] = Arifmetics.evaluateExpression(value, _variables)
+        _variables[name] = Arifmetics.evaluateExpression(value, _variables, _arrays)
     }
 }
 
+class MyArray(_name: String, _size: String, _inside: String = "") : Command {
+    override var name = _name
+    private val nonProcessedSize = _size
+    private val inside = _inside.split("\\s*,\\s*".toRegex())
+
+    private var size = 0
+
+    override fun execute(
+        _variables: MutableMap<String, Double>,
+        _arrays: MutableMap<String, MutableList<Double>>
+    ) {
+        if (_arrays.containsKey(name) || _arrays.containsKey(name)) {
+            throw Exception("$name already exist")
+        }
+
+        size = Arifmetics.evaluateExpression(nonProcessedSize, _variables, _arrays).toInt()
+
+        _arrays[name] = mutableListOf()
+        for (v in inside) {
+            _arrays[name]!!.add(Arifmetics.evaluateExpression(v, _variables, _arrays))
+        }
+    }
+
+    fun addValue(
+        _value: String,
+        _variables: MutableMap<String, Double>,
+        _arrays: MutableMap<String, MutableList<Double>>
+    ) {
+        if (_arrays[name]!!.size >= size) {
+            throw Exception("Out of size")
+        }
+        _arrays[name]!!.add(Arifmetics.evaluateExpression(_value, _variables, _arrays))
+    }
+
+}
+
 class Assign(_name: String, _value: String) : Command {
-    var name: String = _name
-    var value: String = _value
+    override var name: String = _name
+    private var value: String = _value
 
     fun assignName(_name: String) {
         name = _name
@@ -39,12 +83,35 @@ class Assign(_name: String, _value: String) : Command {
         value = _value
     }
 
-    override fun execute(_variables: MutableMap<String, Double>) {
-        if (!_variables.containsKey(name)) {
-            throw Exception("$name does not exist.")
+    private val variableRegex = "^[a-zA-Z][a-zA-Z0-9]*".toRegex()
+    private val arrayRegex = "^($variableRegex)\\[(\\w+)]".toRegex()
+
+    override fun execute(
+        _variables: MutableMap<String, Double>,
+        _arrays: MutableMap<String, MutableList<Double>>
+    ) {
+        if (name.matches(variableRegex)) {
+            if (!_variables.containsKey(name)) {
+                throw Exception("$name does not exist.")
+            }
+
+            _variables[name] = Arifmetics.evaluateExpression(value, _variables, _arrays)
+            return
         }
 
-        _variables[name] = Arifmetics.evaluateExpression(value, _variables)
+        if (name.matches(arrayRegex)) {
+            val (name, index) = arrayRegex.find(name)!!.destructured
+            if (!_arrays.containsKey(name)) {
+                throw Exception("$name does not exist")
+            }
+
+            _arrays[name]!![Arifmetics.evaluateExpression(index, _variables, _arrays).toInt()] =
+                Arifmetics.evaluateExpression(value, _variables, _arrays)
+            return
+        }
+
+        throw Exception("Invalid name: $name")
+
     }
 }
 
@@ -54,6 +121,8 @@ open class If(
 ) :
     Command {
 
+    override var name = ""
+
     private val inside: MutableList<Command> = _commands
     private var condition = _condition
 
@@ -61,18 +130,19 @@ open class If(
         inside.add(_command)
     }
 
-    override fun execute(
-        _variables: MutableMap<String, Double>
-    ) {
-        if (LogicalArifmetic.evalWhole(condition, _variables)) {
-            for (command in inside) {
-                command.execute(_variables)
-            }
-        }
-    }
-
     fun changeCondition(_condition: String) {
         condition = _condition
+    }
+
+    override fun execute(
+        _variables: MutableMap<String, Double>,
+        _arrays: MutableMap<String, MutableList<Double>>
+    ) {
+        if (LogicalArifmetic.evalWhole(condition, _variables, _arrays)) {
+            for (command in inside) {
+                command.execute(_variables, _arrays)
+            }
+        }
     }
 }
 
@@ -84,11 +154,16 @@ class Print(
     _end: String = "\n"
 ) : Command {
 
+    override var name = ""
+
     private val toPrint: String = _toPrint
     private val end = _end
     private val showText: (toPrint: String, end: String) -> Unit = _showText
 
-    override fun execute(_variables: MutableMap<String, Double>) {
+    override fun execute(
+        _variables: MutableMap<String, Double>,
+        _arrays: MutableMap<String, MutableList<Double>>
+    ) {
 
         // проверяем, является ли переданное значени строкой ("что-то" или 'что-то')
         if (toPrint.matches("^(?:\"(?=.*\")|\'(?=.*\')).*".toRegex())) {
@@ -97,43 +172,113 @@ class Print(
             // иначе нам передали либо переменную, либо ариф. выражение, либо неправильную строку
         } else {
             // если есть, то выводим ее значение
-            showText(Arifmetics.evaluateExpression(toPrint, _variables).toString(), end)
+            showText(Arifmetics.evaluateExpression(toPrint, _variables, _arrays).toString(), end)
         }
     }
 }
 
 // по аналогии с Print, в Input нужно передать лямбда-функцию из mainActivity,
 // которая вызывает окно с текстовым полем для ввода данных и возвращает введенные данные
-class Input(_variable: String, _inputText: () -> String) : Command {
+class Input(_name: String, _inputText: () -> String) : Command {
 
-    private val variable = _variable
+    override var name = _name
     private val inputText: () -> String = _inputText
 
-    override fun execute(_variables: MutableMap<String, Double>) {
+    private val variableRegex = "^[a-zA-Z][a-zA-Z0-9]*".toRegex()
+    private val arrayRegex = "^($variableRegex)\\[(.+)]".toRegex()
+
+    override fun execute(
+        _variables: MutableMap<String, Double>,
+        _arrays: MutableMap<String, MutableList<Double>>
+    ) {
         val value = inputText()
-        if (!_variables.containsKey(variable)) {
-            throw Exception("$variable does not exist")
+        if (name.matches(variableRegex)) {
+            if (!_variables.containsKey(name)) {
+                throw Exception("$name does not exist.")
+            }
+
+            _variables[name] = Arifmetics.evaluateExpression(value, _variables, _arrays)
+            return
         }
-        _variables[variable] = Arifmetics.evaluateExpression(value, _variables)
+
+        if (name.matches(arrayRegex)) {
+            val (name, index) = arrayRegex.find(name)!!.destructured
+            if (!_arrays.containsKey(name)) {
+                throw Exception("$name does not exist")
+            }
+
+            _arrays[name]!![Arifmetics.evaluateExpression(index, _variables, _arrays).toInt()] =
+                Arifmetics.evaluateExpression(value, _variables, _arrays)
+            return
+        }
+
+        throw Exception("Invalid name: $name")
+
     }
 }
 
-/*class While(_left: String, _comparator: String, _right: String, _commands: MutableList<Command>) :
+class While(_condition: String, _commands: MutableList<Command>) :
     Command {
+
+    override var name: String = ""
+
+    private val condition = _condition
     private val inside = _commands
 
-    private val left = _left
-    private val right = _right
-    private val comparator = _comparator
-
-    override fun execute(_variables: MutableMap<String, Double>) {
-        val isExecutable = If(left, comparator, right, inside).checkIfExecutable(_variables)
-
-        if (isExecutable) {
+    override fun execute(
+        _variables: MutableMap<String, Double>,
+        _arrays: MutableMap<String, MutableList<Double>>
+    ) {
+        if (LogicalArifmetic.evalWhole(condition, _variables, _arrays)) {
             for (command in inside) {
-                command.execute(_variables)
+                command.execute(_variables, _arrays)
             }
-            execute(_variables)
+            execute(_variables, _arrays)
         }
-    }*/
-//}
+    }
+}
+
+/*
+class For(
+    _before: MutableList<Command>,
+
+    _left: String,
+    _comparator: String,
+    _right: String,
+
+    _eachIter: Command,
+    _inside: MutableList<Command>
+) : Command, If(_left, _comparator, _right, _inside) {
+    override var name = ""
+
+    private val before = _before
+    private val eachIter = _eachIter
+    private val inside = _inside
+
+    override fun execute(
+        _variables: MutableMap<String, Double>,
+        _arrays: MutableMap<String, MutableList<Double>>
+    ) {
+
+        val toDelete = mutableListOf<String>()
+        for (command in before) {
+            if (command is Variable || command is MyArray) {
+                toDelete.add(command.name)
+            }
+            command.execute(_variables, _arrays)
+        }
+
+        while (checkIfExecutable(_variables, _arrays)) {
+            for (command in inside) {
+                command.execute(_variables, _arrays)
+            }
+            eachIter.execute(_variables, _arrays)
+        }
+
+        for (n in toDelete) {
+            _variables.remove(n)
+            _arrays.remove(n)
+        }
+    }
+}
+*/

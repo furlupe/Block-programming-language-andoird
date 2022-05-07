@@ -22,7 +22,16 @@ import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
 
-    val code: MutableList<Command> = mutableListOf()
+    var code: MutableList<Command> = mutableListOf()
+    val toPrintFunction = { toPrint: String, end: String ->
+        val tv: TextView = findViewById(R.id.textView)
+
+        var output = tv.text.toString()
+        output += "$end$toPrint"
+
+        tv.text = output
+    }
+
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -41,6 +50,12 @@ class MainActivity : AppCompatActivity() {
         toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+        fun makeIfCondition(
+            condition: String,
+            innerBlock: MutableList<Command>
+        ) {
+            this.code.add(If(condition, innerBlock))
+        }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
