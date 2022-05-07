@@ -15,11 +15,10 @@ class MainActivity : AppCompatActivity() {
         val tv: TextView = findViewById(R.id.textView)
 
         var output = tv.text.toString()
-        output += "$end$toPrint"
+        output += "$toPrint$end"
 
         tv.text = output
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
