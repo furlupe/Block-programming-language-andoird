@@ -4,8 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="horizontal|vertical"
+    android:scrollbarStyle="insideOverlay"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".MainActivity"
     android:id="@+id/main">
+
 
     <fragment
         android:id="@+id/nav_host_fragment_content_main"
@@ -18,14 +23,7 @@
         app:layout_constraintTop_toTopOf="parent">
     </fragment>
 
-        <LinearLayout
-            android:id="@+id/container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:importantForAutofill="auto"
-            android:orientation="vertical"
-            tools:ignore="MissingConstraints">
-        </LinearLayout>
+
 
    <!-- <Button
         android:id="@+id/runButton"

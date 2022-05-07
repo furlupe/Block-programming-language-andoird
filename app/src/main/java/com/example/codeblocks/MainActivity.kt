@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -17,16 +18,15 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import com.example.codeblocks.databinding.ActivityMainBinding
-import com.example.codeblocks.databinding.IfStartViewBinding
+import com.example.codeblocks.databinding.*
 import com.example.codeblocks.model.*
-import com.example.codeblocks.views.blocks.AssignVariableView
-import com.example.codeblocks.views.blocks.CreateVariableView
-import com.example.codeblocks.views.blocks.IfEndView
-import com.example.codeblocks.views.blocks.IfStartView
+import com.example.codeblocks.views.blocks.*
 import com.google.android.material.navigation.NavigationView
 
+const val PADDING = 110
+
 class MainActivity : AppCompatActivity() {
+
 
     var code: MutableList<Command> = mutableListOf()
     val toPrintFunction = { toPrint: String, end: String ->
@@ -124,6 +124,11 @@ class MainActivity : AppCompatActivity() {
 
                 Interpretator.run(code)
             }
+            R.id.action_clear -> {
+                val container = findViewById<LinearLayout>(R.id.container)
+                code.clear()
+                container.removeAllViews()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -133,11 +138,13 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    fun addCreateVariableBlock(context: Context): Command {
+    fun addCreateVariableBlock(context: Context, multiplier: Int = 0): Command {
         val view = CreateVariableView(context)
-        val binding = com.example.codeblocks.databinding.CreateVariableViewBinding.bind(view)
+        val binding = CreateVariableViewBinding.bind(view)
         val container = findViewById<LinearLayout>(R.id.container)
         container.addView(view)
+
+        view.setPadding(PADDING * multiplier, 0 , 0, 0)
 
         val operation =
             Variable(binding.variableName.text.toString(), binding.variableValue.text.toString())
@@ -169,11 +176,13 @@ class MainActivity : AppCompatActivity() {
         return operation
     }
 
-    fun addAssignVariableBlock(context: Context): Command {
+    fun addAssignVariableBlock(context: Context, multiplier: Int = 0): Command {
         val view = AssignVariableView(context)
-        val binding = com.example.codeblocks.databinding.AssignVariableViewBinding.bind(view)
+        val binding = AssignVariableViewBinding.bind(view)
         val container = findViewById<LinearLayout>(R.id.container)
         container.addView(view)
+
+        view.setPadding(PADDING * multiplier, 0 , 0, 0)
 
         val operation =
             Assign(binding.variableName.text.toString(), binding.variableValue.text.toString())
@@ -205,13 +214,13 @@ class MainActivity : AppCompatActivity() {
         return operation
     }
 
-    fun addIfBlock(context: Context): Command {
+    fun addIfBlock(context: Context, multiplier: Int = 0): Command {
         val viewStart = IfStartView(context)
-        val viewEnd = IfEndView(context)
         val binding = IfStartViewBinding.bind(viewStart)
         val container = findViewById<LinearLayout>(R.id.container)
         container.addView(viewStart)
-        container.addView(viewEnd)
+
+        viewStart.setPadding(PADDING * multiplier, 0 , 0, 0)
 
         val ifPlusCommand: Button = binding.ifPlusCommand
 
@@ -235,20 +244,21 @@ class MainActivity : AppCompatActivity() {
         popupMenu1.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.nav_create_var -> {
-                    operation.addCommandInside(addCreateVariableBlock(this))
+                    operation.addCommandInside(addCreateVariableBlock(this, multiplier + 1))
                     true
                 }
                 R.id.nav_assign_var -> {
-                    operation.addCommandInside(addAssignVariableBlock(this))
+                    operation.addCommandInside(addAssignVariableBlock(this, multiplier + 1))
                     true
                 }
                 R.id.nav_if -> {
                     println(viewStart.context)
-                    operation.addCommandInside(addIfBlock(viewStart.context))
+                    operation.addCommandInside(addIfBlock(viewStart.context, multiplier + 1))
                     true
                 }
                 else -> false
             }
+
         }
 
         ifPlusCommand.setOnClickListener {
