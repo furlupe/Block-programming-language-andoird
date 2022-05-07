@@ -7,7 +7,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -17,7 +20,10 @@ import androidx.navigation.ui.navigateUp
 import com.example.codeblocks.databinding.ActivityMainBinding
 import com.example.codeblocks.databinding.IfStartViewBinding
 import com.example.codeblocks.model.*
-import com.example.codeblocks.views.blocks.*
+import com.example.codeblocks.views.blocks.AssignVariableView
+import com.example.codeblocks.views.blocks.CreateVariableView
+import com.example.codeblocks.views.blocks.IfEndView
+import com.example.codeblocks.views.blocks.IfStartView
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
