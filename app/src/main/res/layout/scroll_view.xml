@@ -13,6 +13,7 @@
             android:layout_height="wrap_content"
             android:importantForAutofill="auto"
             android:orientation="vertical"
+            android:layout_margin="7dp"
             android:background="@drawable/dot_grid">
         </LinearLayout>
 

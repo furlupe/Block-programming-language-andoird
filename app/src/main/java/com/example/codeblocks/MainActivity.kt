@@ -240,18 +240,18 @@ class MainActivity : AppCompatActivity() {
         })
 
         val popupMenu1 = PopupMenu(context, ifPlusCommand)
-        popupMenu1.inflate(R.menu.activity_main_drawer)
+        popupMenu1.inflate(R.menu.menu_blocks_plus)
         popupMenu1.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.nav_create_var -> {
+                R.id.create_var -> {
                     operation.addCommandInside(addCreateVariableBlock(this, multiplier + 1))
                     true
                 }
-                R.id.nav_assign_var -> {
+                R.id.assign_var -> {
                     operation.addCommandInside(addAssignVariableBlock(this, multiplier + 1))
                     true
                 }
-                R.id.nav_if -> {
+                R.id.if_block -> {
                     println(viewStart.context)
                     operation.addCommandInside(addIfBlock(viewStart.context, multiplier + 1))
                     true
