@@ -1,16 +1,15 @@
 package com.example.codeblocks.model
 
 enum class LogicOperators(val priority: Int) {
-    NEGATE(3),OR(1), AND(2), EQUAL_LOGIC(0), NOT_AN_OPERATOR(-1),
+    NEGATE(3), OR(1), AND(2), NOT_AN_OPERATOR(-1),
     OPEN_BRACKET(-1), CLOSED_BRACKET(-1)
 }
 
 fun getLogicOperator(_op: Char) = when(_op) {
-    '_' -> LogicOperators.NEGATE
-    '|' -> LogicOperators.OR
-    '&' -> LogicOperators.AND
-    '~' -> LogicOperators.EQUAL_LOGIC
-    '(' -> LogicOperators.OPEN_BRACKET
-    ')' -> LogicOperators.CLOSED_BRACKET
-    else -> LogicOperators.NOT_AN_OPERATOR
+        '|' -> LogicOperators.OR
+        '&' -> LogicOperators.AND
+        '(' -> LogicOperators.OPEN_BRACKET
+        ')' -> LogicOperators.CLOSED_BRACKET
+        '~' -> LogicOperators.NEGATE
+        else -> LogicOperators.NOT_AN_OPERATOR
 }

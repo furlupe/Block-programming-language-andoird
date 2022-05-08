@@ -21,11 +21,11 @@ object Arifmetics {
         while (i < expression.length) {
             var c: String = expression[i].toString()
             // если прочитанный символ число или буква
-            if (c[0].isLetterOrDigit() || openedBracket) {
+            if (c[0].isLetterOrDigit() || c[0] == '_' || openedBracket) {
                 // если число многоразрядное, или переменная имеет название длины > 1
                 while (i + 1 < expression.length && (expression[i + 1].isLetterOrDigit() ||
                             (expression[i + 1] == '.')
-                            || (expression[i + 1] == '[') || openedBracket)
+                            || (expression[i + 1] == '[' || expression[i + 1] == '_') || openedBracket)
                 ) {
                     openedBracket = when (expression[i + 1]) {
                         '[' -> true
@@ -93,7 +93,7 @@ object Arifmetics {
         println(rpn)
 
         val doubleRegex = "^(?:[1-9]\\d*|0)\\.\\d+".toRegex()
-        val variableRegex = "^[a-zA-Z][a-zA-Z0-9]*".toRegex()
+        val variableRegex = "^[a-zA-Z_][a-zA-Z0-9_]*".toRegex()
         val arrayRegex = "^($variableRegex)\\[(.+)\\]".toRegex()
 
         for (operator in rpn) {
