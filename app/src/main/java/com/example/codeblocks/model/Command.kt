@@ -224,8 +224,16 @@ class While(_condition: String, _commands: MutableList<Command>) :
 
     override var name: String = ""
 
-    private val condition = _condition
+    private var condition = _condition
     private val inside = _commands
+
+    fun addCommandInside(_command: Command) {
+        inside.add(_command)
+    }
+
+    fun changeCondition(_condition: String) {
+        condition = _condition
+    }
 
     override fun execute(
         _variables: MutableMap<String, Double>,
