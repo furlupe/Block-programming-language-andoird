@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.codeblocks.views.blocks.VirtualWorkspaceView xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbars="horizontal|vertical"
-    android:scrollbarStyle="insideOverlay"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:id="@+id/virtual_workspace">
+    android:layout_height="match_parent">
 
-    <com.example.codeblocks.views.blocks.WorkspaceView
-        android:id="@+id/workspace"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="232dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <com.example.codeblocks.views.blocks.VirtualWorkspaceView
+        android:id="@+id/virtual_workspace"
+        android:layout_width="332dp"
+        android:layout_height="614dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="horizontal|vertical">
 
-<!--    <LinearLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal" />-->
+        <com.example.codeblocks.views.blocks.WorkspaceView
+            android:id="@+id/workspace"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="232dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </com.example.codeblocks.views.blocks.VirtualWorkspaceView>
 
-</com.example.codeblocks.views.blocks.VirtualWorkspaceView>
+
+    <!--    <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" />-->
+
+</merge>

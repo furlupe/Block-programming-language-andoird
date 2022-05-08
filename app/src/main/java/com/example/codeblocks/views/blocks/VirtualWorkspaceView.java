@@ -1,5 +1,7 @@
 package com.example.codeblocks.views.blocks;
 
+import static java.sql.DriverManager.println;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -10,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -17,7 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.codeblocks.R;
 
 
-public class VirtualWorkspaceView extends ConstraintLayout {
+public class VirtualWorkspaceView extends LinearLayout {
     private static final String TAG = "VirtualWorkspaceView";
     private static final boolean DEBUG = false;
 
@@ -44,7 +47,6 @@ public class VirtualWorkspaceView extends ConstraintLayout {
 
     private boolean mDrawGrid = true;
 
-    private WorkspaceView mWorkspaceView;
     private boolean mResetViewPending = true;
 
     private ScaleGestureDetector mScaleGestureDetector;
@@ -68,10 +70,6 @@ public class VirtualWorkspaceView extends ConstraintLayout {
     @Override
     public void onFinishInflate() {
         super.onFinishInflate();
-
-        mWorkspaceView = (WorkspaceView) findViewById(R.id.workspace);
-        mWorkspaceView.setPivotX(0);
-        mWorkspaceView.setPivotY(0);
 
         setWillNotDraw(false);
         setHorizontalScrollBarEnabled(mScrollable);
@@ -236,11 +234,6 @@ public class VirtualWorkspaceView extends ConstraintLayout {
                 getMeasuredSize(widthMeasureSpec, DESIRED_WIDTH),
                 getMeasuredSize(heightMeasureSpec, DESIRED_HEIGHT));
 
-        mWorkspaceView.measure(
-                View.MeasureSpec.makeMeasureSpec(
-                        (int) (getMeasuredWidth() / mViewScale), View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(
-                        (int) (getMeasuredHeight() / mViewScale), View.MeasureSpec.EXACTLY));
     }
 
     @Override
@@ -252,13 +245,11 @@ public class VirtualWorkspaceView extends ConstraintLayout {
 
         final int offsetX = getScrollX();
         final int offsetY = getScrollY();
-        mWorkspaceView.layout((offsetX), (offsetY),
-                (int) ((getMeasuredWidth() / mViewScale) + offsetX),
-                (int) ((getMeasuredHeight() / mViewScale) + offsetY));
     }
 
     @Override
     protected void onDraw(Canvas c) {
+        Log.d(TAG, "onDraw() called with: c = [" + c + "]");
         if (shouldDrawGrid()) {
             mGridRenderer.drawGrid(c, getWidth(), getHeight(), getScrollX(), getScrollY());
         }
@@ -378,10 +369,6 @@ public class VirtualWorkspaceView extends ConstraintLayout {
             if (shouldDrawGrid()) {
                 mGridRenderer.updateGridBitmap(mViewScale);
             }
-
-            mWorkspaceView.setScaleX(mViewScale);
-            mWorkspaceView.setScaleY(mViewScale);
-            mWorkspaceView.requestLayout();
         }
     }
 
@@ -466,9 +453,6 @@ public class VirtualWorkspaceView extends ConstraintLayout {
                 mGridRenderer.updateGridBitmap(mViewScale);
             }
 
-            mWorkspaceView.setScaleX(mViewScale);
-            mWorkspaceView.setScaleY(mViewScale);
-
             final float scaleDifference = mViewScale - mStartScale;
             final int scrollScaleX = (int) (scaleDifference * mStartFocusX);
             final int scrollScaleY = (int) (scaleDifference * mStartFocusY);
@@ -485,7 +469,6 @@ public class VirtualWorkspaceView extends ConstraintLayout {
 
     @NonNull
     private Rect getViewScaledBlockBounds() {
-        mWorkspaceView.getBlocksBoundingBox(mTempRect);
         mTempRect.left = (int) Math.floor(mTempRect.left * mViewScale);
         mTempRect.right = (int) Math.ceil(mTempRect.right * mViewScale);
         mTempRect.top = (int) Math.floor(mTempRect.top * mViewScale);
