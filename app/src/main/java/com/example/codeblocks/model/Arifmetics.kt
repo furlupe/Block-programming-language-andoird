@@ -54,7 +54,7 @@ object Arifmetics {
                         }
                         stack.removeLast()
                     }
-                    PLUS, MINUS, FRACTION, MULTIPLY -> {
+                    PLUS, MINUS, FRACTION, MULTIPLY, MOD -> {
 
                         if (stack.count() > 0) {
                             var stackOP = getArifmeticOperator(stack.last())
@@ -133,6 +133,7 @@ object Arifmetics {
                 MINUS -> stack.addLast(b - a)
                 FRACTION -> stack.addLast(b / a)
                 MULTIPLY -> stack.addLast(b * a)
+                MOD -> stack.addLast(b % a)
                 NOT_AN_OPERATION, OPEN_BRACKET, CLOSED_BRACKET -> throw Exception("$operator is not an operator")
             }
         }
