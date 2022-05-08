@@ -219,7 +219,7 @@ class Input(_name: String, _inputText: () -> String) : Command {
     }
 }
 
-class While(_condition: String, _commands: MutableList<Command>) :
+class While(_condition: String, _commands: MutableList<Command> = mutableListOf()) :
     Command {
 
     override var name: String = ""

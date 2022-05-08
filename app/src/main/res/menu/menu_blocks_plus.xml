@@ -16,4 +16,9 @@
         android:orderInCategory="3"
         android:title="@string/if_condition"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/while_block"
+        android:orderInCategory="4"
+        android:title="@string/while_condition"
+        app:showAsAction="never"/>
 </menu>

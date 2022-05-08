@@ -2,18 +2,21 @@ package com.example.codeblocks
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Point
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -76,6 +79,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_if -> {
                     code.add(addIfBlock(this))
+                }
+                R.id.nav_while -> {
+                    code.add(addWhileBlock(this))
                 }
             }
             true
@@ -144,7 +150,7 @@ class MainActivity : AppCompatActivity() {
         val container = findViewById<LinearLayout>(R.id.container)
         container.addView(view)
 
-        view.setPadding(PADDING * multiplier, 0 , 0, 0)
+        view.setPadding(PADDING * multiplier, 0, 0, 0)
 
         val operation =
             Variable(binding.variableName.text.toString(), binding.variableValue.text.toString())
@@ -256,6 +262,10 @@ class MainActivity : AppCompatActivity() {
                     operation.addCommandInside(addIfBlock(viewStart.context, multiplier + 1))
                     true
                 }
+                R.id.while_block -> {
+                    operation.addCommandInside(addWhileBlock(viewStart.context, multiplier + 1))
+                    true
+                }
                 else -> false
             }
 
@@ -346,4 +356,62 @@ class MainActivity : AppCompatActivity() {
          })*/
         return operation
     }
+
+    fun addWhileBlock(context: Context, multiplier: Int = 0) : Command{
+        val viewStart = WhileStartView(context)
+        val binding = WhileStartViewBinding.bind(viewStart)
+        val container = findViewById<LinearLayout>(R.id.container)
+        container.addView(viewStart)
+
+        viewStart.setPadding(PADDING * multiplier, 0 , 0, 0)
+
+        val WhilePlusCommand: Button = binding.whilePlusCommand
+
+        val operation = While("")
+
+        binding.condition.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                operation.changeCondition(binding.condition.text.toString())
+            }
+
+        })
+
+        val popupMenu1 = PopupMenu(context, WhilePlusCommand)
+        popupMenu1.inflate(R.menu.menu_blocks_plus)
+        popupMenu1.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.create_var -> {
+                    operation.addCommandInside(addCreateVariableBlock(this, multiplier + 1))
+                    true
+                }
+                R.id.assign_var -> {
+                    operation.addCommandInside(addAssignVariableBlock(this, multiplier + 1))
+                    true
+                }
+                R.id.if_block -> {
+                    println(viewStart.context)
+                    operation.addCommandInside(addIfBlock(viewStart.context, multiplier + 1))
+                    true
+                }
+                R.id.while_block -> {
+                    operation.addCommandInside(addWhileBlock(viewStart.context, multiplier + 1))
+                    true
+                }
+                else -> false
+            }
+
+        }
+
+        WhilePlusCommand.setOnClickListener {
+            popupMenu1.show()
+        }
+        return operation
+    }
 }
+
