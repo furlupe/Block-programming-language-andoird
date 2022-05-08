@@ -12,7 +12,7 @@ object Arifmetics {
         val expression = _expression.replace(" ", "") // изабвляемся от лишних пробелов
 
         val output: MutableList<String> = mutableListOf() // выходная строка
-        val stack = ArrayDeque<String>() // стек для операторов
+        val stack = ArrayDeque<ArifmeticOperators>() // стек для операторов
 
         var i = 0
 
@@ -42,30 +42,41 @@ object Arifmetics {
             } else {
                 // получить ArifmeticOperator по значению строки
                 when (val op = getArifmeticOperator(c)) {
-                    OPEN_BRACKET -> stack.addLast("(")
+                    OPEN_BRACKET -> stack.addLast(op)
                     CLOSED_BRACKET -> {
-                        while (stack.last() != "(") {
+                        while (stack.last() != OPEN_BRACKET) {
                             // если стек опустел раньше нахождения "(", значит ариф. запись была не верной
                             if (stack.count() == 0) {
                                 throw Exception("Wrong expression")
                             }
                             // Добавляем все с вершины стека, пока не найдем "("
-                            output.add(stack.removeLast())
+                            output.add(stack.removeLast().operator)
                         }
                         stack.removeLast()
                     }
-                    PLUS, MINUS, FRACTION, MULTIPLY, MOD -> {
+                    PLUS, FRACTION, MULTIPLY, MOD -> {
 
                         if (stack.count() > 0) {
-                            var stackOP = getArifmeticOperator(stack.last())
-                            while (stackOP.priority >= op.priority && stack.count() > 0) {
-                                output.add(stack.removeLast())
-                                if (stack.count() > 0) stackOP = getArifmeticOperator(stack.last())
+                            while (stack.count() > 0 && stack.last().priority >= op.priority) {
+                                output.add(stack.removeLast().operator)
                             }
                         }
-                        stack.addLast(c)
+                        stack.addLast(op)
                     }
-                    NOT_AN_OPERATION -> throw Exception("$c is not an operator")
+                    MINUS -> {
+                        if (i == 0 || !expression[i - 1].toString().matches("[\\w\\[\\]\\)]".toRegex())) {
+                            stack.addLast(UNARY_MINUS)
+                        } else {
+                            if (stack.count() > 0) {
+                                while (stack.count() > 0 && stack.last().priority >= op.priority) {
+                                    output.add(stack.removeLast().operator)
+                                }
+                            }
+                            stack.addLast(op)
+                        }
+                    }
+
+                    else -> throw Exception("$c is not an operator")
                 }
             }
             i++
@@ -73,9 +84,9 @@ object Arifmetics {
         // заносим оставшиеся операции из стека в выходную строку
         while (stack.count() > 0) {
             val l = stack.removeLast()
-            if (getArifmeticOperator(l) == OPEN_BRACKET) throw Exception("Expression has inconsistent brackets")
+            if (l == OPEN_BRACKET) throw Exception("Expression has inconsistent brackets")
 
-            output.add(l)
+            output.add(l.operator)
         }
 
         return output
@@ -126,6 +137,12 @@ object Arifmetics {
 
             val op = getArifmeticOperator(operator)
             val a = stack.removeLast()
+
+            if (op == UNARY_MINUS) {
+                stack.addLast(-a)
+                continue
+            }
+
             val b = stack.removeLast()
 
             when (op) {
@@ -134,6 +151,7 @@ object Arifmetics {
                 FRACTION -> stack.addLast(b / a)
                 MULTIPLY -> stack.addLast(b * a)
                 MOD -> stack.addLast(b % a)
+                UNARY_MINUS -> stack.addLast(-a)
                 NOT_AN_OPERATION, OPEN_BRACKET, CLOSED_BRACKET -> throw Exception("$operator is not an operator")
             }
         }
