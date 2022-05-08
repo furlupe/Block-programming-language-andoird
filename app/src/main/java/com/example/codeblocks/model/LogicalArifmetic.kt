@@ -5,8 +5,8 @@ import com.example.codeblocks.model.LogicOperators.*
 
 object LogicalArifmetic {
     val logicops = mutableListOf('|', '&', '~', '(', ')')
-    val variableOrArrayRegex = "\\w+(?:\\[.+\\])?".toRegex()
-    val exprRegex = "($variableOrArrayRegex)(?:([><]=|[><=])($variableOrArrayRegex))?".toRegex()
+    val arifExpr = "[\\w\\+\\-\\*\\/\\%\\s]+".toRegex()
+    val exprRegex = "($arifExpr)(?:([><]=|[><=])($arifExpr))?".toRegex()
     val logRegex = "[|&~]".toRegex()
 
     fun parseExpr(_expr: String): MutableList<String> {
@@ -98,6 +98,7 @@ object LogicalArifmetic {
         _arrays: MutableMap<String, MutableList<Double>>
     ): Boolean {
         val expr = parseExpr(_expr)
+        println("Parsed: $expr")
         val stack = ArrayDeque<Boolean>()
 
         for (operator in expr) {
