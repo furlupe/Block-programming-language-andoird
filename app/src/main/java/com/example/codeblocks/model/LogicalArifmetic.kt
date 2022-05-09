@@ -4,10 +4,10 @@ import com.example.codeblocks.model.Comparators.*
 import com.example.codeblocks.model.LogicOperators.*
 
 object LogicalArifmetic {
-    val logicops = mutableListOf('|', '&', '~', '(', ')')
+    val logicops = mutableListOf('|', '&', '~', '^' , '(', ')')
     val arifExpr = "[\\w\\+\\-\\*\\/\\%\\s]+".toRegex()
     val exprRegex = "($arifExpr)(?:([><]=|[><=])($arifExpr))?".toRegex()
-    val logRegex = "[|&~]".toRegex()
+    val logRegex = "[\\^|&~]".toRegex()
 
     private fun parseExpr(_expr: String): MutableList<String> {
         val expr = _expr.replace(" ", "")
@@ -41,7 +41,7 @@ object LogicalArifmetic {
                         }
                         stack.removeLast()
                     }
-                    OR, AND, NEGATE -> {
+                    NEGATE, AND, OR, XOR -> {
                         while (stack.count() > 0 && stack.last().priority >= op.priority) {
                             output.add(stack.removeLast().operator)
                         }
@@ -110,9 +110,10 @@ object LogicalArifmetic {
 
             stack.addLast(
                 when (op) {
-                    NEGATE -> !a
-                    OR -> a || b
-                    AND -> a && b
+                    NEGATE -> a.not()
+                    AND -> a and b
+                    OR -> a or b
+                    XOR -> a xor b
                     else -> throw Exception("Logic error")
                 }
             )

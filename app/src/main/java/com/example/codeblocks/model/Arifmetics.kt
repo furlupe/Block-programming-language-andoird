@@ -147,8 +147,7 @@ object Arifmetics {
                 FRACTION -> b / a
                 MULTIPLY -> b * a
                 MOD -> b % a
-                UNARY_MINUS -> -a
-                NOT_AN_OPERATION, OPEN_BRACKET, CLOSED_BRACKET -> throw Exception("$operator is not an operator")
+                else -> throw Exception("$operator is not an operator")
             })
 
         }
