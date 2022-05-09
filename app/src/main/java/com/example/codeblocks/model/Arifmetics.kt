@@ -4,7 +4,7 @@ import androidx.core.text.isDigitsOnly
 import com.example.codeblocks.model.ArifmeticOperators.*
 
 object Arifmetics {
-    fun createRPN(_expression: String): MutableList<String> {
+    private fun createRPN(_expression: String): MutableList<String> {
         if (_expression.isEmpty()) {
             throw Exception("Присвойте переменной значение")
         }
@@ -56,10 +56,8 @@ object Arifmetics {
                     }
                     PLUS, FRACTION, MULTIPLY, MOD -> {
 
-                        if (stack.count() > 0) {
-                            while (stack.count() > 0 && stack.last().priority >= op.priority) {
-                                output.add(stack.removeLast().operator)
-                            }
+                        while (stack.count() > 0 && stack.last().priority >= op.priority) {
+                            output.add(stack.removeLast().operator)
                         }
                         stack.addLast(op)
                     }
@@ -67,10 +65,8 @@ object Arifmetics {
                         if (i == 0 || !expression[i - 1].toString().matches("[\\w\\[\\]\\)]".toRegex())) {
                             stack.addLast(UNARY_MINUS)
                         } else {
-                            if (stack.count() > 0) {
-                                while (stack.count() > 0 && stack.last().priority >= op.priority) {
-                                    output.add(stack.removeLast().operator)
-                                }
+                            while (stack.count() > 0 && stack.last().priority >= op.priority) {
+                                output.add(stack.removeLast().operator)
                             }
                             stack.addLast(op)
                         }
