@@ -109,17 +109,23 @@ class Assign(_name: String, _value: String) : Command {
 
 open class If(
     _condition: String,
-    _commands: MutableList<Command> = mutableListOf()
+    _commands: MutableList<Command> = mutableListOf(),
+    _else: MutableList<Command> = mutableListOf()
 ) :
     Command {
 
     override var name = ""
 
-    private val inside: MutableList<Command> = _commands
+    private val insideMainBlock = _commands
+    private val insideElseBlock = _else
     private var condition = _condition
 
-    fun addCommandInside(_command: Command) {
-        inside.add(_command)
+    fun addCommandInsideMainBlock(_command: Command) {
+        insideMainBlock.add(_command)
+    }
+
+    fun addCommandInsideElseBlock(_command: Command) {
+        insideElseBlock.add(_command)
     }
 
     fun changeCondition(_condition: String) {
@@ -130,8 +136,15 @@ open class If(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ) {
+        val toExecute = if (LogicalArifmetic.evalWhole(
+                condition,
+                _variables,
+                _arrays
+            )
+        ) insideMainBlock else insideElseBlock
+
         if (LogicalArifmetic.evalWhole(condition, _variables, _arrays)) {
-            for (command in inside) {
+            for (command in toExecute) {
                 command.execute(_variables, _arrays)
             }
         }
