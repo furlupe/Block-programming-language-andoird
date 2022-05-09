@@ -63,20 +63,15 @@ class MainActivity : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener {
 
-            when (it.itemId) {
-                R.id.nav_create_var -> {
-                    code.add(addCreateVariableBlock(this))
+            code.add(
+                when (it.itemId) {
+                    R.id.nav_create_var -> addCreateVariableBlock(this)
+                    R.id.nav_assign_var -> addAssignVariableBlock(this)
+                    R.id.nav_if -> addIfBlock(this)
+                    R.id.nav_while -> addWhileBlock(this)
+                    else -> throw Exception("wtf")
                 }
-                R.id.nav_assign_var -> {
-                    code.add(addAssignVariableBlock(this))
-                }
-                R.id.nav_if -> {
-                    code.add(addIfBlock(this))
-                }
-                R.id.nav_while -> {
-                    code.add(addWhileBlock(this))
-                }
-            }
+            )
             true
         }
 
@@ -241,47 +236,8 @@ class MainActivity : AppCompatActivity() {
         val popupMenu1 = PopupMenu(context, ifPlusCommand)
         popupMenu1.inflate(R.menu.menu_blocks_plus)
         popupMenu1.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.create_var -> {
-                    operation.addCommandInsideMainBlock(
-                        addCreateVariableBlock(
-                            this,
-                            multiplier + 1
-                        )
-                    )
-                    true
-                }
-                R.id.assign_var -> {
-                    operation.addCommandInsideMainBlock(
-                        addAssignVariableBlock(
-                            this,
-                            multiplier + 1
-                        )
-                    )
-                    true
-                }
-                R.id.if_block -> {
-                    println(viewStart.context)
-                    operation.addCommandInsideMainBlock(
-                        addIfBlock(
-                            viewStart.context,
-                            multiplier + 1
-                        )
-                    )
-                    true
-                }
-                R.id.while_block -> {
-                    operation.addCommandInsideMainBlock(
-                        addWhileBlock(
-                            viewStart.context,
-                            multiplier + 1
-                        )
-                    )
-                    true
-                }
-                else -> false
-            }
-
+            operation.addCommandInsideMainBlock(whichCommandToAdd(it, this, multiplier))
+            true
         }
 
         ifPlusCommand.setOnClickListener {
@@ -425,6 +381,14 @@ class MainActivity : AppCompatActivity() {
             popupMenu1.show()
         }
         return operation
+    }
+
+    fun whichCommandToAdd(it: MenuItem, context: Context, m: Int) = when (it.itemId) {
+        R.id.create_var -> addCreateVariableBlock(context, m + 1)
+        R.id.assign_var -> addAssignVariableBlock(context, m + 1)
+        R.id.if_block -> addIfBlock(context, m + 1)
+        R.id.while_block -> addWhileBlock(context, m + 1)
+        else -> throw Exception("wtf")
     }
 }
 
