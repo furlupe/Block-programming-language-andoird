@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="VariableView">
+        <attr name="label" format="string" />
+        <attr name="hint" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="TrashCanView">
+        <attr name="defaultIcon" format="reference"/>
+        <attr name="onHoverIcon" format="reference"/>
+    </declare-styleable>
+
+</resources>

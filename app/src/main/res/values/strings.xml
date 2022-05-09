@@ -6,4 +6,29 @@
     <string name="run">Run</string>
     <string name="textview">TextView</string>
     <string name="assign">Assign</string>
+    <string name="comparator">Comparator</string>
+    <string name="equal">=</string>
+    <string name="OK">Ok</string>
+    <string name="Plus">+</string>
+    <string name="IF">If</string>
+    <string name="text_start">Start</string>
+    <string name="variables">VARIABLE</string>
+    <string name="create_variable">Create Variable</string>
+    <string name="assign_variable">Assign Variable</string>
+    <string name="create_variable_n">Create\nvariable</string>
+    <string name="assign_variable_n">Assign\nvariable</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="clear">Clear</string>
+    <string name="left_operand">Left</string>
+    <string name="right_operand">Right</string>
+    <string name="sign_less"><![CDATA[<]]></string>
+    <string name="sign_greater"><![CDATA[>]]></string>
+    <string name="sign_equal">==</string>
+    <string name="sign_not_equal">!=</string>
+    <string name="sign_less_or_equal"><![CDATA[<=]]></string>
+    <string name="sign_greater_or_equal"><![CDATA[>=]]></string>
+    <string name="if_condition">If Condition</string>
+    <string name="condition">Condition</string>
+    <string name="while_condition">While Condition</string>
 </resources>

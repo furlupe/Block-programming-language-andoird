@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/while_start_block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_block_while" />
+
+        <EditText
+            android:id="@+id/condition"
+            android:layout_width="272dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="55dp"
+            android:hint="@string/condition"
+            android:textColor="#582909"
+            android:textColorHint="#582909"/>
+
+        <Button
+            android:id="@+id/while_plus_command"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/bg_plus_while"
+            android:textColor="#582909"
+            android:text="@string/Plus" />
+    </RelativeLayout>
+
+</merge>
