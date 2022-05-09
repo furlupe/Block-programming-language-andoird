@@ -2,28 +2,27 @@ package com.example.codeblocks
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Point
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.example.codeblocks.databinding.*
 import com.example.codeblocks.model.*
-import com.example.codeblocks.views.blocks.*
+import com.example.codeblocks.views.blocks.AssignVariableView
+import com.example.codeblocks.views.blocks.CreateVariableView
+import com.example.codeblocks.views.blocks.IfStartView
+import com.example.codeblocks.views.blocks.WhileStartView
 import com.google.android.material.navigation.NavigationView
 
 const val PADDING = 110
@@ -59,12 +58,6 @@ class MainActivity : AppCompatActivity() {
         toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-        fun makeIfCondition(
-            condition: String,
-            innerBlock: MutableList<Command>
-        ) {
-            this.code.add(If(condition, innerBlock))
-        }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -188,7 +181,7 @@ class MainActivity : AppCompatActivity() {
         val container = findViewById<LinearLayout>(R.id.container)
         container.addView(view)
 
-        view.setPadding(PADDING * multiplier, 0 , 0, 0)
+        view.setPadding(PADDING * multiplier, 0, 0, 0)
 
         val operation =
             Assign(binding.variableName.text.toString(), binding.variableValue.text.toString())
@@ -226,7 +219,7 @@ class MainActivity : AppCompatActivity() {
         val container = findViewById<LinearLayout>(R.id.container)
         container.addView(viewStart)
 
-        viewStart.setPadding(PADDING * multiplier, 0 , 0, 0)
+        viewStart.setPadding(PADDING * multiplier, 0, 0, 0)
 
         val ifPlusCommand: Button = binding.ifPlusCommand
 
@@ -250,20 +243,40 @@ class MainActivity : AppCompatActivity() {
         popupMenu1.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.create_var -> {
-                    operation.addCommandInside(addCreateVariableBlock(this, multiplier + 1))
+                    operation.addCommandInsideMainBlock(
+                        addCreateVariableBlock(
+                            this,
+                            multiplier + 1
+                        )
+                    )
                     true
                 }
                 R.id.assign_var -> {
-                    operation.addCommandInside(addAssignVariableBlock(this, multiplier + 1))
+                    operation.addCommandInsideMainBlock(
+                        addAssignVariableBlock(
+                            this,
+                            multiplier + 1
+                        )
+                    )
                     true
                 }
                 R.id.if_block -> {
                     println(viewStart.context)
-                    operation.addCommandInside(addIfBlock(viewStart.context, multiplier + 1))
+                    operation.addCommandInsideMainBlock(
+                        addIfBlock(
+                            viewStart.context,
+                            multiplier + 1
+                        )
+                    )
                     true
                 }
                 R.id.while_block -> {
-                    operation.addCommandInside(addWhileBlock(viewStart.context, multiplier + 1))
+                    operation.addCommandInsideMainBlock(
+                        addWhileBlock(
+                            viewStart.context,
+                            multiplier + 1
+                        )
+                    )
                     true
                 }
                 else -> false
@@ -357,15 +370,15 @@ class MainActivity : AppCompatActivity() {
         return operation
     }
 
-    fun addWhileBlock(context: Context, multiplier: Int = 0) : Command{
+    fun addWhileBlock(context: Context, multiplier: Int = 0): Command {
         val viewStart = WhileStartView(context)
         val binding = WhileStartViewBinding.bind(viewStart)
         val container = findViewById<LinearLayout>(R.id.container)
         container.addView(viewStart)
 
-        viewStart.setPadding(PADDING * multiplier, 0 , 0, 0)
+        viewStart.setPadding(PADDING * multiplier, 0, 0, 0)
 
-        val WhilePlusCommand: Button = binding.whilePlusCommand
+        val whilePlusCommand: Button = binding.whilePlusCommand
 
         val operation = While("")
 
@@ -382,7 +395,7 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        val popupMenu1 = PopupMenu(context, WhilePlusCommand)
+        val popupMenu1 = PopupMenu(context, whilePlusCommand)
         popupMenu1.inflate(R.menu.menu_blocks_plus)
         popupMenu1.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -408,7 +421,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        WhilePlusCommand.setOnClickListener {
+        whilePlusCommand.setOnClickListener {
             popupMenu1.show()
         }
         return operation
