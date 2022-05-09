@@ -141,15 +141,16 @@ object Arifmetics {
 
             val b = stack.removeLast()
 
-            when (op) {
-                PLUS -> stack.addLast(b + a)
-                MINUS -> stack.addLast(b - a)
-                FRACTION -> stack.addLast(b / a)
-                MULTIPLY -> stack.addLast(b * a)
-                MOD -> stack.addLast(b % a)
-                UNARY_MINUS -> stack.addLast(-a)
+            stack.addLast(when (op) {
+                PLUS -> b + a
+                MINUS -> b - a
+                FRACTION -> b / a
+                MULTIPLY -> b * a
+                MOD -> b % a
+                UNARY_MINUS -> -a
                 NOT_AN_OPERATION, OPEN_BRACKET, CLOSED_BRACKET -> throw Exception("$operator is not an operator")
-            }
+            })
+
         }
 
         return stack.last()

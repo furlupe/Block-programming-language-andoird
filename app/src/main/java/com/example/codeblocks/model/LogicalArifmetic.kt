@@ -55,9 +55,8 @@ object LogicalArifmetic {
             output.add(c)
 
         while (stack.count() > 0) {
-            val l = stack.removeLast()
-            if (l == OPEN_BRACKET) throw Exception("Expression has inconsistent brackets")
-            output.add(l.operator)
+            if (stack.last() == OPEN_BRACKET) throw Exception("Expression has inconsistent brackets")
+            output.add(stack.removeLast().operator)
         }
         return output
     }
@@ -100,20 +99,20 @@ object LogicalArifmetic {
             }
 
             val op = getLogicOperator(operator[0])
-            val a: Boolean = stack.removeLast()
-            val b: Boolean
+            val a = stack.removeLast()
+
+            if (op == NEGATE) {
+                stack.addLast(!a)
+                continue
+            }
+
+            val b = stack.removeLast()
 
             stack.addLast(
                 when (op) {
                     NEGATE -> !a
-                    OR -> {
-                        b = stack.removeLast()
-                        a || b
-                    }
-                    AND -> {
-                        b = stack.removeLast()
-                        a && b
-                    }
+                    OR -> a || b
+                    AND -> a && b
                     else -> throw Exception("Logic error")
                 }
             )
