@@ -253,55 +253,53 @@ class While(_condition: String, _commands: MutableList<Command> = mutableListOf(
         _arrays: MutableMap<String, MutableList<Double>>
     ) {
         if (LogicalArifmetic.evalWhole(condition, _variables, _arrays)) {
-            for (command in inside) {
+            for (command in inside)
                 command.execute(_variables, _arrays)
-            }
             execute(_variables, _arrays)
         }
     }
 }
 
-/*
 class For(
-    _before: MutableList<Command>,
-
-    _left: String,
-    _comparator: String,
-    _right: String,
-
-    _eachIter: Command,
-    _inside: MutableList<Command>
-) : Command, If(_left, _comparator, _right, _inside) {
+    _before: MutableList<Command> = mutableListOf(),
+    _condition: String = "",
+    _eachStep: MutableList<Command> = mutableListOf(),
+    _inside: MutableList<Command> = mutableListOf()
+) : Command {
     override var name = ""
 
-    private val before = _before
-    private val eachIter = _eachIter
-    private val inside = _inside
+    private var before = _before
+    fun addCommandToDoBefore(command: Command) = before.add(command)
+
+    private var condition = _condition
+    fun changeCondition(cond: String) {
+        condition = cond
+    }
+
+    private var eachStep = _eachStep
+    fun addCommandToDoEachStep(command: Command) = eachStep.add(command)
+
+    private var inside = _inside
+    fun addCommandToDoInside(command: Command) = inside.add(command)
 
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ) {
-
-        val toDelete = mutableListOf<String>()
-        for (command in before) {
-            if (command is Variable || command is MyArray) {
-                toDelete.add(command.name)
-            }
-            command.execute(_variables, _arrays)
+        val toDelete = mutableListOf<Command>()
+        for (b in before) {
+            b.execute(_variables, _arrays)
+            if (b is Variable)
+                toDelete.add(b)
         }
 
-        while (checkIfExecutable(_variables, _arrays)) {
-            for (command in inside) {
-                command.execute(_variables, _arrays)
-            }
-            eachIter.execute(_variables, _arrays)
+        while (LogicalArifmetic.evalWhole(condition, _variables, _arrays)) {
+            for (i in inside + eachStep)
+                i.execute(_variables, _arrays)
         }
 
-        for (n in toDelete) {
-            _variables.remove(n)
-            _arrays.remove(n)
-        }
+        for (d in toDelete)
+            _variables.remove(d.name)
     }
+
 }
-*/
