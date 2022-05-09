@@ -4,10 +4,10 @@ import com.example.codeblocks.model.Comparators.*
 import com.example.codeblocks.model.LogicOperators.*
 
 object LogicalArifmetic {
-    val logicops = mutableListOf('|', '&', '~', '(', ')')
-    val variableOrArrayRegex = "\\w+(?:\\[.+\\])?".toRegex()
-    val exprRegex = "($variableOrArrayRegex)(?:([><]=|[><=])($variableOrArrayRegex))?".toRegex()
-    val logRegex = "[|&~]".toRegex()
+    private val logicops = mutableListOf('|', '&', '~', '(', ')')
+    private val arifExpr = "[\\w\\+\\-\\*\\/\\%\\s]+".toRegex()
+    private val exprRegex = "($arifExpr)(?:([><]=|[><=])($arifExpr))?".toRegex()
+    private val logRegex = "[|&~]".toRegex()
 
     private fun parseExpr(_expr: String): MutableList<String> {
         val expr = _expr.replace(" ", "")
