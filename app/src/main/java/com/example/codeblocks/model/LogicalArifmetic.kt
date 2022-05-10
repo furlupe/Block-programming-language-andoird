@@ -4,24 +4,24 @@ import com.example.codeblocks.model.Comparators.*
 import com.example.codeblocks.model.LogicOperators.*
 
 object LogicalArifmetic {
-    val logicops = mutableListOf('|', '&', '~', '(', ')')
+    val logicops = mutableListOf('|', '&', '~', '^' , '(', ')')
     val arifExpr = "[\\w\\+\\-\\*\\/\\%\\s]+".toRegex()
     val exprRegex = "($arifExpr)(?:([><]=|[><=])($arifExpr))?".toRegex()
-    val logRegex = "[|&~]".toRegex()
+    val logRegex = "[\\^|&~]".toRegex()
 
-    fun parseExpr(_expr: String): MutableList<String> {
+    private fun parseExpr(_expr: String): MutableList<String> {
         val expr = _expr.replace(" ", "")
 
-        var c: String = ""
+        var c = ""
         val output = mutableListOf<String>()
-        val stack = ArrayDeque<Char>()
+        val stack = ArrayDeque<LogicOperators>()
 
         var openedBrackets = false
 
         for (i in expr) {
             if (i !in logicops || openedBrackets) {
                 c += i
-                openedBrackets = when(i) {
+                openedBrackets = when (i) {
                     '[' -> true
                     ']' -> false
                     else -> openedBrackets
@@ -31,25 +31,21 @@ object LogicalArifmetic {
                     output.add(c)
                 c = ""
                 when (val op = getLogicOperator(i)) {
-                    OPEN_BRACKET -> stack.addLast('(')
+                    OPEN_BRACKET -> stack.addLast(OPEN_BRACKET)
                     CLOSED_BRACKET -> {
-                        while (stack.last() != '(') {
+                        while (stack.last() != OPEN_BRACKET) {
                             if (stack.count() == 0) {
                                 throw Exception("Wrong expression")
                             }
-                            output.add(stack.removeLast().toString())
+                            output.add(stack.removeLast().operator)
                         }
                         stack.removeLast()
                     }
-                    OR, AND, NEGATE -> {
-                        if (stack.count() > 0) {
-                            var stackOP = getLogicOperator(stack.last())
-                            while (stackOP.priority >= op.priority && stack.count() > 0) {
-                                output.add(stack.removeLast().toString())
-                                if (stack.count() > 0) stackOP = getLogicOperator(stack.last())
-                            }
+                    NEGATE, AND, OR, XOR -> {
+                        while (stack.count() > 0 && stack.last().priority >= op.priority) {
+                            output.add(stack.removeLast().operator)
                         }
-                        stack.addLast(i)
+                        stack.addLast(op)
                     }
                     NOT_AN_OPERATOR -> throw Exception("$i is not and operator")
                 }
@@ -59,26 +55,23 @@ object LogicalArifmetic {
             output.add(c)
 
         while (stack.count() > 0) {
-            val l = stack.removeLast()
-            if (getLogicOperator(l) == OPEN_BRACKET) throw Exception("Expression has inconsistent brackets")
-            output.add(l.toString())
+            if (stack.last() == OPEN_BRACKET) throw Exception("Expression has inconsistent brackets")
+            output.add(stack.removeLast().operator)
         }
         return output
     }
 
-    fun evalExpr(
+    private fun evalExpr(
         _expr: String,
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ): Boolean {
         val (left, comp, right) = exprRegex.find(_expr)!!.destructured
-        val output: Boolean
-
         val countedLeft = Arifmetics.evaluateExpression(left, _variables, _arrays)
 
         if (comp.isNotEmpty()) {
             val countedRight = Arifmetics.evaluateExpression(right, _variables, _arrays)
-            output = when (val op = getComparator(comp)) {
+            return when (getComparator(comp)) {
                 LESS -> (countedLeft < countedRight)
                 GREATER -> (countedLeft > countedRight)
                 LESS_OR_EQUAL -> (countedLeft <= countedRight)
@@ -86,7 +79,6 @@ object LogicalArifmetic {
                 EQUAL -> (countedLeft == countedRight)
                 NOT_EQUAL -> (countedLeft != countedRight)
             }
-            return output
         }
 
         return (countedLeft > 0)
@@ -98,7 +90,6 @@ object LogicalArifmetic {
         _arrays: MutableMap<String, MutableList<Double>>
     ): Boolean {
         val expr = parseExpr(_expr)
-        println("Parsed: $expr")
         val stack = ArrayDeque<Boolean>()
 
         for (operator in expr) {
@@ -108,23 +99,24 @@ object LogicalArifmetic {
             }
 
             val op = getLogicOperator(operator[0])
-            val a: Boolean = stack.removeLast()
-            val b: Boolean
+            val a = stack.removeLast()
 
-            when (op) {
-                NEGATE -> {
-                    stack.addLast(!a)
-                }
-                OR -> {
-                    b = stack.removeLast()
-                    stack.addLast(a || b)
-                }
-                AND -> {
-                    b = stack.removeLast()
-                    stack.addLast(a && b)
-                }
-                else -> throw Exception("Logic error")
+            if (op == NEGATE) {
+                stack.addLast(!a)
+                continue
             }
+
+            val b = stack.removeLast()
+
+            stack.addLast(
+                when (op) {
+                    NEGATE -> a.not()
+                    AND -> a and b
+                    OR -> a or b
+                    XOR -> a xor b
+                    else -> throw Exception("Logic error")
+                }
+            )
         }
         return stack.last()
     }

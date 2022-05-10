@@ -4,7 +4,7 @@ import androidx.core.text.isDigitsOnly
 import com.example.codeblocks.model.ArifmeticOperators.*
 
 object Arifmetics {
-    fun createRPN(_expression: String): MutableList<String> {
+    private fun createRPN(_expression: String): MutableList<String> {
         if (_expression.isEmpty()) {
             throw Exception("Присвойте переменной значение")
         }
@@ -56,10 +56,8 @@ object Arifmetics {
                     }
                     PLUS, FRACTION, MULTIPLY, MOD -> {
 
-                        if (stack.count() > 0) {
-                            while (stack.count() > 0 && stack.last().priority >= op.priority) {
-                                output.add(stack.removeLast().operator)
-                            }
+                        while (stack.count() > 0 && stack.last().priority >= op.priority) {
+                            output.add(stack.removeLast().operator)
                         }
                         stack.addLast(op)
                     }
@@ -67,10 +65,8 @@ object Arifmetics {
                         if (i == 0 || !expression[i - 1].toString().matches("[\\w\\[\\]\\)]".toRegex())) {
                             stack.addLast(UNARY_MINUS)
                         } else {
-                            if (stack.count() > 0) {
-                                while (stack.count() > 0 && stack.last().priority >= op.priority) {
-                                    output.add(stack.removeLast().operator)
-                                }
+                            while (stack.count() > 0 && stack.last().priority >= op.priority) {
+                                output.add(stack.removeLast().operator)
                             }
                             stack.addLast(op)
                         }
@@ -145,15 +141,15 @@ object Arifmetics {
 
             val b = stack.removeLast()
 
-            when (op) {
-                PLUS -> stack.addLast(b + a)
-                MINUS -> stack.addLast(b - a)
-                FRACTION -> stack.addLast(b / a)
-                MULTIPLY -> stack.addLast(b * a)
-                MOD -> stack.addLast(b % a)
-                UNARY_MINUS -> stack.addLast(-a)
-                NOT_AN_OPERATION, OPEN_BRACKET, CLOSED_BRACKET -> throw Exception("$operator is not an operator")
-            }
+            stack.addLast(when (op) {
+                PLUS -> b + a
+                MINUS -> b - a
+                FRACTION -> b / a
+                MULTIPLY -> b * a
+                MOD -> b % a
+                else -> throw Exception("$operator is not an operator")
+            })
+
         }
 
         return stack.last()

@@ -1,6 +1,7 @@
 package com.example.codeblocks
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -24,8 +25,8 @@ import com.google.android.material.navigation.NavigationView
 
 const val PADDING = 110
 
-class MainActivity : AppCompatActivity() {
 
+class MainActivity : AppCompatActivity() {
 
     var code: MutableList<Command> = mutableListOf()
     val toPrintFunction = { toPrint: String, end: String ->
@@ -36,7 +37,6 @@ class MainActivity : AppCompatActivity() {
 
         tv.text = output
     }
-
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding

@@ -27,10 +27,10 @@ class Variable(_name: String, _value: String) : Command {
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
-    ) {
-        if (_variables.containsKey(name) || _arrays.containsKey(name)) {
-            throw Exception("$name already exists.")
-        }
+    ){
+
+        if (_variables.containsKey(name)) throw Exception("Variable already exists!")
+
         _variables[name] = Arifmetics.evaluateExpression(value, _variables, _arrays)
     }
 }
@@ -45,10 +45,8 @@ class MyArray(_name: String, _size: String, _inside: String = "") : Command {
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
-    ) {
-        if (_arrays.containsKey(name) || _arrays.containsKey(name)) {
-            throw Exception("$name already exist")
-        }
+    ){
+        if (_arrays.containsKey(name)) throw Exception("Variable doesn't exist!")
 
         size = Arifmetics.evaluateExpression(nonProcessedSize, _variables, _arrays).toInt()
 
@@ -90,16 +88,16 @@ class Assign(_name: String, _value: String) : Command {
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ) {
+
         if (name.matches(variableRegex)) {
-            if (!_variables.containsKey(name)) {
-                throw Exception("$name does not exist.")
-            }
+            if (!_variables.containsKey(name)) throw Exception("Variable doesn't exist!")
 
             _variables[name] = Arifmetics.evaluateExpression(value, _variables, _arrays)
-            return
         }
 
         if (name.matches(arrayRegex)) {
+            if (!_arrays.containsKey(name)) throw Exception("Variable doesn't exist!")
+
             val (name, index) = arrayRegex.find(name)!!.destructured
             if (!_arrays.containsKey(name)) {
                 throw Exception("$name does not exist")
@@ -107,11 +105,7 @@ class Assign(_name: String, _value: String) : Command {
 
             _arrays[name]!![Arifmetics.evaluateExpression(index, _variables, _arrays).toInt()] =
                 Arifmetics.evaluateExpression(value, _variables, _arrays)
-            return
         }
-
-        throw Exception("Invalid name: $name")
-
     }
 }
 
@@ -143,7 +137,8 @@ open class If(
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
-    ) {
+    ){
+
         val toExecute = if (LogicalArifmetic.evalWhole(
                 condition,
                 _variables,
@@ -156,6 +151,7 @@ open class If(
                 command.execute(_variables, _arrays)
             }
         }
+
     }
 }
 
@@ -177,6 +173,7 @@ class Print(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ) {
+
         // проверяем, является ли переданное значени строкой ("что-то" или 'что-то')
         for (out in toPrint) {
             if (out.matches("^(?:\"(?=.*\")|\'(?=.*\')).*".toRegex())) {
@@ -205,29 +202,20 @@ class Input(_name: String, _inputText: () -> String) : Command {
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
-    ) {
+    ){
         val value = inputText()
         if (name.matches(variableRegex)) {
-            if (!_variables.containsKey(name)) {
-                throw Exception("$name does not exist.")
-            }
+            if (!_variables.containsKey(name)) throw Exception("Variable doesn't exist!")
 
             _variables[name] = Arifmetics.evaluateExpression(value, _variables, _arrays)
-            return
         }
 
         if (name.matches(arrayRegex)) {
             val (name, index) = arrayRegex.find(name)!!.destructured
-            if (!_arrays.containsKey(name)) {
-                throw Exception("$name does not exist")
-            }
 
             _arrays[name]!![Arifmetics.evaluateExpression(index, _variables, _arrays).toInt()] =
                 Arifmetics.evaluateExpression(value, _variables, _arrays)
-            return
         }
-
-        throw Exception("Invalid name: $name")
 
     }
 }
@@ -251,57 +239,57 @@ class While(_condition: String, _commands: MutableList<Command> = mutableListOf(
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
-    ) {
-        if (LogicalArifmetic.evalWhole(condition, _variables, _arrays)) {
+    ){
+
+        while (LogicalArifmetic.evalWhole(condition, _variables, _arrays)) {
             for (command in inside) {
                 command.execute(_variables, _arrays)
             }
-            execute(_variables, _arrays)
         }
     }
 }
 
-/*
 class For(
-    _before: MutableList<Command>,
-
-    _left: String,
-    _comparator: String,
-    _right: String,
-
-    _eachIter: Command,
-    _inside: MutableList<Command>
-) : Command, If(_left, _comparator, _right, _inside) {
+    _before: MutableList<Command> = mutableListOf(),
+    _condition: String = "",
+    _eachStep: MutableList<Command> = mutableListOf(),
+    _inside: MutableList<Command> = mutableListOf()
+) : Command {
     override var name = ""
 
-    private val before = _before
-    private val eachIter = _eachIter
-    private val inside = _inside
+    private var before = _before
+    fun addCommandToDoBefore(command: Command) = before.add(command)
+
+    private var condition = _condition
+    fun changeCondition(cond: String) {
+        condition = cond
+    }
+
+    private var eachStep = _eachStep
+    fun addCommandToDoEachStep(command: Command) = eachStep.add(command)
+
+    private var inside = _inside
+    fun addCommandToDoInside(command: Command) = inside.add(command)
 
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
-    ) {
-
-        val toDelete = mutableListOf<String>()
-        for (command in before) {
-            if (command is Variable || command is MyArray) {
-                toDelete.add(command.name)
-            }
-            command.execute(_variables, _arrays)
+    ){
+        val toDelete = mutableListOf<Command>()
+        for (b in before) {
+            b.execute(_variables, _arrays)
+            if (b is Variable)
+                toDelete.add(b)
         }
 
-        while (checkIfExecutable(_variables, _arrays)) {
-            for (command in inside) {
-                command.execute(_variables, _arrays)
-            }
-            eachIter.execute(_variables, _arrays)
+        while (LogicalArifmetic.evalWhole(condition, _variables, _arrays)) {
+            for (i in inside + eachStep)
+                i.execute(_variables, _arrays)
         }
 
-        for (n in toDelete) {
-            _variables.remove(n)
-            _arrays.remove(n)
-        }
+        for (d in toDelete)
+            _variables.remove(d.name)
+
     }
+
 }
-*/
