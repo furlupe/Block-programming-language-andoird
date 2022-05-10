@@ -1,7 +1,6 @@
 package com.example.codeblocks
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -72,29 +71,6 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-//        val runButton: Button = findViewById(R.id.runButton)
-
-        // для выполнения кода Print, в него необходимо передать лямбда-функцию из mainActivity, которая содержит в себе работу с textView из activity_main.xml
-        /*this.code.add( Print("\"some text\"") { toPrint: String ->
-
-            val tv: TextView = findViewById(R.id.textView)
-
-            var output: String = tv.text.toString()
-            output += "\n$toPrint"
-
-            tv.text = output
-
-        })*/
-
-//        runButton.setOnClickListener {
-
-        /* val op = If("a", "<", "b", mutableListOf())
-            code.add( op )
-            op.addCommandInside( Create("c", "15") ) */ // --> вот так добавлять команды в внутр. блоки
-
-//            Interpretator.run(code)
-//        }
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -129,16 +105,20 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    fun addCreateVariableBlock(context: Context, multiplier: Int = 0): Command {
+    private fun addCreateVariableBlock(
+        context: Context,
+        multiplier: Int = 0,
+        index: Int = -1
+    ): Command {
         val view = CreateVariableView(context)
+        view.setPadding(PADDING * multiplier, 0, 0, 0)
+
+        val container = findViewById<LinearLayout>(R.id.container)
+        container.addView(view, if (index > -1) index else container.childCount)
+
+        val operation = Variable("")
         val binding = CreateVariableViewBinding.bind(view)
-        val container = findViewById<LinearLayout>(R.id.container)
-        container.addView(view)
 
-        view.setPadding(PADDING * multiplier, 0, 0, 0)
-
-        val operation =
-            Variable(binding.variableName.text.toString(), binding.variableValue.text.toString())
         binding.variableName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -151,7 +131,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
         binding.variableValue.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -164,19 +143,24 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
         return operation
     }
 
-    fun addAssignVariableBlock(context: Context, multiplier: Int = 0): Command {
+    private fun addAssignVariableBlock(
+        context: Context,
+        multiplier: Int = 0,
+        index: Int = -1
+    ): Command {
         val view = AssignVariableView(context)
-        val binding = AssignVariableViewBinding.bind(view)
-        val container = findViewById<LinearLayout>(R.id.container)
-        container.addView(view)
-
         view.setPadding(PADDING * multiplier, 0, 0, 0)
 
-        val operation =
-            Assign(binding.variableName.text.toString(), binding.variableValue.text.toString())
+        val container = findViewById<LinearLayout>(R.id.container)
+        container.addView(view, if (index > -1) index else container.childCount)
+
+        val operation = Assign("", "")
+        val binding = AssignVariableViewBinding.bind(view)
+
         binding.variableName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -189,7 +173,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
         binding.variableValue.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -202,81 +185,23 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
         return operation
     }
 
-    fun addIfBlock(context: Context, multiplier: Int = 0): Command {
-        val viewStart = IfStartView(context)
-        val viewEnd = IfEndView(context)
-        val bindingStart = IfStartViewBinding.bind(viewStart)
+    private fun addIfBlock(
+        context: Context,
+        multiplier: Int = 0,
+        index: Int = -1
+    ): Command {
+        val view = IfStartView(context)
+        view.setPadding(PADDING * multiplier, 0, 0, 0)
+
         val container = findViewById<LinearLayout>(R.id.container)
-        container.addView(viewStart)
-//        container.addView(viewEnd)
-
-        viewStart.setPadding(PADDING * multiplier, 0, 0, 0)
-
-        val ifPlusCommand: Button = bindingStart.ifPlusCommand
+        container.addView(view, if (index > -1) index else container.childCount)
 
         val operation = If("")
-
-        bindingStart.condition.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                operation.changeCondition(bindingStart.condition.text.toString())
-            }
-
-        })
-
-        val popupMenuIf = PopupMenu(context, ifPlusCommand)
-        popupMenuIf.inflate(R.menu.menu_plus_command_if)
-        popupMenuIf.setOnMenuItemClickListener {
-            if(it.itemId == R.id.else_block) {
-                val viewElse = IfElseView(context)
-                container.addView(viewElse)
-
-                val binding = IfElseViewBinding.bind(viewElse)
-                val elsePlusCommand: Button = binding.elsePlusCommand
-
-                val popupMenuElse = PopupMenu(context, elsePlusCommand)
-                popupMenuElse.inflate(R.menu.menu_blocks_plus)
-                popupMenuElse.setOnMenuItemClickListener {
-                    operation.addCommandInsideElseBlock(whichCommandToAdd(it, this, multiplier))
-                    true
-                }
-                elsePlusCommand.setOnClickListener {
-                    popupMenuElse.show()
-                }
-            }
-            else {
-                operation.addCommandInsideMainBlock(whichCommandToAdd(it, this, multiplier))
-            }
-            true
-        }
-
-        ifPlusCommand.setOnClickListener {
-            popupMenuIf.show()
-        }
-
-        return operation
-    }
-
-    fun addWhileBlock(context: Context, multiplier: Int = 0): Command {
-        val viewStart = WhileStartView(context)
-        val binding = WhileStartViewBinding.bind(viewStart)
-        val container = findViewById<LinearLayout>(R.id.container)
-        container.addView(viewStart)
-
-        viewStart.setPadding(PADDING * multiplier, 0, 0, 0)
-
-        val whilePlusCommand: Button = binding.whilePlusCommand
-
-        val operation = While("")
-
+        val binding = IfStartViewBinding.bind(view)
         binding.condition.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -290,44 +215,143 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        val popupMenu1 = PopupMenu(context, whilePlusCommand)
-        popupMenu1.inflate(R.menu.menu_blocks_plus)
-        popupMenu1.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.create_var -> {
-                    operation.addCommandInside(addCreateVariableBlock(this, multiplier + 1))
-                    true
-                }
-                R.id.assign_var -> {
-                    operation.addCommandInside(addAssignVariableBlock(this, multiplier + 1))
-                    true
-                }
-                R.id.if_block -> {
-                    println(viewStart.context)
-                    operation.addCommandInside(addIfBlock(viewStart.context, multiplier + 1))
-                    true
-                }
-                R.id.while_block -> {
-                    operation.addCommandInside(addWhileBlock(viewStart.context, multiplier + 1))
-                    true
-                }
-                else -> false
+        val addCommand: Button = binding.ifPlusCommand
+
+        val popup = PopupMenu(context, addCommand)
+        popup.inflate(R.menu.menu_plus_command_if)
+        popup.setOnMenuItemClickListener {
+
+            if (it.itemId == R.id.else_block) {
+                operation.elseExists = true
+                addElseToIf(
+                    this,
+                    operation,
+                    multiplier,
+                    container.indexOfChild(view) + countAmountOfViews(operation.insideMainBlock) + 1
+                )
+
+            } else {
+                operation.addCommandInsideMainBlock(
+                    whichCommandToAdd(
+                        it,
+                        this,
+                        multiplier,
+                        container.indexOfChild(view) + countAmountOfViews(operation.insideMainBlock) + 1
+                    )
+                )
             }
+            true
         }
 
-        whilePlusCommand.setOnClickListener {
-            popupMenu1.show()
+        addCommand.setOnClickListener {
+            popup.show()
         }
+
         return operation
     }
 
-    fun whichCommandToAdd(it: MenuItem, context: Context, m: Int) = when (it.itemId) {
-        R.id.create_var -> addCreateVariableBlock(context, m + 1)
-        R.id.assign_var -> addAssignVariableBlock(context, m + 1)
-        R.id.if_block -> addIfBlock(context, m + 1)
-        R.id.while_block -> addWhileBlock(context, m + 1)
+    private fun addElseToIf(context: Context, myIf: If, multiplier: Int = 0, index: Int = -1) {
+        val view = IfElseView(context)
+        view.setPadding(PADDING * multiplier, 0, 0, 0)
+
+        val container = findViewById<LinearLayout>(R.id.container)
+        container.addView(view, if (index > -1) index else container.childCount)
+
+        val binding = IfElseViewBinding.bind(view)
+
+        val addCommand: Button = binding.elsePlusCommand
+
+        val popupMenuElse = PopupMenu(context, addCommand)
+        popupMenuElse.inflate(R.menu.menu_blocks_plus)
+        popupMenuElse.setOnMenuItemClickListener {
+
+            myIf.addCommandInsideElseBlock(
+                whichCommandToAdd(
+                    it,
+                    this,
+                    multiplier,
+                    container.indexOfChild(view) + 1
+                )
+            )
+            true
+        }
+
+        addCommand.setOnClickListener {
+            popupMenuElse.show()
+        }
+    }
+
+    fun addWhileBlock(
+        context: Context,
+        multiplier: Int = 0,
+        index: Int = -1
+    ): Command {
+        val view = WhileStartView(context)
+        view.setPadding(PADDING * multiplier, 0, 0, 0)
+
+        val container = findViewById<LinearLayout>(R.id.container)
+        container.addView(view, if (index > -1) index else container.childCount)
+
+        val operation = While("")
+        val binding = WhileStartViewBinding.bind(view)
+        binding.condition.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                operation.changeCondition(binding.condition.text.toString())
+            }
+
+        })
+
+        val addCommand: Button = binding.whilePlusCommand
+
+        val popup = PopupMenu(context, addCommand)
+        popup.inflate(R.menu.menu_blocks_plus)
+        popup.setOnMenuItemClickListener {
+
+            operation.addCommandInside(
+                whichCommandToAdd(
+                    it,
+                    this,
+                    multiplier,
+                    container.indexOfChild(view) + countAmountOfViews(operation.inside) + 1
+                )
+            )
+            true
+        }
+
+        addCommand.setOnClickListener {
+            popup.show()
+        }
+
+        return operation
+    }
+
+    private fun whichCommandToAdd(it: MenuItem, context: Context, m: Int = 0, index: Int) =
+        when (it.itemId) {
+            R.id.create_var -> addCreateVariableBlock(context, m + 1, index)
+            R.id.assign_var -> addAssignVariableBlock(context, m + 1, index)
+            R.id.if_block -> addIfBlock(context, m + 1, index)
+            R.id.while_block -> addWhileBlock(context, m + 1, index)
 //        R.id.else_block ->
-        else -> throw Exception("wtf")
+            else -> throw Exception("wtf")
+        }
+
+    private fun countAmountOfViews(commands: MutableList<Command>): Int {
+        var l = 0
+        for (command in commands) {
+            l += 1 + when (command) {
+                is If -> countAmountOfViews(command.insideMainBlock) + countAmountOfViews(command.insideElseBlock) + if (command.elseExists) 1 else 0
+                is While -> countAmountOfViews(command.inside)
+                else -> 0
+            }
+        }
+
+        return l
     }
 }
 

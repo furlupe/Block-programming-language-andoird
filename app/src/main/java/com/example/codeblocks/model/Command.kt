@@ -12,7 +12,7 @@ interface Command {
 
 }
 
-class Variable(_name: String, _value: String) : Command {
+class Variable(_name: String, _value: String = "0") : Command {
     override var name = _name
     private var value = _value
 
@@ -118,8 +118,10 @@ open class If(
 
     override var name = ""
 
-    private val insideMainBlock = _commands
-    private val insideElseBlock = _else
+    var elseExists = false
+
+    val insideMainBlock = _commands
+    val insideElseBlock = _else
     private var condition = _condition
 
     fun addCommandInsideMainBlock(_command: Command) {
@@ -146,12 +148,8 @@ open class If(
             )
         ) insideMainBlock else insideElseBlock
 
-        if (LogicalArifmetic.evalWhole(condition, _variables, _arrays)) {
-            for (command in toExecute) {
-                command.execute(_variables, _arrays)
-            }
-        }
-
+        for (command in toExecute)
+            command.execute(_variables, _arrays)
     }
 }
 
@@ -226,7 +224,7 @@ class While(_condition: String, _commands: MutableList<Command> = mutableListOf(
     override var name: String = ""
 
     private var condition = _condition
-    private val inside = _commands
+    val inside = _commands
 
     fun addCommandInside(_command: Command) {
         inside.add(_command)
