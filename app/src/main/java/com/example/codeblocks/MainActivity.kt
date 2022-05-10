@@ -19,10 +19,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.example.codeblocks.databinding.*
 import com.example.codeblocks.model.*
-import com.example.codeblocks.views.blocks.AssignVariableView
-import com.example.codeblocks.views.blocks.CreateVariableView
-import com.example.codeblocks.views.blocks.IfStartView
-import com.example.codeblocks.views.blocks.WhileStartView
+import com.example.codeblocks.views.blocks.*
 import com.google.android.material.navigation.NavigationView
 
 const val PADDING = 110
@@ -210,17 +207,19 @@ class MainActivity : AppCompatActivity() {
 
     fun addIfBlock(context: Context, multiplier: Int = 0): Command {
         val viewStart = IfStartView(context)
-        val binding = IfStartViewBinding.bind(viewStart)
+        val viewEnd = IfEndView(context)
+        val bindingStart = IfStartViewBinding.bind(viewStart)
         val container = findViewById<LinearLayout>(R.id.container)
         container.addView(viewStart)
+//        container.addView(viewEnd)
 
         viewStart.setPadding(PADDING * multiplier, 0, 0, 0)
 
-        val ifPlusCommand: Button = binding.ifPlusCommand
+        val ifPlusCommand: Button = bindingStart.ifPlusCommand
 
         val operation = If("")
 
-        binding.condition.addTextChangedListener(object : TextWatcher {
+        bindingStart.condition.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
@@ -228,101 +227,41 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                operation.changeCondition(binding.condition.text.toString())
+                operation.changeCondition(bindingStart.condition.text.toString())
             }
 
         })
 
-        val popupMenu1 = PopupMenu(context, ifPlusCommand)
-        popupMenu1.inflate(R.menu.menu_blocks_plus)
-        popupMenu1.setOnMenuItemClickListener {
-            operation.addCommandInsideMainBlock(whichCommandToAdd(it, this, multiplier))
+        val popupMenuIf = PopupMenu(context, ifPlusCommand)
+        popupMenuIf.inflate(R.menu.menu_plus_command_if)
+        popupMenuIf.setOnMenuItemClickListener {
+            if(it.itemId == R.id.else_block) {
+                val viewElse = IfElseView(context)
+                container.addView(viewElse)
+
+                val binding = IfElseViewBinding.bind(viewElse)
+                val elsePlusCommand: Button = binding.elsePlusCommand
+
+                val popupMenuElse = PopupMenu(context, elsePlusCommand)
+                popupMenuElse.inflate(R.menu.menu_blocks_plus)
+                popupMenuElse.setOnMenuItemClickListener {
+                    operation.addCommandInsideElseBlock(whichCommandToAdd(it, this, multiplier))
+                    true
+                }
+                elsePlusCommand.setOnClickListener {
+                    popupMenuElse.show()
+                }
+            }
+            else {
+                operation.addCommandInsideMainBlock(whichCommandToAdd(it, this, multiplier))
+            }
             true
         }
 
         ifPlusCommand.setOnClickListener {
-            popupMenu1.show()
+            popupMenuIf.show()
         }
 
-        /* val signButton: Button = binding.buttonSign
-
-         val popupMenu2 = PopupMenu(context, signButton)
-         popupMenu2.inflate(R.menu.popup_menu_comparison_sign)
-         popupMenu2.setOnMenuItemClickListener {
-             when (it.itemId) {
-                 R.id.less -> {
-                     operation.assignComparator("<")
-                     signButton.text = "<"
-                     true
-                 }
-                 R.id.greater -> {
-                     operation.assignComparator(">")
-                     signButton.text = ">"
-                     true
-                 }
-                 R.id.equal -> {
-                     operation.assignComparator("=")
-                     signButton.text = "="
-                     true
-                 }
-                 R.id.not_equal -> {
-                     operation.assignComparator("!=")
-                     signButton.text = "!="
-                     true
-                 }
-                 R.id.less_or_equal -> {
-                     operation.assignComparator("<=")
-                     signButton.text = "<="
-                     true
-                 }
-                 R.id.greater_or_equal -> {
-                     operation.assignComparator(">=")
-                     signButton.text = ">="
-                     true
-                 }
-                 else -> false
-             }
-         }
-
-         signButton.setOnClickListener {
-             popupMenu2.show()
-         }
-
-         binding.leftOperand.addTextChangedListener(object : TextWatcher {
-             override fun beforeTextChanged(
-                 p0: CharSequence?,
-                 p1: Int,
-                 p2: Int,
-                 p3: Int
-             ) {
-             }
-
-             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-             }
-
-             override fun afterTextChanged(p0: Editable?) {
-                 operation.assignLeft(binding.leftOperand.text.toString())
-             }
-
-         })
-
-         binding.rightOperand.addTextChangedListener(object : TextWatcher {
-             override fun beforeTextChanged(
-                 p0: CharSequence?,
-                 p1: Int,
-                 p2: Int,
-                 p3: Int
-             ) {
-             }
-
-             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-             }
-
-             override fun afterTextChanged(p0: Editable?) {
-                 operation.assignRight(binding.rightOperand.text.toString())
-             }
-
-         })*/
         return operation
     }
 
@@ -374,7 +313,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> false
             }
-
         }
 
         whilePlusCommand.setOnClickListener {
@@ -388,6 +326,7 @@ class MainActivity : AppCompatActivity() {
         R.id.assign_var -> addAssignVariableBlock(context, m + 1)
         R.id.if_block -> addIfBlock(context, m + 1)
         R.id.while_block -> addWhileBlock(context, m + 1)
+//        R.id.else_block ->
         else -> throw Exception("wtf")
     }
 }

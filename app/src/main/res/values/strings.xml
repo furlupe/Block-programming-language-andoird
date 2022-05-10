@@ -31,4 +31,5 @@
     <string name="if_condition">If Condition</string>
     <string name="condition">Condition</string>
     <string name="while_condition">While Condition</string>
+    <string name="else_condition">Else Condition</string>
 </resources>

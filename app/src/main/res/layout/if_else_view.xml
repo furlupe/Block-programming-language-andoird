@@ -14,6 +14,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_block_else" />
+
+        <Button
+            android:id="@+id/else_plus_command"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_plus_if"
+            android:textColor="#582909"
+            android:text="@string/Plus" />
     </RelativeLayout>
 
 </merge>

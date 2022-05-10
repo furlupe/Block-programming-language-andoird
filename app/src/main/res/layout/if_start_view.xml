@@ -21,12 +21,12 @@
         <EditText
             android:id="@+id/condition"
             android:layout_width="272dp"
-            android:layout_height="39dp"
-            android:layout_marginTop="24dp"
+            android:layout_height="40dp"
             android:layout_marginStart="55dp"
+            android:layout_marginTop="24dp"
             android:hint="@string/condition"
             android:textColor="#582909"
-            android:textColorHint="#582909"/>
+            android:textColorHint="#582909" />
 
 <!--        <EditText
             android:id="@+id/left_operand"
