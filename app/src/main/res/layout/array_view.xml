@@ -46,7 +46,7 @@
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/variableValue"
+            android:id="@+id/arrayValue"
             android:layout_width="142dp"
             android:layout_height="39dp"
             android:layout_marginStart="155dp"

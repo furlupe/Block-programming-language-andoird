@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.nav_assign_var -> addAssignVariableBlock(this)
                     R.id.nav_if -> addIfBlock(this)
                     R.id.nav_while -> addWhileBlock(this)
+                    R.id.nav_array -> addArrayBlock(this)
                     else -> throw Exception("wtf")
                 }
             )
@@ -331,13 +332,69 @@ class MainActivity : AppCompatActivity() {
         return operation
     }
 
+    fun addArrayBlock(
+        context: Context,
+        multiplier: Int = 0,
+        index: Int = -1
+    ): Command {
+        val view = ArrayView(context)
+        view.setPadding(PADDING * multiplier, 0, 0, 0)
+
+        val container = findViewById<LinearLayout>(R.id.container)
+        container.addView(view, if (index > -1) index else container.childCount)
+
+        val operation = MyArray("")
+        val binding = ArrayViewBinding.bind(view)
+        binding.arrayName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                operation.changeName(binding.arrayName.text.toString())
+            }
+
+        })
+
+        binding.size.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                operation.changeSize(binding.size.text.toString())
+            }
+
+        })
+
+        binding.arrayValue.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                operation.changeInside(binding.arrayValue.text.toString())
+            }
+
+        })
+
+        return operation
+    }
+
+
     private fun whichCommandToAdd(it: MenuItem, context: Context, m: Int = 0, index: Int) =
         when (it.itemId) {
             R.id.create_var -> addCreateVariableBlock(context, m + 1, index)
             R.id.assign_var -> addAssignVariableBlock(context, m + 1, index)
             R.id.if_block -> addIfBlock(context, m + 1, index)
             R.id.while_block -> addWhileBlock(context, m + 1, index)
-//            R.id.array_block -> add
+            R.id.array_block -> addArrayBlock(context, m + 1, index)
             else -> throw Exception("wtf")
         }
 

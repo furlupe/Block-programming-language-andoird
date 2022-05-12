@@ -21,4 +21,9 @@
         android:orderInCategory="4"
         android:title="@string/while_condition"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/array_block"
+        android:orderInCategory="5"
+        android:title="@string/array"
+        app:showAsAction="never"/>
 </menu>
