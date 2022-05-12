@@ -1,6 +1,7 @@
 package com.example.codeblocks
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -28,6 +29,7 @@ const val PADDING = 110
 class MainActivity : AppCompatActivity() {
 
     var code: MutableList<Command> = mutableListOf()
+
     val toPrintFunction = { toPrint: String, end: String ->
         val tv: TextView = findViewById(R.id.textView)
 
@@ -35,6 +37,18 @@ class MainActivity : AppCompatActivity() {
         output += "$toPrint$end"
 
         tv.text = output
+    }
+    val toInputFunction = {
+        val view = layoutInflater.inflate(R.layout.input_dialog, null, false)
+        val binding = InputDialogBinding.bind(view)
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Input your value")
+        builder.setView(view)
+
+        var _input = ""
+        builder.setPositiveButton("Send") { _, _ -> _input = binding.input.text.toString() }
+        _input
     }
 
     private lateinit var appBarConfiguration: AppBarConfiguration
