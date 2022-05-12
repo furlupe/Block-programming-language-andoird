@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.nav_if -> addIfBlock(this)
                     R.id.nav_while -> addWhileBlock(this)
                     R.id.nav_array -> addArrayBlock(this)
-                    R.id.nav_input -> addInputBlock(this)
+                    R.id.nav_print -> addPrintBlock(this)
                     else -> throw Exception("wtf")
                 }
             )
@@ -404,20 +404,20 @@ class MainActivity : AppCompatActivity() {
         return operation
     }
 
-    fun addInputBlock(
+    fun addPrintBlock(
         context: Context,
         multiplier: Int = 0,
         index: Int = -1
     ): Command {
-        val view = InputView(context)
+        val view = PrintView(context)
         view.setPadding(PADDING * multiplier, 0, 0, 0)
 
         val container = findViewById<LinearLayout>(R.id.container)
         container.addView(view, if (index > -1) index else container.childCount)
 
-        val operation = Input("", toInputFunction)
-        val binding = InputViewBinding.bind(view)
-        binding.inputTo.addTextChangedListener(object : TextWatcher {
+        val operation = Print(toPrintFunction)
+        val binding = PrintViewBinding.bind(view)
+        binding.printTo.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
@@ -425,15 +425,13 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                operation.toInput = binding.inputTo.text.toString().split("\\s*,\\s*".toRegex())
+                operation.toPrint = binding.printTo.text.toString().split("\\s*,\\s*".toRegex())
             }
 
         })
 
         return operation
     }
-
-
 
     private fun whichCommandToAdd(it: MenuItem, context: Context, m: Int = 0, index: Int) =
         when (it.itemId) {
@@ -442,21 +440,21 @@ class MainActivity : AppCompatActivity() {
             R.id.if_block -> addIfBlock(context, m + 1, index)
             R.id.while_block -> addWhileBlock(context, m + 1, index)
             R.id.array_block -> addArrayBlock(context, m + 1, index)
-            R.id.input_block -> addInputBlock(context, m + 1, index)
+            R.id.print_block -> addPrintBlock(context, m + 1, index)
             else -> throw Exception("wtf")
         }
 
     private fun countAmountOfViews(commands: MutableList<Command>): Int {
-        var l = 0
+        var len = 0
         for (command in commands) {
-            l += 1 + when (command) {
+            len += 1 + when (command) {
                 is If -> countAmountOfViews(command.insideMainBlock) + countAmountOfViews(command.insideElseBlock) + if (command.elseExists) 1 else 0
                 is While -> countAmountOfViews(command.inside)
                 else -> 0
             }
         }
 
-        return l
+        return len
     }
 }
 
