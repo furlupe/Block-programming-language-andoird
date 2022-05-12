@@ -19,7 +19,7 @@
             app:srcCompat="@drawable/ic_input" />
 
         <EditText
-            android:id="@+id/inputName"
+            android:id="@+id/inputTo"
             android:layout_width="208dp"
             android:layout_height="40dp"
             android:layout_marginStart="8dp"

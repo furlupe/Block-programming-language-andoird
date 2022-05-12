@@ -2,20 +2,21 @@ package com.example.codeblocks.model
 
 // по аналогии с Print, в Input нужно передать лямбда-функцию из mainActivity,
 // которая вызывает окно с текстовым полем для ввода данных и возвращает введенные данные
-class Input(_toInput: String, _inputText: () -> String) : Command {
+class Input(_toInput: String = "", _inputText: () -> String) : Command {
 
     override var name = ""
 
     private val variableRegex = "^[a-zA-Z][a-zA-Z0-9]*".toRegex()
     private val arrayRegex = "^($variableRegex)\\[(.+)]".toRegex()
 
-    val toInput = _toInput.split("\\s*,\\s*".toRegex())
-    val values = _inputText().split("\\s*,\\s*".toRegex())
+    var toInput = _toInput.split("\\s*,\\s*".toRegex())
+    val inputText = _inputText
 
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ){
+        val values = inputText().split("\\s*,\\s*".toRegex())
         if (toInput.count() != values.count())
             throw Exception("Expected more or less values to input")
 

@@ -26,4 +26,14 @@
         android:orderInCategory="5"
         android:title="@string/array"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/input_block"
+        android:orderInCategory="6"
+        android:title="@string/input"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/print_block"
+        android:orderInCategory="7"
+        android:title="@string/print"
+        app:showAsAction="never"/>
 </menu>

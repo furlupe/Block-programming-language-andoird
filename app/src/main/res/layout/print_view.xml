@@ -19,7 +19,7 @@
             app:srcCompat="@drawable/ic_print" />
 
         <EditText
-            android:id="@+id/printName"
+            android:id="@+id/printTo"
             android:layout_width="208dp"
             android:layout_height="40dp"
             android:layout_marginStart="8dp"

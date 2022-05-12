@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity() {
 
         tv.text = output
     }
+
+    @SuppressLint("InflateParams")
     val toInputFunction = {
         val view = layoutInflater.inflate(R.layout.input_dialog, null, false)
         val binding = InputDialogBinding.bind(view)
@@ -80,6 +82,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.nav_if -> addIfBlock(this)
                     R.id.nav_while -> addWhileBlock(this)
                     R.id.nav_array -> addArrayBlock(this)
+                    R.id.nav_input -> addInputBlock(this)
                     else -> throw Exception("wtf")
                 }
             )
@@ -401,6 +404,36 @@ class MainActivity : AppCompatActivity() {
         return operation
     }
 
+    fun addInputBlock(
+        context: Context,
+        multiplier: Int = 0,
+        index: Int = -1
+    ): Command {
+        val view = InputView(context)
+        view.setPadding(PADDING * multiplier, 0, 0, 0)
+
+        val container = findViewById<LinearLayout>(R.id.container)
+        container.addView(view, if (index > -1) index else container.childCount)
+
+        val operation = Input("", toInputFunction)
+        val binding = InputViewBinding.bind(view)
+        binding.inputTo.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                operation.toInput = binding.inputTo.text.toString().split("\\s*,\\s*".toRegex())
+            }
+
+        })
+
+        return operation
+    }
+
+
 
     private fun whichCommandToAdd(it: MenuItem, context: Context, m: Int = 0, index: Int) =
         when (it.itemId) {
@@ -409,6 +442,7 @@ class MainActivity : AppCompatActivity() {
             R.id.if_block -> addIfBlock(context, m + 1, index)
             R.id.while_block -> addWhileBlock(context, m + 1, index)
             R.id.array_block -> addArrayBlock(context, m + 1, index)
+            R.id.input_block -> addInputBlock(context, m + 1, index)
             else -> throw Exception("wtf")
         }
 
