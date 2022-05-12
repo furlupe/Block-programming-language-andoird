@@ -337,7 +337,7 @@ class MainActivity : AppCompatActivity() {
             R.id.assign_var -> addAssignVariableBlock(context, m + 1, index)
             R.id.if_block -> addIfBlock(context, m + 1, index)
             R.id.while_block -> addWhileBlock(context, m + 1, index)
-//        R.id.else_block ->
+//            R.id.array_block -> add
             else -> throw Exception("wtf")
         }
 

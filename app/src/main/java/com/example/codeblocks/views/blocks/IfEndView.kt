@@ -12,5 +12,5 @@ class IfEndView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr){
 
-    val binding = IfStartViewBinding.inflate(LayoutInflater.from(context), this)
+    private val binding = IfStartViewBinding.inflate(LayoutInflater.from(context), this)
 }

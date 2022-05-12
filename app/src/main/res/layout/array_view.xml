@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/ass_var_block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:layout_width="304dp"
+            android:layout_height="88dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_array" />
+
+        <EditText
+            android:id="@+id/arrayName"
+            android:layout_width="88dp"
+            android:layout_height="39dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="177dp"
+            android:layout_marginBottom="24dp"
+            android:hint="@string/name"
+            android:textColor="#582909"
+            android:textColorHint="#582909"
+            android:textSize="18sp" />
+
+
+        <EditText
+            android:id="@+id/size"
+            android:layout_width="44dp"
+            android:layout_height="39dp"
+            android:layout_marginStart="104dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="24dp"
+            android:hint="@string/size"
+            android:textColor="#582909"
+            android:textColorHint="#582909"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/variableValue"
+            android:layout_width="142dp"
+            android:layout_height="39dp"
+            android:layout_marginStart="155dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="24dp"
+            android:hint="@string/value"
+            android:textColor="#582909"
+            android:textColorHint="#582909"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+</merge>

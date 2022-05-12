@@ -12,6 +12,6 @@ class WhileStartView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr){
 
-    val binding = WhileStartViewBinding.inflate(LayoutInflater.from(context), this)
+    private val binding = WhileStartViewBinding.inflate(LayoutInflater.from(context), this)
 
 }
