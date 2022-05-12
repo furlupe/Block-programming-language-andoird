@@ -16,8 +16,9 @@ class Input(_toInput: String = "", _inputText: () -> String) : Command {
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ){
+
         val values = inputText().split("\\s*,\\s*".toRegex())
-        if (toInput.count() != values.count())
+        if (toInput.count() != values.count() || values.isEmpty())
             throw Exception("Expected more or less values to input")
 
         for(i in 0..toInput.count()) {

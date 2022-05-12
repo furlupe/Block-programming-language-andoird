@@ -50,6 +50,8 @@ class MainActivity : AppCompatActivity() {
 
         var _input = ""
         builder.setPositiveButton("Send") { _, _ -> _input = binding.input.text.toString() }
+
+        builder.show()
         _input
     }
 
