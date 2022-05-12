@@ -13,8 +13,7 @@ class Assign(_name: String, _value: String) : Command {
     }
 
     private val variableRegex = "^[a-zA-Z][a-zA-Z0-9]*".toRegex()
-    private val arifExpr = "[\\w\\+\\-\\*\\/\\%\\s]+".toRegex()
-    private val arrayRegex = "^($variableRegex)\\[($arifExpr)]".toRegex()
+    private val arrayRegex = "^($variableRegex)\\[(.+)]".toRegex()
 
     override fun execute(
         _variables: MutableMap<String, Double>,
@@ -28,14 +27,10 @@ class Assign(_name: String, _value: String) : Command {
         }
 
         if (name.matches(arrayRegex)) {
-            if (!_arrays.containsKey(name)) throw Exception("Variable doesn't exist!")
+            val (arrName, index) = arrayRegex.find(name)!!.destructured
+            if (!_arrays.containsKey(arrName)) throw Exception("Variable doesn't exist!")
 
-            val (name, index) = arrayRegex.find(name)!!.destructured
-            if (!_arrays.containsKey(name)) {
-                throw Exception("$name does not exist")
-            }
-
-            _arrays[name]!![Arifmetics.evaluateExpression(index, _variables, _arrays).toInt()] =
+            _arrays[arrName]!![Arifmetics.evaluateExpression(index, _variables, _arrays).toInt()] =
                 Arifmetics.evaluateExpression(value, _variables, _arrays)
         }
     }

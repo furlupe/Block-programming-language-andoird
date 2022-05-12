@@ -62,7 +62,9 @@ object Arifmetics {
                         stack.addLast(op)
                     }
                     MINUS -> {
-                        if (i == 0 || !expression[i - 1].toString().matches("[\\w\\[\\]\\)]".toRegex())) {
+                        if (i == 0 || !expression[i - 1].toString()
+                                .matches("[\\w\\[\\]\\)]".toRegex())
+                        ) {
                             stack.addLast(UNARY_MINUS)
                         } else {
                             while (stack.count() > 0 && stack.last().priority >= op.priority) {
@@ -121,12 +123,19 @@ object Arifmetics {
             }
 
             if (operator.matches(arrayRegex)) {
-                val (name, index) = arrayRegex.find(operator)!!.destructured
+                val (name, nonProcessedIndex) = arrayRegex.find(operator)!!.destructured
+                val index = evaluateExpression(nonProcessedIndex, variables, arrays).toInt()
+
                 if (!arrays.containsKey(name)) {
                     throw Exception("$operator does not exist")
                 }
-                val op = arrays[name]!![evaluateExpression(index, variables, arrays).toInt()]
-                stack.addLast(op)
+
+                val op = arrays[name]
+                if (op!!.size < index) {
+                    throw Exception("Array index out of range: $index")
+                }
+
+                stack.addLast(op[index])
 
                 continue
             }
@@ -141,14 +150,16 @@ object Arifmetics {
 
             val b = stack.removeLast()
 
-            stack.addLast(when (op) {
-                PLUS -> b + a
-                MINUS -> b - a
-                FRACTION -> b / a
-                MULTIPLY -> b * a
-                MOD -> b % a
-                else -> throw Exception("$operator is not an operator")
-            })
+            stack.addLast(
+                when (op) {
+                    PLUS -> b + a
+                    MINUS -> b - a
+                    FRACTION -> b / a
+                    MULTIPLY -> b * a
+                    MOD -> b % a
+                    else -> throw Exception("$operator is not an operator")
+                }
+            )
 
         }
 
