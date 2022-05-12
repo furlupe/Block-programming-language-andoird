@@ -4,13 +4,13 @@ package com.example.codeblocks.model
 // которая содержит в себе работу с textView из activity_main.xml
 class Print(
     _showText: (toPrint: String, end: String) -> Unit,
-    _toPrint: String,
+    _toPrint: String = "",
     _end: String = " "
 ) : Command {
 
     override var name = ""
 
-    private val toPrint = _toPrint.split("\\s*,\\s*".toRegex())
+    var toPrint = _toPrint.split("\\s*,\\s*".toRegex())
     private val end = _end
     private val showText: (toPrint: String, end: String) -> Unit = _showText
 
