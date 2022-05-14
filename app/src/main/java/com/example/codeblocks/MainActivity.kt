@@ -8,10 +8,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.PopupMenu
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -21,6 +18,7 @@ import androidx.navigation.ui.navigateUp
 import com.example.codeblocks.databinding.*
 import com.example.codeblocks.model.*
 import com.example.codeblocks.views.blocks.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 
 const val PADDING = 110
@@ -31,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     var code: MutableList<Command> = mutableListOf()
 
     val toPrintFunction = { toPrint: String, end: String ->
-        val tv: TextView = findViewById(R.id.textView)
+        val tv: TextView = findViewById(R.id.print)
 
         var output = tv.text.toString()
         output += "$toPrint$end"
@@ -63,6 +61,13 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val console = findViewById<FrameLayout>(R.id.console)
+
+        BottomSheetBehavior.from(console).apply {
+            peekHeight = 70
+            this.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -106,13 +111,16 @@ class MainActivity : AppCompatActivity() {
                 /* val op = If("a", "<", "b", mutableListOf())
                 code.add( op )
                 op.addCommandInside( Create("c", "15") ) */ // --> вот так добавлять команды в внутр. блоки
-
+                val print: TextView = findViewById(R.id.print)
+                print.text = ""
                 Interpretator.run(code)
             }
             R.id.action_clear -> {
                 val container = findViewById<LinearLayout>(R.id.container)
                 code.clear()
                 container.removeAllViews()
+                val print: TextView = findViewById(R.id.print)
+                print.text = ""
             }
         }
         return super.onOptionsItemSelected(item)
