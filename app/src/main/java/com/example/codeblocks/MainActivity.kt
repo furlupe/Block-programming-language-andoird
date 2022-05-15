@@ -23,7 +23,6 @@ import com.google.android.material.navigation.NavigationView
 
 const val PADDING = 110
 
-
 class MainActivity : AppCompatActivity() {
 
     var code: MutableList<Command> = mutableListOf()
@@ -223,10 +222,13 @@ class MainActivity : AppCompatActivity() {
         index: Int = -1
     ): Command {
         val view = IfStartView(context)
+        val viewEnd = IfEndView(context)
         view.setPadding(PADDING * multiplier, 0, 0, 0)
+        viewEnd.setPadding(PADDING * multiplier, 0, 0, 0)
 
         val container = findViewById<LinearLayout>(R.id.container)
         container.addView(view, if (index > -1) index else container.childCount)
+        container.addView(viewEnd, if (index > -1) index + 1 else container.childCount)
 
         val operation = If("")
         val binding = IfStartViewBinding.bind(view)
@@ -315,10 +317,13 @@ class MainActivity : AppCompatActivity() {
         index: Int = -1
     ): Command {
         val view = WhileStartView(context)
+        val viewEnd = WhileEndView(context)
         view.setPadding(PADDING * multiplier, 0, 0, 0)
+        viewEnd.setPadding(PADDING * multiplier, 0, 0, 0)
 
         val container = findViewById<LinearLayout>(R.id.container)
         container.addView(view, if (index > -1) index else container.childCount)
+        container.addView(viewEnd, if (index > -1) index + 1 else container.childCount)
 
         val operation = While("")
         val binding = WhileStartViewBinding.bind(view)
@@ -440,6 +445,19 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        binding.printEnd.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                operation.end = binding.printEnd.text.toString()
+            }
+
+        })
+
         return operation
     }
 
@@ -458,8 +476,8 @@ class MainActivity : AppCompatActivity() {
         var len = 0
         for (command in commands) {
             len += 1 + when (command) {
-                is If -> countAmountOfViews(command.insideMainBlock) + countAmountOfViews(command.insideElseBlock) + if (command.elseExists) 1 else 0
-                is While -> countAmountOfViews(command.inside)
+                is If -> 1 + countAmountOfViews(command.insideMainBlock) + countAmountOfViews(command.insideElseBlock) + if (command.elseExists) 1 else 0
+                is While -> 1 + countAmountOfViews(command.inside)
                 else -> 0
             }
         }

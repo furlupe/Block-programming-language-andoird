@@ -11,7 +11,7 @@ class Print(
     override var name = ""
 
     var toPrint = _toPrint.split("\\s*,\\s*".toRegex())
-    private val end = _end
+    var end = _end
     private val showText: (toPrint: String, end: String) -> Unit = _showText
 
     override fun execute(

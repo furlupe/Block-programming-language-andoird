@@ -36,4 +36,5 @@
     <string name="array">Array</string>
     <string name="input">Input</string>
     <string name="print">Print</string>
+    <string name="end">End</string>
 </resources>

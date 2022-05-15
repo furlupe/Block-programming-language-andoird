@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import com.example.codeblocks.databinding.IfEndViewBinding
 import com.example.codeblocks.databinding.IfStartViewBinding
 
 class IfEndView @JvmOverloads constructor(
@@ -12,5 +13,5 @@ class IfEndView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr){
 
-    private val binding = IfStartViewBinding.inflate(LayoutInflater.from(context), this)
+    private val binding = IfEndViewBinding.inflate(LayoutInflater.from(context), this)
 }
