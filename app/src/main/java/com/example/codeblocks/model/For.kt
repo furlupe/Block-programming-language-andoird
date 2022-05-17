@@ -7,20 +7,12 @@ class For(
     _inside: MutableList<Command> = mutableListOf()
 ) : Command {
     override var name = ""
+    override var pos = 0
 
-    private var before = _before
-    fun addCommandToDoBefore(command: Command) = before.add(command)
-
-    private var condition = _condition
-    fun changeCondition(cond: String) {
-        condition = cond
-    }
-
-    private var eachStep = _eachStep
-    fun addCommandToDoEachStep(command: Command) = eachStep.add(command)
-
-    private var inside = _inside
-    fun addCommandToDoInside(command: Command) = inside.add(command)
+    var before = _before
+    var condition = _condition
+    var eachStep = _eachStep
+    var inside = _inside
 
     override fun execute(
         _variables: MutableMap<String, Double>,

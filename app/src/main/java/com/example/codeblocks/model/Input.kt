@@ -5,6 +5,7 @@ package com.example.codeblocks.model
 class Input(_toInput: String = "", _inputText: () -> String) : Command {
 
     override var name = ""
+    override var pos = 0
 
     private val variableRegex = "^[a-zA-Z][a-zA-Z0-9]*".toRegex()
     private val arrayRegex = "^($variableRegex)\\[(.+)]".toRegex()
@@ -19,11 +20,11 @@ class Input(_toInput: String = "", _inputText: () -> String) : Command {
 
         val values = inputText().split("\\s*,\\s*".toRegex())
         if (toInput.count() != values.count() || values.isEmpty())
-            throw Exception("Expected more or less values to input")
+            throw Exception("At: $pos\nExpected more or less values to input")
 
         for(i in 0..toInput.count()) {
             if (toInput[i].matches(variableRegex)) {
-                if (!_variables.containsKey(toInput[i])) throw Exception("Variable doesn't exist!")
+                if (!_variables.containsKey(toInput[i])) throw Exception("At: $pos\nVariable doesn't exist!")
 
                 _variables[toInput[i]] = Arifmetics.evaluateExpression(values[i], _variables, _arrays)
             }

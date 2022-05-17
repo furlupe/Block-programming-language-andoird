@@ -2,35 +2,28 @@ package com.example.codeblocks.model
 
 class MyArray(_name: String = "", _size: String = "", _inside: String = "") : Command {
     override var name = _name
-    var nonProcessedSize = _size
-    var inside = _inside.split("\\s*,\\s*".toRegex())
+    override var pos = 0
 
-    fun changeName(_name: String) {
-        name = _name
-    }
-
-    fun changeSize(_size: String){
-        nonProcessedSize = _size
-    }
-
-    fun changeInside(_inside: String){
-        inside = _inside.split("\\s*,\\s*".toRegex())
-    }
-
-
-    var size = 0
+    var size = _size
+    var inside = _inside
 
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ){
-        size = Arifmetics.evaluateExpression(nonProcessedSize, _variables, _arrays).toInt()
+        val prSize = Arifmetics.evaluateExpression(size, _variables, _arrays).toInt()
+        val prInside = inside.split("\\s*,\\s*".toRegex())
 
-        if (_arrays.containsKey(name)) throw Exception("Variable doesn't exist!")
-        if (inside.count() != size) throw Exception("Item's amount do not match the size!")
+        when (name) {
+            in _variables, in _arrays -> throw Exception("At: $pos\nVariable already exists!")
+            "" -> throw Exception("At: $pos\nEmpty name")
+        }
+
+        if (prInside.count() != prSize)
+            throw Exception("At: $pos\nItem's amount do not match the size!")
 
         _arrays[name] = mutableListOf()
-        for (v in inside) {
+        for (v in prInside) {
             _arrays[name]!!.add(Arifmetics.evaluateExpression(v, _variables, _arrays))
         }
     }

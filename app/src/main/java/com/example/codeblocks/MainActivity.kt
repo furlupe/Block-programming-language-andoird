@@ -1,7 +1,6 @@
 package com.example.codeblocks
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -10,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -31,25 +31,9 @@ class MainActivity : AppCompatActivity() {
         val tv: TextView = findViewById(R.id.print)
 
         var output = tv.text.toString()
-        output += "$toPrint$end"
+        output += toPrint + (end.ifEmpty { "\n" })
 
         tv.text = output
-    }
-
-    @SuppressLint("InflateParams")
-    val toInputFunction = {
-        val view = layoutInflater.inflate(R.layout.input_dialog, null, false)
-        val binding = InputDialogBinding.bind(view)
-
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Input your value")
-        builder.setView(view)
-
-        var _input = ""
-        builder.setPositiveButton("Send") { _, _ -> _input = binding.input.text.toString() }
-
-        builder.show()
-        _input
     }
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -109,19 +93,29 @@ class MainActivity : AppCompatActivity() {
         }
         when (item.itemId) {
             R.id.action_run -> {
-                /* val op = If("a", "<", "b", mutableListOf())
-                code.add( op )
-                op.addCommandInside( Create("c", "15") ) */ // --> вот так добавлять команды в внутр. блоки
                 val print: TextView = findViewById(R.id.print)
                 print.text = ""
-                Interpretator.run(code)
+
+                try {
+                    Interpretator.run(code)
+                } catch (e: Exception) {
+                    val errorBuilder = AlertDialog.Builder(this)
+                    errorBuilder.setTitle("Error occurred")
+                        .setMessage(e.message)
+                        .setPositiveButton("OK") {_, _ -> Unit}
+                        .show()
+                }
+
+                Interpretator.cleanse()
             }
             R.id.action_clear -> {
                 val container = findViewById<LinearLayout>(R.id.container)
-                code.clear()
                 container.removeAllViews()
+
                 val print: TextView = findViewById(R.id.print)
                 print.text = ""
+
+                code.clear()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -154,7 +148,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                operation.assignName(binding.variableName.text.toString())
+                operation.name = binding.variableName.text.toString()
             }
 
         })
@@ -166,11 +160,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                operation.assignValue(binding.variableValue.text.toString())
+                operation.value = binding.variableValue.text.toString()
             }
 
         })
 
+        operation.pos = container.indexOfChild(view)
         return operation
     }
 
@@ -196,7 +191,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                operation.assignName(binding.variableName.text.toString())
+                operation.name = binding.variableName.text.toString()
             }
 
         })
@@ -208,11 +203,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                operation.assignValue(binding.variableValue.text.toString())
+                operation.value = binding.variableValue.text.toString()
             }
 
         })
 
+        operation.pos = container.indexOfChild(view)
         return operation
     }
 
@@ -222,8 +218,9 @@ class MainActivity : AppCompatActivity() {
         index: Int = -1
     ): Command {
         val view = IfStartView(context)
-        val viewEnd = IfEndView(context)
         view.setPadding(PADDING * multiplier, 0, 0, 0)
+
+        val viewEnd = IfEndView(context)
         viewEnd.setPadding(PADDING * multiplier, 0, 0, 0)
 
         val container = findViewById<LinearLayout>(R.id.container)
@@ -240,7 +237,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                operation.changeCondition(binding.condition.text.toString())
+                operation.condition = binding.condition.text.toString()
             }
 
         })
@@ -252,16 +249,18 @@ class MainActivity : AppCompatActivity() {
         popup.setOnMenuItemClickListener {
 
             if (it.itemId == R.id.else_block) {
-                operation.elseExists = true
-                addElseToIf(
-                    this,
-                    operation,
-                    multiplier,
-                    container.indexOfChild(view) + countAmountOfViews(operation.insideMainBlock) + 1
-                )
+                if (!operation.elseExists) {
+                    operation.elseExists = true
+                    addElseToIf(
+                        this,
+                        operation,
+                        multiplier,
+                        container.indexOfChild(view) + countAmountOfViews(operation.insideMainBlock) + 1
+                    )
+                }
 
             } else {
-                operation.addCommandInsideMainBlock(
+                operation.insideMainBlock.add(
                     whichCommandToAdd(
                         it,
                         this,
@@ -277,6 +276,7 @@ class MainActivity : AppCompatActivity() {
             popup.show()
         }
 
+        operation.pos = container.indexOfChild(view)
         return operation
     }
 
@@ -295,7 +295,7 @@ class MainActivity : AppCompatActivity() {
         popupMenuElse.inflate(R.menu.menu_blocks_plus)
         popupMenuElse.setOnMenuItemClickListener {
 
-            myIf.addCommandInsideElseBlock(
+            myIf.insideElseBlock.add(
                 whichCommandToAdd(
                     it,
                     this,
@@ -317,8 +317,9 @@ class MainActivity : AppCompatActivity() {
         index: Int = -1
     ): Command {
         val view = WhileStartView(context)
-        val viewEnd = WhileEndView(context)
         view.setPadding(PADDING * multiplier, 0, 0, 0)
+
+        val viewEnd = WhileEndView(context)
         viewEnd.setPadding(PADDING * multiplier, 0, 0, 0)
 
         val container = findViewById<LinearLayout>(R.id.container)
@@ -335,7 +336,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                operation.changeCondition(binding.condition.text.toString())
+                operation.condition = binding.condition.text.toString()
             }
 
         })
@@ -346,7 +347,7 @@ class MainActivity : AppCompatActivity() {
         popup.inflate(R.menu.menu_blocks_plus)
         popup.setOnMenuItemClickListener {
 
-            operation.addCommandInside(
+            operation.inside.add(
                 whichCommandToAdd(
                     it,
                     this,
@@ -361,6 +362,7 @@ class MainActivity : AppCompatActivity() {
             popup.show()
         }
 
+        operation.pos = container.indexOfChild(view)
         return operation
     }
 
@@ -385,7 +387,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                operation.changeName(binding.arrayName.text.toString())
+                operation.name = binding.arrayName.text.toString()
             }
 
         })
@@ -398,7 +400,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                operation.changeSize(binding.size.text.toString())
+                operation.size = binding.size.text.toString()
             }
 
         })
@@ -411,11 +413,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                operation.changeInside(binding.arrayValue.text.toString())
+                operation.inside = binding.arrayValue.text.toString()
             }
 
         })
 
+        operation.pos = container.indexOfChild(view)
         return operation
     }
 
@@ -440,7 +443,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                operation.toPrint = binding.printTo.text.toString().split("\\s*,\\s*".toRegex())
+                operation.print = binding.printTo.text.toString()
             }
 
         })
@@ -458,6 +461,7 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        operation.pos = container.indexOfChild(view)
         return operation
     }
 
@@ -476,7 +480,9 @@ class MainActivity : AppCompatActivity() {
         var len = 0
         for (command in commands) {
             len += 1 + when (command) {
-                is If -> 1 + countAmountOfViews(command.insideMainBlock) + countAmountOfViews(command.insideElseBlock) + if (command.elseExists) 1 else 0
+                is If -> 1 + countAmountOfViews(command.insideMainBlock) + countAmountOfViews(
+                    command.insideElseBlock
+                ) + if (command.elseExists) 1 else 0
                 is While -> 1 + countAmountOfViews(command.inside)
                 else -> 0
             }

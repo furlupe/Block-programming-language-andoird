@@ -5,12 +5,13 @@ package com.example.codeblocks.model
 class Print(
     _showText: (toPrint: String, end: String) -> Unit,
     _toPrint: String = "",
-    _end: String = " "
+    _end: String = "\n"
 ) : Command {
 
     override var name = ""
+    override var pos = 0
 
-    var toPrint = _toPrint.split("\\s*,\\s*".toRegex())
+    var print = _toPrint
     var end = _end
     private val showText: (toPrint: String, end: String) -> Unit = _showText
 
@@ -18,15 +19,11 @@ class Print(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ) {
-
-        // проверяем, является ли переданное значени строкой ("что-то" или 'что-то')
+        val toPrint = print.split("\\s*,\\s*".toRegex())
         for (out in toPrint) {
             if (out.matches("^(?:\"(?=.*\")|\'(?=.*\')).*".toRegex())) {
-                // ...то вывести ее без кавычек
                 showText(out.substring(1, out.length - 1), end)
-                // иначе нам передали либо переменную, либо ариф. выражение, либо неправильную строку
             } else {
-                // если есть, то выводим ее значение
                 showText(Arifmetics.evaluateExpression(out, _variables, _arrays).toString(), end)
             }
         }

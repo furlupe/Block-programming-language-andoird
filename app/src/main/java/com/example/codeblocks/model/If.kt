@@ -8,29 +8,20 @@ open class If(
     Command {
 
     override var name = ""
+    override var pos = 0
 
     var elseExists = false
 
     val insideMainBlock = _commands
     val insideElseBlock = _else
-    private var condition = _condition
-
-    fun addCommandInsideMainBlock(_command: Command) {
-        insideMainBlock.add(_command)
-    }
-
-    fun addCommandInsideElseBlock(_command: Command) {
-        insideElseBlock.add(_command)
-    }
-
-    fun changeCondition(_condition: String) {
-        condition = _condition
-    }
+    var condition = _condition
 
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
     ){
+
+        if(condition.isEmpty()) throw Exception("At: $pos\nEmpty condition for If")
 
         val toExecute = if (LogicalArifmetic.evalWhole(
                 condition,
