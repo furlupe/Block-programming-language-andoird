@@ -15,7 +15,7 @@ class MyArray(_name: String = "", _size: String = "", _inside: String = "") : Co
         val prInside = inside.split("\\s*,\\s*".toRegex())
 
         when (name) {
-            in _variables, in _arrays -> throw Exception("At: $pos\nVariable already exists!")
+            in _variables, in _arrays -> throw Exception("At: $pos\n$name already exists!")
             "" -> throw Exception("At: $pos\nEmpty name")
         }
 

@@ -12,7 +12,7 @@ class Variable(_name: String, _value: String = "0") : Command {
     ){
 
         when(name) {
-            in _variables, in _arrays -> throw Exception("At: $pos\nVariable already exists!")
+            in _variables, in _arrays -> throw Exception("At: $pos\n$name already exists")
             "" -> throw Exception("At: $pos\nEmpty name")
         }
 
