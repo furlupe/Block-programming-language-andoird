@@ -260,7 +260,8 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        val inner_container = findViewById<DragLinearLayout>(R.id.if_container)
+        val inner_container = binding.ifContainer
+//        val inner_container = findViewById<DragLinearLayout>(R.id.if_container)
         val addCommand: Button = binding.ifPlusCommand
 
         val popup = PopupMenu(context, addCommand)
@@ -317,7 +318,8 @@ class MainActivity : AppCompatActivity() {
 
         val addCommand: Button = binding.elsePlusCommand
 
-        val inner_container = findViewById<DragLinearLayout>(R.id.else_container)
+        val inner_container = binding.elseContainer
+//        val inner_container = findViewById<DragLinearLayout>(R.id.else_container)
 
         val popupMenuElse = PopupMenu(context, addCommand)
         popupMenuElse.inflate(R.menu.menu_blocks_plus)
@@ -378,7 +380,8 @@ class MainActivity : AppCompatActivity() {
         })
 
         val addCommand: Button = binding.whilePlusCommand
-        val inner_container = findViewById<DragLinearLayout>(R.id.while_container)
+//        val inner_container = findViewById<DragLinearLayout>(R.id.while_container)
+        val inner_container = binding.whileContainer
 
         val popup = PopupMenu(context, addCommand)
         popup.inflate(R.menu.menu_blocks_plus)
