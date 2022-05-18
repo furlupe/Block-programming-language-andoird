@@ -5,7 +5,8 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -106,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                     val errorBuilder = AlertDialog.Builder(this)
                     errorBuilder.setTitle("Error occurred")
                         .setMessage(e.message)
-                        .setPositiveButton("OK") {_, _ -> Unit}
+                        .setPositiveButton("OK") { _, _ -> Unit }
                         .show()
                 }
 
@@ -138,15 +139,17 @@ class MainActivity : AppCompatActivity() {
         container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = CreateVariableView(context)
-//        view.setPadding(PADDING * multiplier, 0, 0, 0)
 
-//        val container = findViewById<DragLinearLayout>(R.id.container)
-//        container.addView(view, if (index > -1) index else container.childCount)
         container.addView(view)
         container.setViewDraggable(view, view)
 
         val operation = Variable("")
         val binding = CreateVariableViewBinding.bind(view)
+
+        container.setOnViewSwapListener { _, _, _, secondPosition ->
+            code.remove(operation)
+            code.add(secondPosition, operation)
+        }
 
         binding.variableName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -184,15 +187,17 @@ class MainActivity : AppCompatActivity() {
         container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = AssignVariableView(context)
-//        view.setPadding(PADDING * multiplier, 0, 0, 0)
-//
-//        val container = findViewById<DragLinearLayout>(R.id.container)
-//        container.addView(view, if (index > -1) index else container.childCount)
+
         container.addView(view)
         container.setViewDraggable(view, view)
 
         val operation = Assign("", "")
         val binding = AssignVariableViewBinding.bind(view)
+
+        container.setOnViewSwapListener { _, _, _, secondPosition ->
+            code.remove(operation)
+            code.add(secondPosition, operation)
+        }
 
         binding.variableName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -231,19 +236,17 @@ class MainActivity : AppCompatActivity() {
     ): Command {
         val view = IfStartView(context)
 
-//        view.setPadding(PADDING * multiplier, 0, 0, 0)
-//
-//        val viewEnd = IfEndView(context)
-//        viewEnd.setPadding(PADDING * multiplier, 0, 0, 0)
-//
-//        val container = findViewById<LinearLayout>(R.id.container)
-//        container.addView(view, if (index > -1) index else container.childCount)
-//        container.addView(viewEnd, if (index > -1) index + 1 else container.childCount)
         container.addView(view)
         container.setViewDraggable(view, view)
 
         val operation = If("")
         val binding = IfStartViewBinding.bind(view)
+
+        container.setOnViewSwapListener { _, _, _, secondPosition ->
+            code.remove(operation)
+            code.add(secondPosition, operation)
+        }
+
         binding.condition.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -261,6 +264,7 @@ class MainActivity : AppCompatActivity() {
         val addCommand: Button = binding.ifPlusCommand
 
         val popup = PopupMenu(context, addCommand)
+
         popup.inflate(R.menu.menu_plus_command_if)
         popup.setOnMenuItemClickListener {
 
@@ -276,15 +280,20 @@ class MainActivity : AppCompatActivity() {
                 }
 
             } else {
-                operation.insideMainBlock.add(
-                    whichCommandToAdd(
-                        it,
-                        this,
-                        multiplier,
-                        container.indexOfChild(view) + countAmountOfViews(operation.insideMainBlock) + 1,
-                        inner_container
-                    )
+                val op = whichCommandToAdd(
+                    it,
+                    this,
+                    multiplier,
+                    container.indexOfChild(view) + countAmountOfViews(operation.insideMainBlock) + 1,
+                    inner_container
                 )
+
+                inner_container.setOnViewSwapListener { _, _, _, secondPosition ->
+                    operation.insideMainBlock.remove(op)
+                    operation.insideMainBlock.add(secondPosition, op)
+                }
+
+                operation.insideMainBlock.add(op)
             }
             true
         }
@@ -297,13 +306,11 @@ class MainActivity : AppCompatActivity() {
         return operation
     }
 
-    private fun addElseToIf(context: Context, myIf: If, multiplier: Int = 0, index: Int = -1,
-                            container: DragLinearLayout = findViewById(R.id.if_container)) {
+    private fun addElseToIf(
+        context: Context, myIf: If, multiplier: Int = 0, index: Int = -1,
+        container: DragLinearLayout = findViewById(R.id.if_container)
+    ) {
         val view = IfElseView(context)
-//        view.setPadding(PADDING * multiplier, 0, 0, 0)
-
-//        val container = findViewById<LinearLayout>(R.id.container)
-//        container.addView(view, if (index > -1) index else container.childCount)
         container.addView(view)
         container.setViewDraggable(view, view)
 
@@ -317,15 +324,20 @@ class MainActivity : AppCompatActivity() {
         popupMenuElse.inflate(R.menu.menu_blocks_plus)
         popupMenuElse.setOnMenuItemClickListener {
 
-            myIf.insideElseBlock.add(
-                whichCommandToAdd(
-                    it,
-                    this,
-                    multiplier,
-                    container.indexOfChild(view) + 1,
-                    inner_container
-                )
+            val op = whichCommandToAdd(
+                it,
+                this,
+                multiplier,
+                container.indexOfChild(view) + 1,
+                inner_container
             )
+
+            container.setOnViewSwapListener { _, _, _, secondPosition ->
+                myIf.insideElseBlock.remove(op)
+                myIf.insideElseBlock.add(secondPosition, op)
+            }
+
+            myIf.insideElseBlock.add(op)
             true
         }
 
@@ -341,17 +353,18 @@ class MainActivity : AppCompatActivity() {
         container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = WhileStartView(context)
-//        val viewEnd = WhileEndView(context)
-//        viewEnd.setPadding(PADDING * multiplier, 0, 0, 0)
-//
-//        val container = findViewById<LinearLayout>(R.id.container)
-//        container.addView(view, if (index > -1) index else container.childCount)
-//        container.addView(viewEnd, if (index > -1) index + 1 else container.childCount)
+
         container.addView(view)
         container.setViewDraggable(view, view)
 
         val operation = While("")
         val binding = WhileStartViewBinding.bind(view)
+
+        container.setOnViewSwapListener { _, _, _, secondPosition ->
+            code.remove(operation)
+            code.add(secondPosition, operation)
+        }
+
         binding.condition.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -372,15 +385,21 @@ class MainActivity : AppCompatActivity() {
         popup.inflate(R.menu.menu_blocks_plus)
         popup.setOnMenuItemClickListener {
 
-            operation.inside.add(
-                whichCommandToAdd(
-                    it,
-                    this,
-                    multiplier,
-                    container.indexOfChild(view) + countAmountOfViews(operation.inside) + 1,
-                    inner_container
-                )
+            val op = whichCommandToAdd(
+                it,
+                this,
+                multiplier,
+                container.indexOfChild(view) + countAmountOfViews(operation.inside) + 1,
+                inner_container
             )
+
+            inner_container.setOnViewSwapListener { _, _, _, secondPosition ->
+                operation.inside.remove(op)
+                operation.inside.add(secondPosition, op)
+            }
+
+            operation.inside.add(op)
+
             true
         }
 
@@ -399,15 +418,17 @@ class MainActivity : AppCompatActivity() {
         container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = ArrayView(context)
-//        view.setPadding(PADDING * multiplier, 0, 0, 0)
-//
-//        val container = findViewById<LinearLayout>(R.id.container)
-//        container.addView(view, if (index > -1) index else container.childCount)
         container.addView(view)
         container.setViewDraggable(view, view)
 
         val operation = MyArray("")
         val binding = ArrayViewBinding.bind(view)
+
+        container.setOnViewSwapListener { _, _, _, secondPosition ->
+            code.remove(operation)
+            code.add(secondPosition, operation)
+        }
+
         binding.arrayName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -451,7 +472,7 @@ class MainActivity : AppCompatActivity() {
         return operation
     }
 
-//какая-то фигня с добавлением блока принта на экран
+    //какая-то фигня с добавлением блока принта на экран
 //добавляешь и область взаимодействия с остальными увеличивается..
     fun addPrintBlock(
         context: Context,
@@ -460,15 +481,16 @@ class MainActivity : AppCompatActivity() {
         container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = PrintView(context)
-//        view.setPadding(PADDING * multiplier, 0, 0, 0)
-//
-//        val container = findViewById<LinearLayout>(R.id.container)
-//        container.addView(view, if (index > -1) index else container.childCount)
         container.addView(view)
         container.setViewDraggable(view, view)
 
         val operation = Print(toPrintFunction)
         val binding = PrintViewBinding.bind(view)
+
+        container.setOnViewSwapListener { _, _, _, secondPosition ->
+            code.remove(operation)
+            code.add(secondPosition, operation)
+        }
 
         binding.printTo.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -500,7 +522,13 @@ class MainActivity : AppCompatActivity() {
         return operation
     }
 
-    private fun whichCommandToAdd(it: MenuItem, context: Context, m: Int = 0, index: Int, container: DragLinearLayout) =
+    private fun whichCommandToAdd(
+        it: MenuItem,
+        context: Context,
+        m: Int = 0,
+        index: Int,
+        container: DragLinearLayout
+    ) =
         when (it.itemId) {
             R.id.create_var -> addCreateVariableBlock(context, m + 1, index, container)
             R.id.assign_var -> addAssignVariableBlock(context, m + 1, index, container)
