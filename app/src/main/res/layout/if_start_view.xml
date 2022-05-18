@@ -53,6 +53,11 @@
 
         </com.jmedeisis.draglinearlayout.DragLinearLayout>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/if_for_else_container" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

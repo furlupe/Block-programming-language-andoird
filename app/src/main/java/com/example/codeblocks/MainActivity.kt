@@ -308,11 +308,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun addElseToIf(
         context: Context, myIf: If, multiplier: Int = 0, index: Int = -1,
-        container: DragLinearLayout = findViewById(R.id.if_container)
+        container: RelativeLayout = findViewById(R.id.if_for_else_container)
     ) {
         val view = IfElseView(context)
         container.addView(view)
-        container.setViewDraggable(view, view)
 
         val binding = IfElseViewBinding.bind(view)
 
@@ -332,7 +331,7 @@ class MainActivity : AppCompatActivity() {
                 inner_container
             )
 
-            container.setOnViewSwapListener { _, _, _, secondPosition ->
+            inner_container.setOnViewSwapListener { _, _, _, secondPosition ->
                 myIf.insideElseBlock.remove(op)
                 myIf.insideElseBlock.add(secondPosition, op)
             }
