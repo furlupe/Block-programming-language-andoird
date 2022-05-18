@@ -5,8 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -20,6 +19,7 @@ import com.example.codeblocks.model.*
 import com.example.codeblocks.views.blocks.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
+import com.jmedeisis.draglinearlayout.DragLinearLayout
 
 const val PADDING = 110
 
@@ -79,6 +79,10 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+        val container = findViewById<DragLinearLayout>(R.id.container)
+        val scroll = findViewById<ScrollView>(R.id.scroll_view)
+        container.setContainerScrollView(scroll)
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -126,16 +130,20 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    @SuppressLint("WrongViewCast")
     private fun addCreateVariableBlock(
         context: Context,
         multiplier: Int = 0,
-        index: Int = -1
+        index: Int = -1,
+        container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = CreateVariableView(context)
-        view.setPadding(PADDING * multiplier, 0, 0, 0)
+//        view.setPadding(PADDING * multiplier, 0, 0, 0)
 
-        val container = findViewById<LinearLayout>(R.id.container)
-        container.addView(view, if (index > -1) index else container.childCount)
+//        val container = findViewById<DragLinearLayout>(R.id.container)
+//        container.addView(view, if (index > -1) index else container.childCount)
+        container.addView(view)
+        container.setViewDraggable(view, view)
 
         val operation = Variable("")
         val binding = CreateVariableViewBinding.bind(view)
@@ -172,13 +180,16 @@ class MainActivity : AppCompatActivity() {
     private fun addAssignVariableBlock(
         context: Context,
         multiplier: Int = 0,
-        index: Int = -1
+        index: Int = -1,
+        container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = AssignVariableView(context)
-        view.setPadding(PADDING * multiplier, 0, 0, 0)
-
-        val container = findViewById<LinearLayout>(R.id.container)
-        container.addView(view, if (index > -1) index else container.childCount)
+//        view.setPadding(PADDING * multiplier, 0, 0, 0)
+//
+//        val container = findViewById<DragLinearLayout>(R.id.container)
+//        container.addView(view, if (index > -1) index else container.childCount)
+        container.addView(view)
+        container.setViewDraggable(view, view)
 
         val operation = Assign("", "")
         val binding = AssignVariableViewBinding.bind(view)
@@ -215,17 +226,21 @@ class MainActivity : AppCompatActivity() {
     private fun addIfBlock(
         context: Context,
         multiplier: Int = 0,
-        index: Int = -1
+        index: Int = -1,
+        container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = IfStartView(context)
-        view.setPadding(PADDING * multiplier, 0, 0, 0)
 
-        val viewEnd = IfEndView(context)
-        viewEnd.setPadding(PADDING * multiplier, 0, 0, 0)
-
-        val container = findViewById<LinearLayout>(R.id.container)
-        container.addView(view, if (index > -1) index else container.childCount)
-        container.addView(viewEnd, if (index > -1) index + 1 else container.childCount)
+//        view.setPadding(PADDING * multiplier, 0, 0, 0)
+//
+//        val viewEnd = IfEndView(context)
+//        viewEnd.setPadding(PADDING * multiplier, 0, 0, 0)
+//
+//        val container = findViewById<LinearLayout>(R.id.container)
+//        container.addView(view, if (index > -1) index else container.childCount)
+//        container.addView(viewEnd, if (index > -1) index + 1 else container.childCount)
+        container.addView(view)
+        container.setViewDraggable(view, view)
 
         val operation = If("")
         val binding = IfStartViewBinding.bind(view)
@@ -242,6 +257,7 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        val inner_container = findViewById<DragLinearLayout>(R.id.if_container)
         val addCommand: Button = binding.ifPlusCommand
 
         val popup = PopupMenu(context, addCommand)
@@ -265,7 +281,8 @@ class MainActivity : AppCompatActivity() {
                         it,
                         this,
                         multiplier,
-                        container.indexOfChild(view) + countAmountOfViews(operation.insideMainBlock) + 1
+                        container.indexOfChild(view) + countAmountOfViews(operation.insideMainBlock) + 1,
+                        inner_container
                     )
                 )
             }
@@ -280,16 +297,21 @@ class MainActivity : AppCompatActivity() {
         return operation
     }
 
-    private fun addElseToIf(context: Context, myIf: If, multiplier: Int = 0, index: Int = -1) {
+    private fun addElseToIf(context: Context, myIf: If, multiplier: Int = 0, index: Int = -1,
+                            container: DragLinearLayout = findViewById(R.id.if_container)) {
         val view = IfElseView(context)
-        view.setPadding(PADDING * multiplier, 0, 0, 0)
+//        view.setPadding(PADDING * multiplier, 0, 0, 0)
 
-        val container = findViewById<LinearLayout>(R.id.container)
-        container.addView(view, if (index > -1) index else container.childCount)
+//        val container = findViewById<LinearLayout>(R.id.container)
+//        container.addView(view, if (index > -1) index else container.childCount)
+        container.addView(view)
+        container.setViewDraggable(view, view)
 
         val binding = IfElseViewBinding.bind(view)
 
         val addCommand: Button = binding.elsePlusCommand
+
+        val inner_container = findViewById<DragLinearLayout>(R.id.else_container)
 
         val popupMenuElse = PopupMenu(context, addCommand)
         popupMenuElse.inflate(R.menu.menu_blocks_plus)
@@ -300,7 +322,8 @@ class MainActivity : AppCompatActivity() {
                     it,
                     this,
                     multiplier,
-                    container.indexOfChild(view) + 1
+                    container.indexOfChild(view) + 1,
+                    inner_container
                 )
             )
             true
@@ -314,17 +337,18 @@ class MainActivity : AppCompatActivity() {
     fun addWhileBlock(
         context: Context,
         multiplier: Int = 0,
-        index: Int = -1
+        index: Int = -1,
+        container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = WhileStartView(context)
-        view.setPadding(PADDING * multiplier, 0, 0, 0)
-
-        val viewEnd = WhileEndView(context)
-        viewEnd.setPadding(PADDING * multiplier, 0, 0, 0)
-
-        val container = findViewById<LinearLayout>(R.id.container)
-        container.addView(view, if (index > -1) index else container.childCount)
-        container.addView(viewEnd, if (index > -1) index + 1 else container.childCount)
+//        val viewEnd = WhileEndView(context)
+//        viewEnd.setPadding(PADDING * multiplier, 0, 0, 0)
+//
+//        val container = findViewById<LinearLayout>(R.id.container)
+//        container.addView(view, if (index > -1) index else container.childCount)
+//        container.addView(viewEnd, if (index > -1) index + 1 else container.childCount)
+        container.addView(view)
+        container.setViewDraggable(view, view)
 
         val operation = While("")
         val binding = WhileStartViewBinding.bind(view)
@@ -342,6 +366,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         val addCommand: Button = binding.whilePlusCommand
+        val inner_container = findViewById<DragLinearLayout>(R.id.while_container)
 
         val popup = PopupMenu(context, addCommand)
         popup.inflate(R.menu.menu_blocks_plus)
@@ -352,7 +377,8 @@ class MainActivity : AppCompatActivity() {
                     it,
                     this,
                     multiplier,
-                    container.indexOfChild(view) + countAmountOfViews(operation.inside) + 1
+                    container.indexOfChild(view) + countAmountOfViews(operation.inside) + 1,
+                    inner_container
                 )
             )
             true
@@ -369,13 +395,16 @@ class MainActivity : AppCompatActivity() {
     fun addArrayBlock(
         context: Context,
         multiplier: Int = 0,
-        index: Int = -1
+        index: Int = -1,
+        container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = ArrayView(context)
-        view.setPadding(PADDING * multiplier, 0, 0, 0)
-
-        val container = findViewById<LinearLayout>(R.id.container)
-        container.addView(view, if (index > -1) index else container.childCount)
+//        view.setPadding(PADDING * multiplier, 0, 0, 0)
+//
+//        val container = findViewById<LinearLayout>(R.id.container)
+//        container.addView(view, if (index > -1) index else container.childCount)
+        container.addView(view)
+        container.setViewDraggable(view, view)
 
         val operation = MyArray("")
         val binding = ArrayViewBinding.bind(view)
@@ -422,19 +451,25 @@ class MainActivity : AppCompatActivity() {
         return operation
     }
 
+//какая-то фигня с добавлением блока принта на экран
+//добавляешь и область взаимодействия с остальными увеличивается..
     fun addPrintBlock(
         context: Context,
         multiplier: Int = 0,
-        index: Int = -1
+        index: Int = -1,
+        container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = PrintView(context)
-        view.setPadding(PADDING * multiplier, 0, 0, 0)
-
-        val container = findViewById<LinearLayout>(R.id.container)
-        container.addView(view, if (index > -1) index else container.childCount)
+//        view.setPadding(PADDING * multiplier, 0, 0, 0)
+//
+//        val container = findViewById<LinearLayout>(R.id.container)
+//        container.addView(view, if (index > -1) index else container.childCount)
+        container.addView(view)
+        container.setViewDraggable(view, view)
 
         val operation = Print(toPrintFunction)
         val binding = PrintViewBinding.bind(view)
+
         binding.printTo.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -465,14 +500,14 @@ class MainActivity : AppCompatActivity() {
         return operation
     }
 
-    private fun whichCommandToAdd(it: MenuItem, context: Context, m: Int = 0, index: Int) =
+    private fun whichCommandToAdd(it: MenuItem, context: Context, m: Int = 0, index: Int, container: DragLinearLayout) =
         when (it.itemId) {
-            R.id.create_var -> addCreateVariableBlock(context, m + 1, index)
-            R.id.assign_var -> addAssignVariableBlock(context, m + 1, index)
-            R.id.if_block -> addIfBlock(context, m + 1, index)
-            R.id.while_block -> addWhileBlock(context, m + 1, index)
-            R.id.array_block -> addArrayBlock(context, m + 1, index)
-            R.id.print_block -> addPrintBlock(context, m + 1, index)
+            R.id.create_var -> addCreateVariableBlock(context, m + 1, index, container)
+            R.id.assign_var -> addAssignVariableBlock(context, m + 1, index, container)
+            R.id.if_block -> addIfBlock(context, m + 1, index, container)
+            R.id.while_block -> addWhileBlock(context, m + 1, index, container)
+            R.id.array_block -> addArrayBlock(context, m + 1, index, container)
+            R.id.print_block -> addPrintBlock(context, m + 1, index, container)
             else -> throw Exception("wtf")
         }
 

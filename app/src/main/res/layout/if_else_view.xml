@@ -4,26 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <ImageView
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_block_else" />
+
+            <Button
+                android:id="@+id/else_plus_command"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_plus_if"
+                android:textColor="#582909"
+                android:text="@string/Plus" />
+        </RelativeLayout>
+
+        <com.jmedeisis.draglinearlayout.DragLinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_block_else" />
+            android:layout_marginStart="40dp"
+            android:id="@+id/else_container">
 
-        <Button
-            android:id="@+id/else_plus_command"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/bg_plus_if"
-            android:textColor="#582909"
-            android:text="@string/Plus" />
-    </RelativeLayout>
+        </com.jmedeisis.draglinearlayout.DragLinearLayout>
+
+    </LinearLayout>
 
 </merge>
