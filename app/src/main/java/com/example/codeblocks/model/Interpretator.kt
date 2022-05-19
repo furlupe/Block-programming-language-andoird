@@ -7,6 +7,7 @@ object Interpretator {
 
     // выполнить код
     fun run(code: MutableList<Command>) {
+        println(code)
         for (command in code) {
             command.execute(variables, arrays)
         }

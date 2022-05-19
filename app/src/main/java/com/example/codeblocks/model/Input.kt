@@ -18,7 +18,7 @@ class Input(_toInput: String = "", _inputText: () -> String) : Command {
         _arrays: MutableMap<String, MutableList<Double>>
     ){
 
-        val values = inputText().split("\\s*,\\s*".toRegex())
+        /*val values = inputText().split("\\s*,\\s*".toRegex())
         if (toInput.count() != values.count() || values.isEmpty())
             throw Exception("At: $pos\nExpected more or less values to input")
 
@@ -35,6 +35,6 @@ class Input(_toInput: String = "", _inputText: () -> String) : Command {
                 _arrays[n]!![Arifmetics.evaluateExpression(index, _variables, _arrays).toInt()] =
                     Arifmetics.evaluateExpression(values[i], _variables, _arrays)
             }
-        }
+        }*/
     }
 }

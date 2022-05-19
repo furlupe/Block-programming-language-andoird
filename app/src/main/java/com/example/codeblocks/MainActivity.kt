@@ -5,12 +5,12 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.motion.widget.OnSwipe
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -22,7 +22,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import com.jmedeisis.draglinearlayout.DragLinearLayout
 
-const val PADDING = 110
 
 class MainActivity : AppCompatActivity() {
 
@@ -107,7 +106,7 @@ class MainActivity : AppCompatActivity() {
                     val errorBuilder = AlertDialog.Builder(this)
                     errorBuilder.setTitle("Error occurred")
                         .setMessage(e.message)
-                        .setPositiveButton("OK") { _, _ -> Unit }
+                        .setPositiveButton("OK") { _, _ -> }
                         .show()
                 }
 
@@ -134,8 +133,6 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("WrongViewCast")
     private fun addCreateVariableBlock(
         context: Context,
-        multiplier: Int = 0,
-        index: Int = -1,
         container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = CreateVariableView(context)
@@ -182,8 +179,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun addAssignVariableBlock(
         context: Context,
-        multiplier: Int = 0,
-        index: Int = -1,
         container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = AssignVariableView(context)
@@ -230,8 +225,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun addIfBlock(
         context: Context,
-        multiplier: Int = 0,
-        index: Int = -1,
         container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = IfStartView(context)
@@ -261,7 +254,6 @@ class MainActivity : AppCompatActivity() {
         })
 
         val inner_container = binding.ifContainer
-//        val inner_container = findViewById<DragLinearLayout>(R.id.if_container)
         val addCommand: Button = binding.ifPlusCommand
 
         val popup = PopupMenu(context, addCommand)
@@ -275,8 +267,6 @@ class MainActivity : AppCompatActivity() {
                     addElseToIf(
                         this,
                         operation,
-                        multiplier,
-                        container.indexOfChild(view) + countAmountOfViews(operation.insideMainBlock) + 1
                     )
                 }
 
@@ -284,8 +274,6 @@ class MainActivity : AppCompatActivity() {
                 val op = whichCommandToAdd(
                     it,
                     this,
-                    multiplier,
-                    container.indexOfChild(view) + countAmountOfViews(operation.insideMainBlock) + 1,
                     inner_container
                 )
 
@@ -308,7 +296,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addElseToIf(
-        context: Context, myIf: If, multiplier: Int = 0, index: Int = -1,
+        context: Context, myIf: If,
         container: RelativeLayout = findViewById(R.id.if_for_else_container)
     ) {
         val view = IfElseView(context)
@@ -319,7 +307,6 @@ class MainActivity : AppCompatActivity() {
         val addCommand: Button = binding.elsePlusCommand
 
         val inner_container = binding.elseContainer
-//        val inner_container = findViewById<DragLinearLayout>(R.id.else_container)
 
         val popupMenuElse = PopupMenu(context, addCommand)
         popupMenuElse.inflate(R.menu.menu_blocks_plus)
@@ -328,8 +315,6 @@ class MainActivity : AppCompatActivity() {
             val op = whichCommandToAdd(
                 it,
                 this,
-                multiplier,
-                container.indexOfChild(view) + 1,
                 inner_container
             )
 
@@ -349,8 +334,6 @@ class MainActivity : AppCompatActivity() {
 
     fun addWhileBlock(
         context: Context,
-        multiplier: Int = 0,
-        index: Int = -1,
         container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = WhileStartView(context)
@@ -380,7 +363,6 @@ class MainActivity : AppCompatActivity() {
         })
 
         val addCommand: Button = binding.whilePlusCommand
-//        val inner_container = findViewById<DragLinearLayout>(R.id.while_container)
         val inner_container = binding.whileContainer
 
         val popup = PopupMenu(context, addCommand)
@@ -390,8 +372,6 @@ class MainActivity : AppCompatActivity() {
             val op = whichCommandToAdd(
                 it,
                 this,
-                multiplier,
-                container.indexOfChild(view) + countAmountOfViews(operation.inside) + 1,
                 inner_container
             )
 
@@ -415,8 +395,6 @@ class MainActivity : AppCompatActivity() {
 
     fun addArrayBlock(
         context: Context,
-        multiplier: Int = 0,
-        index: Int = -1,
         container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = ArrayView(context)
@@ -478,8 +456,6 @@ class MainActivity : AppCompatActivity() {
 //добавляешь и область взаимодействия с остальными увеличивается..
     fun addPrintBlock(
         context: Context,
-        multiplier: Int = 0,
-        index: Int = -1,
         container: DragLinearLayout = findViewById(R.id.container)
     ): Command {
         val view = PrintView(context)
@@ -527,33 +503,16 @@ class MainActivity : AppCompatActivity() {
     private fun whichCommandToAdd(
         it: MenuItem,
         context: Context,
-        m: Int = 0,
-        index: Int,
         container: DragLinearLayout
     ) =
         when (it.itemId) {
-            R.id.create_var -> addCreateVariableBlock(context, m + 1, index, container)
-            R.id.assign_var -> addAssignVariableBlock(context, m + 1, index, container)
-            R.id.if_block -> addIfBlock(context, m + 1, index, container)
-            R.id.while_block -> addWhileBlock(context, m + 1, index, container)
-            R.id.array_block -> addArrayBlock(context, m + 1, index, container)
-            R.id.print_block -> addPrintBlock(context, m + 1, index, container)
+            R.id.create_var -> addCreateVariableBlock(context, container)
+            R.id.assign_var -> addAssignVariableBlock(context, container)
+            R.id.if_block -> addIfBlock(context, container)
+            R.id.while_block -> addWhileBlock(context, container)
+            R.id.array_block -> addArrayBlock(context,  container)
+            R.id.print_block -> addPrintBlock(context, container)
             else -> throw Exception("wtf")
         }
-
-    private fun countAmountOfViews(commands: MutableList<Command>): Int {
-        var len = 0
-        for (command in commands) {
-            len += 1 + when (command) {
-                is If -> 1 + countAmountOfViews(command.insideMainBlock) + countAmountOfViews(
-                    command.insideElseBlock
-                ) + if (command.elseExists) 1 else 0
-                is While -> 1 + countAmountOfViews(command.inside)
-                else -> 0
-            }
-        }
-
-        return len
-    }
 }
 
