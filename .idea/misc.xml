@@ -5,28 +5,31 @@
       <map>
         <entry key="..\:/TSU/proga/modseven/app/src/main/res/drawable/ic_array.xml" value="0.1965" />
         <entry key="..\:/TSU/proga/modseven/app/src/main/res/drawable/ic_create_variable.xml" value="0.1965" />
-        <entry key="..\:/TSU/proga/modseven/app/src/main/res/drawable/ic_else.xml" value="0.1965" />
         <entry key="..\:/TSU/proga/modseven/app/src/main/res/drawable/ic_input.xml" value="0.1965" />
         <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/array_view.xml" value="0.36666666666666664" />
         <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/assign_variable_dialog.xml" value="0.358695652173913" />
         <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/assign_variable_view.xml" value="0.36666666666666664" />
-        <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/console_bottom.xml" value="0.36666666666666664" />
         <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/create_variable_dialog.xml" value="0.5" />
         <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/create_variable_view.xml" value="0.36666666666666664" />
         <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/if_else_view.xml" value="0.36666666666666664" />
-        <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/if_start_view.xml" value="0.17831813576494426" />
-        <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/input_dialog.xml" value="0.36666666666666664" />
-        <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/input_view.xml" value="0.36666666666666664" />
-        <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/print_view.xml" value="0.18802083333333333" />
         <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/scroll_view.xml" value="0.234375" />
         <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/variable_create_dialog.xml" value="0.358695652173913" />
-        <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/while_end_view.xml" value="0.18802083333333333" />
-        <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/while_start_view.xml" value="0.15715579710144928" />
         <entry key="..\:/TSU/proga/modseven/app/src/main/res/layout/workspace_view.xml" value="0.234375" />
-        <entry key="..\:/TSU/proga/modseven/app/src/main/res/menu/main_menu.xml" value="0.36666666666666664" />
-        <entry key="..\:/TSU/proga/modseven/app/src/main/res/menu/menu_blocks_plus.xml" value="0.36666666666666664" />
-        <entry key="..\:/TSU/proga/modseven/app/src/main/res/menu/menu_plus_command_if.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2085" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/drawable/animation.xml" value="0.1395" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/drawable/background_splash.xml" value="0.1395" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/drawable/bg_plus_while.xml" value="0.1395" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/drawable/ic_array.xml" value="0.1395" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/drawable/ic_baseline_horizontal_rule_24.xml" value="0.1395" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2085" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1395" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/drawable/splash.xml" value="0.1395" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/layout/activity_splash.xml" value="0.39861111111111114" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/layout/activity_splash_screen.xml" value="0.39861111111111114" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/layout/array_view.xml" value="0.39207650273224043" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/menu/menu_plus_command_if.xml" value="0.39861111111111114" />
+        <entry key="..\:/Users/SofiKO/Documents/GitHub/moduleseven/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1395" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2945" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/assign_bg.xml" value="0.336" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/bg_console.xml" value="0.3675" />
@@ -43,12 +46,10 @@
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/ic_block_if.xml" value="0.336" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/ic_block_while.xml" value="0.336" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/ic_create_variable.xml" value="0.2945" />
-        <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/ic_else.xml" value="0.2595" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/ic_if_end.xml" value="0.336" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/ic_if_start.xml" value="0.336" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/ic_input.xml" value="0.336" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2945" />
-        <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/ic_new_variable.xml" value="0.2595" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/ic_print.xml" value="0.232" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/layout_bg.xml" value="0.3675" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/drawable/my_button.xml" value="0.3675" />
@@ -60,7 +61,7 @@
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/array_view.xml" value="0.5" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/assign_variable_dialog.xml" value="0.28940217391304346" />
-        <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/assign_variable_view.xml" value="0.5" />
+        <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/assign_variable_view.xml" value="0.33816425120772947" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/assing_view.xml" value="0.36666666666666664" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/block_command_view.xml" value="0.5" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/block_if.xml" value="0.36666666666666664" />
@@ -69,11 +70,11 @@
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/console_bottom.xml" value="0.1" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/content_main.xml" value="0.33" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/create_variable_dialog.xml" value="0.36666666666666664" />
-        <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/create_variable_view.xml" value="0.5" />
+        <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/create_variable_view.xml" value="0.36666666666666664" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/dotted.xml" value="0.36666666666666664" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/if_else_view.xml" value="0.36666666666666664" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/if_end_view.xml" value="0.36666666666666664" />
-        <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/if_start_view.xml" value="0.5" />
+        <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/if_start_view.xml" value="0.36666666666666664" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/input_dialog.xml" value="0.31657608695652173" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/input_view.xml" value="0.67" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/print_view.xml" value="0.67" />
@@ -88,7 +89,7 @@
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/while_start_view.xml" value="0.36666666666666664" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/workspace.xml" value="0.19375" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/layout/workspace_view.xml" value="0.33" />
-        <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/menu/activity_main_drawer.xml" value="0.67" />
+        <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/menu/activity_main_drawer.xml" value="0.22" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/menu/layout_popup_menu.xml" value="0.2984375" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/menu/main_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/gitHIts/Module7/moduleseven/app/src/main/res/menu/menu_blocks_plus.xml" value="0.36666666666666664" />
