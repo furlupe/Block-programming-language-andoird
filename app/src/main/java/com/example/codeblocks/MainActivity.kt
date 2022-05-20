@@ -497,8 +497,6 @@ class MainActivity : AppCompatActivity() {
         return operation
     }
 
-    //какая-то фигня с добавлением блока принта на экран
-//добавляешь и область взаимодействия с остальными увеличивается..
     fun addPrintBlock(
         context: Context,
         container: DragLinearLayout = findViewById(R.id.container),
@@ -541,6 +539,45 @@ class MainActivity : AppCompatActivity() {
 
             override fun afterTextChanged(p0: Editable?) {
                 operation.end = binding.printEnd.text.toString()
+            }
+
+        })
+
+        view.accessory = list
+        operation.pos = container.indexOfChild(view)
+
+        return operation
+    }
+
+    fun addInputBlock(
+        context: Context,
+        container: DragLinearLayout = findViewById(R.id.container),
+        list: MutableList<Command> = code
+    ): Command {
+        val view = InputView(context)
+        container.addView(view)
+        container.setViewDraggable(view, view)
+
+        val operation = view.command
+        val binding = view.binding
+
+        val delete: Button = binding.delete
+        delete.setOnClickListener{
+            container.removeView(view)
+            list.remove(operation)
+        }
+
+        binding.inputTo.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                operation.toInput = binding.inputTo.text.toString()
             }
 
         })

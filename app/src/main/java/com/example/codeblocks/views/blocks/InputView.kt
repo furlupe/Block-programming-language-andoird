@@ -17,7 +17,7 @@ class InputView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr), Block{
 
     override val binding = InputViewBinding.inflate(LayoutInflater.from(context), this)
-    override lateinit var command: Command
+    override val command = Input()
     override var accessory: MutableList<Command> = mutableListOf()
 
 }

@@ -30,6 +30,20 @@
             android:textColor="#582909"
             android:textColorHint="#582909"
             android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="27dp"
+            android:layout_height="68dp"
+            android:layout_marginStart="226.5dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="24dp"
+            android:background="@null"
+            android:rotation="-90"
+            android:textColor="#582909"
+            android:textColorHint="#582909"
+            android:textSize="18sp" />
     </RelativeLayout>
 
 </merge>
