@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity() {
         val operation = Assign("", "")
         val binding = AssignVariableViewBinding.bind(view)
 
-        container.setOnViewSwapListener { _, _, _, secondPosition ->
+        container.setOnViewSwapListener { _, firstPosition, _, secondPosition ->
             code.remove(operation)
             code.add(secondPosition, operation)
         }
