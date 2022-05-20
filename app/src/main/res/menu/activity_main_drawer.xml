@@ -20,6 +20,9 @@
             android:id="@+id/nav_array"
             android:title="@string/array"/>
         <item
+            android:id="@+id/nav_input"
+            android:title="@string/input"/>
+        <item
             android:id="@+id/nav_print"
             android:title="@string/print"/>
     </group>
