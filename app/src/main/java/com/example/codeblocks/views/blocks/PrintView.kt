@@ -17,7 +17,7 @@ class PrintView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr), Block{
 
     override val binding = PrintViewBinding.inflate(LayoutInflater.from(context), this)
-    override var command: Command = Print({_,_ ->})
+    override val command = Print({_,_ ->})
     override var accessory: MutableList<Command> = mutableListOf()
 
 }

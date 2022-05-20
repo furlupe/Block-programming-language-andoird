@@ -17,7 +17,7 @@ class ArrayView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr), Block{
 
     override val binding = ArrayViewBinding.inflate(LayoutInflater.from(context), this)
-    override var command: Command = MyArray()
+    override val command= MyArray()
     override var accessory: MutableList<Command> = mutableListOf()
 
 }

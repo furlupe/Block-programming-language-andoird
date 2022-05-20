@@ -17,7 +17,7 @@ class WhileStartView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr), Block{
 
     override val binding = WhileStartViewBinding.inflate(LayoutInflater.from(context), this)
-    override var command: Command = While("")
+    override val command = While("")
     override var accessory: MutableList<Command> = mutableListOf()
 
 }

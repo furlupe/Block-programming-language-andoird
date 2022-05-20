@@ -5,6 +5,6 @@ import com.example.codeblocks.model.Command
 
 interface Block{
     val binding: ViewBinding
-    var command: Command
+    val command: Command
     var accessory: MutableList<Command>
 }
