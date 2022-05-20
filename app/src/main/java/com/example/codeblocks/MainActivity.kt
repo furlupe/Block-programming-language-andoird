@@ -133,7 +133,8 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("WrongViewCast")
     private fun addCreateVariableBlock(
         context: Context,
-        container: DragLinearLayout = findViewById(R.id.container)
+        container: DragLinearLayout = findViewById(R.id.container),
+        list: MutableList<Command> = code
     ): Command {
         val view = CreateVariableView(context)
 
@@ -146,6 +147,12 @@ class MainActivity : AppCompatActivity() {
         container.setOnViewSwapListener { _, _, _, secondPosition ->
             code.remove(operation)
             code.add(secondPosition, operation)
+        }
+
+        val delete:Button = binding.delete
+        delete.setOnClickListener{
+            container.removeView(view)
+            list.remove(operation)
         }
 
         binding.variableName.addTextChangedListener(object : TextWatcher {
@@ -179,7 +186,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun addAssignVariableBlock(
         context: Context,
-        container: DragLinearLayout = findViewById(R.id.container)
+        container: DragLinearLayout = findViewById(R.id.container),
+        list: MutableList<Command> = code
     ): Command {
         val view = AssignVariableView(context)
 
@@ -192,6 +200,12 @@ class MainActivity : AppCompatActivity() {
         container.setOnViewSwapListener { _, firstPosition, _, secondPosition ->
             code.remove(operation)
             code.add(secondPosition, operation)
+        }
+
+        val delete:Button = binding.delete
+        delete.setOnClickListener{
+            container.removeView(view)
+            list.remove(operation)
         }
 
         binding.variableName.addTextChangedListener(object : TextWatcher {
@@ -225,7 +239,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun addIfBlock(
         context: Context,
-        container: DragLinearLayout = findViewById(R.id.container)
+        container: DragLinearLayout = findViewById(R.id.container),
+        list: MutableList<Command> = code
     ): Command {
         val view = IfStartView(context)
 
@@ -238,6 +253,12 @@ class MainActivity : AppCompatActivity() {
         container.setOnViewSwapListener { _, _, _, secondPosition ->
             code.remove(operation)
             code.add(secondPosition, operation)
+        }
+
+        val delete:Button = binding.delete
+        delete.setOnClickListener{
+            container.removeView(view)
+            list.remove(operation)
         }
 
         binding.condition.addTextChangedListener(object : TextWatcher {
@@ -266,7 +287,7 @@ class MainActivity : AppCompatActivity() {
                     operation.elseExists = true
                     addElseToIf(
                         this,
-                        operation,
+                        operation
                     )
                 }
 
@@ -274,14 +295,14 @@ class MainActivity : AppCompatActivity() {
                 val op = whichCommandToAdd(
                     it,
                     this,
-                    inner_container
+                    inner_container,
+                    operation.insideMainBlock
                 )
 
                 inner_container.setOnViewSwapListener { _, _, _, secondPosition ->
                     operation.insideMainBlock.remove(op)
                     operation.insideMainBlock.add(secondPosition, op)
                 }
-
                 operation.insideMainBlock.add(op)
             }
             true
@@ -297,7 +318,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun addElseToIf(
         context: Context, myIf: If,
-        container: RelativeLayout = findViewById(R.id.if_for_else_container)
+        container: RelativeLayout = findViewById(R.id.if_for_else_container),
+        list: MutableList<Command> = code
     ) {
         val view = IfElseView(context)
         container.addView(view)
@@ -315,12 +337,20 @@ class MainActivity : AppCompatActivity() {
             val op = whichCommandToAdd(
                 it,
                 this,
-                inner_container
+                inner_container,
+                myIf.insideElseBlock
             )
 
             inner_container.setOnViewSwapListener { _, _, _, secondPosition ->
                 myIf.insideElseBlock.remove(op)
                 myIf.insideElseBlock.add(secondPosition, op)
+            }
+
+            val delete:Button = binding.delete
+            delete.setOnClickListener{
+                myIf.elseExists = false
+                container.removeView(view)
+                myIf.insideElseBlock.clear()
             }
 
             myIf.insideElseBlock.add(op)
@@ -334,7 +364,8 @@ class MainActivity : AppCompatActivity() {
 
     fun addWhileBlock(
         context: Context,
-        container: DragLinearLayout = findViewById(R.id.container)
+        container: DragLinearLayout = findViewById(R.id.container),
+        list: MutableList<Command> = code
     ): Command {
         val view = WhileStartView(context)
 
@@ -347,6 +378,12 @@ class MainActivity : AppCompatActivity() {
         container.setOnViewSwapListener { _, _, _, secondPosition ->
             code.remove(operation)
             code.add(secondPosition, operation)
+        }
+
+        val delete:Button = binding.delete
+        delete.setOnClickListener{
+            container.removeView(view)
+            list.remove(operation)
         }
 
         binding.condition.addTextChangedListener(object : TextWatcher {
@@ -372,7 +409,8 @@ class MainActivity : AppCompatActivity() {
             val op = whichCommandToAdd(
                 it,
                 this,
-                inner_container
+                inner_container,
+                operation.inside
             )
 
             inner_container.setOnViewSwapListener { _, _, _, secondPosition ->
@@ -395,7 +433,8 @@ class MainActivity : AppCompatActivity() {
 
     fun addArrayBlock(
         context: Context,
-        container: DragLinearLayout = findViewById(R.id.container)
+        container: DragLinearLayout = findViewById(R.id.container),
+        list: MutableList<Command> = code
     ): Command {
         val view = ArrayView(context)
         container.addView(view)
@@ -407,6 +446,12 @@ class MainActivity : AppCompatActivity() {
         container.setOnViewSwapListener { _, _, _, secondPosition ->
             code.remove(operation)
             code.add(secondPosition, operation)
+        }
+
+        val delete:Button = binding.delete
+        delete.setOnClickListener{
+            container.removeView(view)
+            list.remove(operation)
         }
 
         binding.arrayName.addTextChangedListener(object : TextWatcher {
@@ -456,7 +501,8 @@ class MainActivity : AppCompatActivity() {
 //добавляешь и область взаимодействия с остальными увеличивается..
     fun addPrintBlock(
         context: Context,
-        container: DragLinearLayout = findViewById(R.id.container)
+        container: DragLinearLayout = findViewById(R.id.container),
+        list: MutableList<Command> = code
     ): Command {
         val view = PrintView(context)
         container.addView(view)
@@ -468,6 +514,12 @@ class MainActivity : AppCompatActivity() {
         container.setOnViewSwapListener { _, _, _, secondPosition ->
             code.remove(operation)
             code.add(secondPosition, operation)
+        }
+
+        val delete:Button = binding.delete
+        delete.setOnClickListener{
+            container.removeView(view)
+            list.remove(operation)
         }
 
         binding.printTo.addTextChangedListener(object : TextWatcher {
@@ -503,15 +555,16 @@ class MainActivity : AppCompatActivity() {
     private fun whichCommandToAdd(
         it: MenuItem,
         context: Context,
-        container: DragLinearLayout
+        container: DragLinearLayout,
+        list: MutableList<Command>
     ) =
         when (it.itemId) {
-            R.id.create_var -> addCreateVariableBlock(context, container)
-            R.id.assign_var -> addAssignVariableBlock(context, container)
-            R.id.if_block -> addIfBlock(context, container)
-            R.id.while_block -> addWhileBlock(context, container)
-            R.id.array_block -> addArrayBlock(context,  container)
-            R.id.print_block -> addPrintBlock(context, container)
+            R.id.create_var -> addCreateVariableBlock(context, container, list)
+            R.id.assign_var -> addAssignVariableBlock(context, container, list)
+            R.id.if_block -> addIfBlock(context, container, list)
+            R.id.while_block -> addWhileBlock(context, container, list)
+            R.id.array_block -> addArrayBlock(context,  container, list)
+            R.id.print_block -> addPrintBlock(context, container, list)
             else -> throw Exception("wtf")
         }
 }

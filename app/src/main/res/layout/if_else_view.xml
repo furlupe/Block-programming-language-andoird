@@ -18,7 +18,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_block_else" />
+                app:srcCompat="@drawable/ic_else" />
 
             <Button
                 android:id="@+id/else_plus_command"
@@ -29,6 +29,20 @@
                 android:background="@drawable/bg_plus_if"
                 android:textColor="#582909"
                 android:text="@string/Plus" />
+
+            <Button
+                android:id="@+id/delete"
+                android:layout_width="27dp"
+                android:layout_height="68dp"
+                android:layout_marginStart="170dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="24dp"
+                android:background="@null"
+                android:rotation="-90"
+                android:textColor="#582909"
+                android:textColorHint="#582909"
+                android:textSize="18sp" />
         </RelativeLayout>
 
         <com.jmedeisis.draglinearlayout.DragLinearLayout
