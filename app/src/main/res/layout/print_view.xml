@@ -8,13 +8,13 @@
 
     <RelativeLayout
         android:id="@+id/print_block"
-        android:layout_width="272dp"
-        android:layout_height="88dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
 
         <ImageView
-            android:layout_width="272dp"
-            android:layout_height="88dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_print" />
@@ -44,6 +44,21 @@
             android:textColor="#582909"
             android:textColorHint="#582909"
             android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="27dp"
+            android:layout_height="68dp"
+            android:layout_marginStart="274dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="24dp"
+            android:background="@null"
+            android:rotation="-90"
+            android:textColor="#582909"
+            android:textColorHint="#582909"
+            android:textSize="18sp" />
+
     </RelativeLayout>
 
 </merge>
