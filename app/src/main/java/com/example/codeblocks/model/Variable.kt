@@ -11,6 +11,8 @@ class Variable(_name: String, _value: String = "0") : Command {
         _arrays: MutableMap<String, MutableList<Double>>
     ) {
 
+        if (name[0].isDigit())
+            throw Exception("At: $pos\nWrong name: $name")
         when (name) {
             in _variables, in _arrays -> throw Exception("At: $pos\n$name already exists")
             "" -> throw Exception("At: $pos\nEmpty name")

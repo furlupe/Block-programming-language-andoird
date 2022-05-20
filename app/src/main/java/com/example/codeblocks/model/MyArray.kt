@@ -14,6 +14,9 @@ class MyArray(_name: String = "", _size: String = "", _inside: String = "") : Co
         val prSize = Arifmetics.evaluateExpression(size, _variables, _arrays).toInt()
         val prInside = inside.split("\\s*,\\s*".toRegex())
 
+        if (name[0].isDigit())
+            throw Exception("At: $pos\nWrong name: $name")
+
         when (name) {
             in _variables, in _arrays -> throw Exception("At: $pos\n$name already exists!")
             "" -> throw Exception("At: $pos\nEmpty name")
