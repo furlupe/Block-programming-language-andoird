@@ -11,11 +11,11 @@ object Interpretator {
         for (command in code) {
             command.execute(variables, arrays)
         }
-        println("$variables, $arrays")
         cleanse()
     }
 
     fun cleanse() {
+        println("$variables, $arrays")
         this.variables.clear()
         this.arrays.clear()
     }

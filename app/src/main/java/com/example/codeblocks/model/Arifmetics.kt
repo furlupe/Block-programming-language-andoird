@@ -20,9 +20,7 @@ object Arifmetics {
 
         while (i < expression.length) {
             var c: String = expression[i].toString()
-            // если прочитанный символ число или буква
             if (c[0].isLetterOrDigit() || c[0] == '_' || openedBracket) {
-                // если число многоразрядное, или переменная имеет название длины > 1
                 while (i + 1 < expression.length && (expression[i + 1].isLetterOrDigit() ||
                             (expression[i + 1] == '.')
                             || (expression[i + 1] == '[' || expression[i + 1] == '_') || openedBracket)
@@ -112,22 +110,12 @@ object Arifmetics {
                 continue
             }
 
-            if (operator.matches(variableRegex)) {
-                if (!variables.containsKey(operator)) {
-                    throw Exception("$operator does not exist")
-                }
-                val op = variables[operator] ?: throw Exception("$operator is null")
-                stack.addLast(op)
-
-                continue
-            }
-
             if (operator.matches(arrayRegex)) {
                 val (name, nonProcessedIndex) = arrayRegex.find(operator)!!.destructured
                 val index = evaluateExpression(nonProcessedIndex, variables, arrays).toInt()
 
                 if (!arrays.containsKey(name)) {
-                    throw Exception("$operator does not exist")
+                    throw Exception("array $operator does not exist")
                 }
 
                 val op = arrays[name]
@@ -136,6 +124,16 @@ object Arifmetics {
                 }
 
                 stack.addLast(op[index])
+
+                continue
+            }
+
+            if (operator.matches(variableRegex)) {
+                if (!variables.containsKey(operator)) {
+                    throw Exception("var $operator does not exist")
+                }
+                val op = variables[operator] ?: throw Exception("$operator is null")
+                stack.addLast(op)
 
                 continue
             }

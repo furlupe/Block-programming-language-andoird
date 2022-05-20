@@ -5,7 +5,7 @@ import com.example.codeblocks.model.LogicOperators.*
 
 object LogicalArifmetic {
     val logicops = mutableListOf('|', '&', '~', '^' , '(', ')')
-    val arifExpr = "[\\w\\+\\-\\*\\/\\%\\s]+".toRegex()
+    val arifExpr = "[\\w\\+\\-\\*\\/\\%\\s\\[\\]]+".toRegex()
     val exprRegex = "($arifExpr)(?:([><]=|[><=])($arifExpr))?".toRegex()
     val logRegex = "[\\^|&~]".toRegex()
 
@@ -68,6 +68,8 @@ object LogicalArifmetic {
     ): Boolean {
         val (left, comp, right) = exprRegex.find(_expr)!!.destructured
         val countedLeft = Arifmetics.evaluateExpression(left, _variables, _arrays)
+
+        println("$left, $comp, $right")
 
         if (comp.isNotEmpty()) {
             val countedRight = Arifmetics.evaluateExpression(right, _variables, _arrays)
