@@ -17,7 +17,7 @@ class For(
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
-    ){
+    ) {
         val toDelete = mutableListOf<Command>()
         for (b in before) {
             b.execute(_variables, _arrays)

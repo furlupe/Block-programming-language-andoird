@@ -5,23 +5,24 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.motion.widget.OnSwipe
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import com.example.codeblocks.databinding.*
-import com.example.codeblocks.model.*
+import com.example.codeblocks.databinding.ActivityMainBinding
+import com.example.codeblocks.model.Command
+import com.example.codeblocks.model.If
+import com.example.codeblocks.model.Interpretator
 import com.example.codeblocks.views.blocks.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import com.jmedeisis.draglinearlayout.DragLinearLayout
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -97,6 +98,7 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         if (toggle.onOptionsItemSelected(item)) {
@@ -151,8 +153,8 @@ class MainActivity : AppCompatActivity() {
         val binding = view.binding
         val operation = view.command
 
-        val delete:Button = binding.delete
-        delete.setOnClickListener{
+        val delete: Button = binding.delete
+        delete.setOnClickListener {
             container.removeView(view)
             list.remove(view.command)
         }
@@ -201,8 +203,8 @@ class MainActivity : AppCompatActivity() {
         val operation = view.command
         val binding = view.binding
 
-        val delete:Button = binding.delete
-        delete.setOnClickListener{
+        val delete: Button = binding.delete
+        delete.setOnClickListener {
             container.removeView(view)
             list.remove(operation)
         }
@@ -251,8 +253,8 @@ class MainActivity : AppCompatActivity() {
         val operation = view.command
         val binding = view.binding
 
-        val delete:Button = binding.delete
-        delete.setOnClickListener{
+        val delete: Button = binding.delete
+        delete.setOnClickListener {
             container.removeView(view)
             list.remove(operation)
         }
@@ -349,8 +351,8 @@ class MainActivity : AppCompatActivity() {
                 myIf.insideElseBlock
             )
 
-            val delete:Button = binding.delete
-            delete.setOnClickListener{
+            val delete: Button = binding.delete
+            delete.setOnClickListener {
                 myIf.elseExists = false
                 container.removeView(view)
                 myIf.insideElseBlock.clear()
@@ -380,8 +382,8 @@ class MainActivity : AppCompatActivity() {
         val operation = view.command
         val binding = view.binding
 
-        val delete:Button = binding.delete
-        delete.setOnClickListener{
+        val delete: Button = binding.delete
+        delete.setOnClickListener {
             container.removeView(view)
             list.remove(operation)
         }
@@ -447,8 +449,8 @@ class MainActivity : AppCompatActivity() {
         val operation = view.command
         val binding = view.binding
 
-        val delete:Button = binding.delete
-        delete.setOnClickListener{
+        val delete: Button = binding.delete
+        delete.setOnClickListener {
             container.removeView(view)
             list.remove(operation)
         }
@@ -511,8 +513,8 @@ class MainActivity : AppCompatActivity() {
 
         val binding = view.binding
 
-        val delete:Button = binding.delete
-        delete.setOnClickListener{
+        val delete: Button = binding.delete
+        delete.setOnClickListener {
             container.removeView(view)
             list.remove(operation)
         }
@@ -562,12 +564,12 @@ class MainActivity : AppCompatActivity() {
         val binding = view.binding
 
         val delete: Button = binding.delete
-        delete.setOnClickListener{
+        delete.setOnClickListener {
             container.removeView(view)
             list.remove(operation)
         }
 
-        binding.inputTo.addTextChangedListener(object : TextWatcher{
+        binding.inputTo.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
@@ -599,7 +601,7 @@ class MainActivity : AppCompatActivity() {
             R.id.assign_var -> addAssignVariableBlock(context, container, list)
             R.id.if_block -> addIfBlock(context, container, list)
             R.id.while_block -> addWhileBlock(context, container, list)
-            R.id.array_block -> addArrayBlock(context,  container, list)
+            R.id.array_block -> addArrayBlock(context, container, list)
             R.id.print_block -> addPrintBlock(context, container, list)
             else -> throw Exception("wtf")
         }

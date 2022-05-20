@@ -1,7 +1,5 @@
 package com.example.codeblocks.model
 
-import java.lang.Exception
-
 enum class Comparators() {
     LESS, GREATER,
     EQUAL, NOT_EQUAL,

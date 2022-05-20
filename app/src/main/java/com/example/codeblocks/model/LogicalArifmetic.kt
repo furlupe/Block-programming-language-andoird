@@ -4,7 +4,7 @@ import com.example.codeblocks.model.Comparators.*
 import com.example.codeblocks.model.LogicOperators.*
 
 object LogicalArifmetic {
-    val logicops = mutableListOf('|', '&', '~', '^' , '(', ')')
+    val logicops = mutableListOf('|', '&', '~', '^', '(', ')')
     val arifExpr = "[\\w\\+\\-\\*\\/\\%\\s\\[\\]]+".toRegex()
     val exprRegex = "($arifExpr)(?:([><]=|[><=])($arifExpr))?".toRegex()
     val logRegex = "[\\^|&~]".toRegex()

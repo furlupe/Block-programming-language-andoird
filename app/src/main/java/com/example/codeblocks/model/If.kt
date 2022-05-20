@@ -19,9 +19,9 @@ open class If(
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
-    ){
+    ) {
 
-        if(condition.isEmpty()) throw Exception("At: $pos\nEmpty condition for If")
+        if (condition.isEmpty()) throw Exception("At: $pos\nEmpty condition for If")
 
         val toExecute = if (LogicalArifmetic.evalWhole(
                 condition,

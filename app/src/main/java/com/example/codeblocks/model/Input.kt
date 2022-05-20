@@ -16,20 +16,21 @@ class Input(_toInput: String = "", _value: String = "") : Command {
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
-    ){
+    ) {
 
-        if(toInput.isEmpty())
+        if (toInput.isEmpty())
             throw Exception("At: $pos\nNowhere to input!")
 
-        if(toInput.matches(variableRegex)) {
+        if (toInput.matches(variableRegex)) {
             if (!_variables.containsKey(toInput))
                 throw Exception("At: $pos\nVar $toInput does not exist")
             _variables[toInput] = Arifmetics.evaluateExpression(value, _variables, _arrays)
         }
 
-        if(toInput.matches(arrayRegex)) {
+        if (toInput.matches(arrayRegex)) {
             val (arrayName, nonProcessedIndex) = arrayRegex.find(toInput)!!.destructured
-            val index = Arifmetics.evaluateExpression(nonProcessedIndex, _variables, _arrays).toInt()
+            val index =
+                Arifmetics.evaluateExpression(nonProcessedIndex, _variables, _arrays).toInt()
 
             if (!_arrays.containsKey(arrayName))
                 throw Exception("At: $pos\nArray $toInput does not exist")

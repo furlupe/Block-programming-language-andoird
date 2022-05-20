@@ -12,7 +12,7 @@ class IfElseView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr), Block{
+) : LinearLayout(context, attrs, defStyleAttr), Block {
 
     override val binding = IfElseViewBinding.inflate(LayoutInflater.from(context), this)
     override val command = If("")

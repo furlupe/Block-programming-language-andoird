@@ -10,7 +10,7 @@ class MyArray(_name: String = "", _size: String = "", _inside: String = "") : Co
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
-    ){
+    ) {
         val prSize = Arifmetics.evaluateExpression(size, _variables, _arrays).toInt()
         val prInside = inside.split("\\s*,\\s*".toRegex())
 

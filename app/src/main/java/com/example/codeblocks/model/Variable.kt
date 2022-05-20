@@ -9,9 +9,9 @@ class Variable(_name: String, _value: String = "0") : Command {
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
-    ){
+    ) {
 
-        when(name) {
+        when (name) {
             in _variables, in _arrays -> throw Exception("At: $pos\n$name already exists")
             "" -> throw Exception("At: $pos\nEmpty name")
         }

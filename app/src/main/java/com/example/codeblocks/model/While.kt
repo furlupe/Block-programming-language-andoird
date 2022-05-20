@@ -12,9 +12,9 @@ class While(_condition: String, _commands: MutableList<Command> = mutableListOf(
     override fun execute(
         _variables: MutableMap<String, Double>,
         _arrays: MutableMap<String, MutableList<Double>>
-    ){
+    ) {
 
-        if(condition.isEmpty()) throw Exception("At: $pos\nEmpty condition for While")
+        if (condition.isEmpty()) throw Exception("At: $pos\nEmpty condition for While")
 
         while (LogicalArifmetic.evalWhole(condition, _variables, _arrays)) {
             for (command in inside) {
