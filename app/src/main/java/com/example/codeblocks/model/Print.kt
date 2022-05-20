@@ -13,7 +13,7 @@ class Print(
 
     var print = _toPrint
     var end = _end
-    private val showText: (toPrint: String, end: String) -> Unit = _showText
+    var showText: (toPrint: String, end: String) -> Unit = _showText
 
     override fun execute(
         _variables: MutableMap<String, Double>,

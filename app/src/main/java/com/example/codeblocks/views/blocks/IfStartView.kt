@@ -17,7 +17,7 @@ class IfStartView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr), Block{
 
     override val binding = IfStartViewBinding.inflate(LayoutInflater.from(context), this)
-    override var command: Command = If("")
+    override val command = If("")
     override var accessory: MutableList<Command> = mutableListOf()
 
 }

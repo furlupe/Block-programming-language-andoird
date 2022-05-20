@@ -16,8 +16,8 @@ class IfEndView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr), Block{
 
-    override val binding = IfEndViewBinding.inflate(LayoutInflater.from(context), this)
-    override var command: Command = If("")
+    override val binding = IfElseViewBinding.inflate(LayoutInflater.from(context), this)
+    override val command = If("")
     override var accessory: MutableList<Command> = mutableListOf()
 
 }

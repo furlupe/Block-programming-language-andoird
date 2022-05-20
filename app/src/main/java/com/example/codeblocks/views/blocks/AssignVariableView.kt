@@ -16,6 +16,6 @@ class AssignVariableView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr), Block{
 
     override val binding = AssignVariableViewBinding.inflate(LayoutInflater.from(context), this)
-    override var command: Command = Assign("", "")
+    override val command = Assign("", "")
     override var accessory: MutableList<Command> = mutableListOf()
 }

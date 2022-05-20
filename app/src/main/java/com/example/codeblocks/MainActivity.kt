@@ -87,7 +87,6 @@ class MainActivity : AppCompatActivity() {
             if (firstView is Block) {
                 firstView.accessory.remove(firstView.command)
                 firstView.accessory.add(secondPosition, firstView.command)
-                println("${firstView.accessory}, ${firstView.command}")
             }
         }
 
@@ -149,13 +148,13 @@ class MainActivity : AppCompatActivity() {
         container.addView(view)
         container.setViewDraggable(view, view)
 
-        val operation = Variable("")
-        val binding = CreateVariableViewBinding.bind(view)
+        val binding = view.binding
+        val operation = view.command
 
         val delete:Button = binding.delete
         delete.setOnClickListener{
             container.removeView(view)
-            list.remove(operation)
+            list.remove(view.command)
         }
 
         binding.variableName.addTextChangedListener(object : TextWatcher {
@@ -183,10 +182,9 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        view.command = operation
         view.accessory = list
+        view.command.pos = container.indexOfChild(view)
 
-        operation.pos = container.indexOfChild(view)
         return operation
     }
 
@@ -200,8 +198,8 @@ class MainActivity : AppCompatActivity() {
         container.addView(view)
         container.setViewDraggable(view, view)
 
-        val operation = Assign("", "")
-        val binding = AssignVariableViewBinding.bind(view)
+        val operation = view.command
+        val binding = view.binding
 
         val delete:Button = binding.delete
         delete.setOnClickListener{
@@ -234,9 +232,9 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        view.command = operation
         view.accessory = list
         operation.pos = container.indexOfChild(view)
+
         return operation
     }
 
@@ -250,8 +248,8 @@ class MainActivity : AppCompatActivity() {
         container.addView(view)
         container.setViewDraggable(view, view)
 
-        val operation = If("")
-        val binding = IfStartViewBinding.bind(view)
+        val operation = view.command
+        val binding = view.binding
 
         val delete:Button = binding.delete
         delete.setOnClickListener{
@@ -314,7 +312,6 @@ class MainActivity : AppCompatActivity() {
             popup.show()
         }
 
-        view.command = operation
         view.accessory = list
         operation.pos = container.indexOfChild(view)
         return operation
@@ -328,7 +325,7 @@ class MainActivity : AppCompatActivity() {
         val view = IfElseView(context)
         container.addView(view)
 
-        val binding = IfElseViewBinding.bind(view)
+        val binding = view.binding
 
         val addCommand: Button = binding.elsePlusCommand
 
@@ -352,11 +349,6 @@ class MainActivity : AppCompatActivity() {
                 myIf.insideElseBlock
             )
 
-            inner_container.setOnViewSwapListener { _, _, _, secondPosition ->
-                myIf.insideElseBlock.remove(op)
-                myIf.insideElseBlock.add(secondPosition, op)
-            }
-
             val delete:Button = binding.delete
             delete.setOnClickListener{
                 myIf.elseExists = false
@@ -371,6 +363,8 @@ class MainActivity : AppCompatActivity() {
         addCommand.setOnClickListener {
             popupMenuElse.show()
         }
+
+        view.accessory = list
     }
 
     fun addWhileBlock(
@@ -383,8 +377,8 @@ class MainActivity : AppCompatActivity() {
         container.addView(view)
         container.setViewDraggable(view, view)
 
-        val operation = While("")
-        val binding = WhileStartViewBinding.bind(view)
+        val operation = view.command
+        val binding = view.binding
 
         val delete:Button = binding.delete
         delete.setOnClickListener{
@@ -436,7 +430,6 @@ class MainActivity : AppCompatActivity() {
             popup.show()
         }
 
-        view.command = operation
         view.accessory = list
         operation.pos = container.indexOfChild(view)
         return operation
@@ -451,8 +444,8 @@ class MainActivity : AppCompatActivity() {
         container.addView(view)
         container.setViewDraggable(view, view)
 
-        val operation = MyArray("")
-        val binding = ArrayViewBinding.bind(view)
+        val operation = view.command
+        val binding = view.binding
 
         val delete:Button = binding.delete
         delete.setOnClickListener{
@@ -499,7 +492,6 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        view.command = operation
         view.accessory = list
         operation.pos = container.indexOfChild(view)
         return operation
@@ -516,8 +508,10 @@ class MainActivity : AppCompatActivity() {
         container.addView(view)
         container.setViewDraggable(view, view)
 
-        val operation = Print(toPrintFunction)
-        val binding = PrintViewBinding.bind(view)
+        val operation = view.command
+        operation.showText = toPrintFunction
+
+        val binding = view.binding
 
         val delete:Button = binding.delete
         delete.setOnClickListener{
@@ -551,10 +545,9 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        view.command = operation
         view.accessory = list
-
         operation.pos = container.indexOfChild(view)
+
         return operation
     }
 
