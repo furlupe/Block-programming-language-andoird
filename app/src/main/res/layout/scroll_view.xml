@@ -16,8 +16,8 @@
             android:layout_height="wrap_content"
             android:importantForAutofill="auto"
             android:orientation="vertical"
-            android:layout_margin="7dp"
-            android:paddingBottom="-16dp">
+            android:paddingEnd="7dp"
+            android:paddingStart="7dp">
         </com.jmedeisis.draglinearlayout.DragLinearLayout>
 
     </HorizontalScrollView>
