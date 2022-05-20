@@ -22,5 +22,8 @@
         <item
             android:id="@+id/nav_print"
             android:title="@string/print"/>
+        <item
+            android:id="@+id/nav_input"
+            android:title="@string/input"/>
     </group>
 </menu>

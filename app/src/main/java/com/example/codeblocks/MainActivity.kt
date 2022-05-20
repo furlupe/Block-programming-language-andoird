@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
@@ -18,6 +19,7 @@ import androidx.navigation.ui.navigateUp
 import com.example.codeblocks.databinding.ActivityMainBinding
 import com.example.codeblocks.model.Command
 import com.example.codeblocks.model.If
+import com.example.codeblocks.model.Input
 import com.example.codeblocks.model.Interpretator
 import com.example.codeblocks.views.blocks.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -74,6 +76,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.nav_while -> addWhileBlock(this)
                     R.id.nav_array -> addArrayBlock(this)
                     R.id.nav_print -> addPrintBlock(this)
+                    R.id.nav_input -> addInputBlock(this)
                     else -> throw Exception("wtf")
                 }
             )
@@ -563,6 +566,18 @@ class MainActivity : AppCompatActivity() {
         val operation = view.command
         val binding = view.binding
 
+        val dialog = LayoutInflater.from(this).inflate(R.layout.input_dialog, null)
+        val builder = AlertDialog.Builder(this)
+            .setView(dialog)
+            .setTitle(R.string.input)
+
+        val dialogShow = builder.show()
+
+        dialog.findViewById<Button>(R.id.inputSend).setOnClickListener {
+            operation.value = dialog.findViewById<EditText>(R.id.input).text.toString()
+            dialogShow.dismiss()
+        }
+
         val delete: Button = binding.delete
         delete.setOnClickListener {
             container.removeView(view)
@@ -603,6 +618,7 @@ class MainActivity : AppCompatActivity() {
             R.id.while_block -> addWhileBlock(context, container, list)
             R.id.array_block -> addArrayBlock(context, container, list)
             R.id.print_block -> addPrintBlock(context, container, list)
+            R.id.input_block -> addInputBlock(context, container, list)
             else -> throw Exception("wtf")
         }
 }

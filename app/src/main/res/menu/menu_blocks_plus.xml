@@ -31,4 +31,9 @@
         android:orderInCategory="7"
         android:title="@string/print"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/input_block"
+        android:orderInCategory="8"
+        android:title="@string/input"
+        app:showAsAction="never"/>
 </menu>
