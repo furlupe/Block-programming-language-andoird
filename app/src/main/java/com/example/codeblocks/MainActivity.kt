@@ -83,6 +83,14 @@ class MainActivity : AppCompatActivity() {
         val scroll = findViewById<ScrollView>(R.id.scroll_view)
         container.setContainerScrollView(scroll)
 
+        container.setOnViewSwapListener { firstView, firstPosition, secondView, secondPosition ->
+            if (firstView is Block) {
+                firstView.accessory.remove(firstView.command)
+                firstView.accessory.add(secondPosition, firstView.command)
+                println("${firstView.accessory}, ${firstView.command}")
+            }
+        }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -144,11 +152,6 @@ class MainActivity : AppCompatActivity() {
         val operation = Variable("")
         val binding = CreateVariableViewBinding.bind(view)
 
-        container.setOnViewSwapListener { _, _, _, secondPosition ->
-            code.remove(operation)
-            code.add(secondPosition, operation)
-        }
-
         val delete:Button = binding.delete
         delete.setOnClickListener{
             container.removeView(view)
@@ -179,6 +182,9 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
+        view.command = operation
+        view.accessory = list
 
         operation.pos = container.indexOfChild(view)
         return operation
@@ -197,11 +203,6 @@ class MainActivity : AppCompatActivity() {
         val operation = Assign("", "")
         val binding = AssignVariableViewBinding.bind(view)
 
-        container.setOnViewSwapListener { _, firstPosition, _, secondPosition ->
-            code.remove(operation)
-            code.add(secondPosition, operation)
-        }
-
         val delete:Button = binding.delete
         delete.setOnClickListener{
             container.removeView(view)
@@ -233,6 +234,8 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        view.command = operation
+        view.accessory = list
         operation.pos = container.indexOfChild(view)
         return operation
     }
@@ -249,11 +252,6 @@ class MainActivity : AppCompatActivity() {
 
         val operation = If("")
         val binding = IfStartViewBinding.bind(view)
-
-        container.setOnViewSwapListener { _, _, _, secondPosition ->
-            code.remove(operation)
-            code.add(secondPosition, operation)
-        }
 
         val delete:Button = binding.delete
         delete.setOnClickListener{
@@ -275,6 +273,14 @@ class MainActivity : AppCompatActivity() {
         })
 
         val inner_container = binding.ifContainer
+        inner_container.setOnViewSwapListener { firstView, firstPosition, secondView, secondPosition ->
+            if (firstView is Block) {
+                firstView.accessory.remove(firstView.command)
+                firstView.accessory.add(secondPosition, firstView.command)
+                println("${firstView.accessory}, ${firstView.command}")
+            }
+        }
+
         val addCommand: Button = binding.ifPlusCommand
 
         val popup = PopupMenu(context, addCommand)
@@ -299,10 +305,6 @@ class MainActivity : AppCompatActivity() {
                     operation.insideMainBlock
                 )
 
-                inner_container.setOnViewSwapListener { _, _, _, secondPosition ->
-                    operation.insideMainBlock.remove(op)
-                    operation.insideMainBlock.add(secondPosition, op)
-                }
                 operation.insideMainBlock.add(op)
             }
             true
@@ -312,6 +314,8 @@ class MainActivity : AppCompatActivity() {
             popup.show()
         }
 
+        view.command = operation
+        view.accessory = list
         operation.pos = container.indexOfChild(view)
         return operation
     }
@@ -329,6 +333,13 @@ class MainActivity : AppCompatActivity() {
         val addCommand: Button = binding.elsePlusCommand
 
         val inner_container = binding.elseContainer
+        inner_container.setOnViewSwapListener { firstView, firstPosition, secondView, secondPosition ->
+            if (firstView is Block) {
+                firstView.accessory.remove(firstView.command)
+                firstView.accessory.add(secondPosition, firstView.command)
+                println("${firstView.accessory}, ${firstView.command}")
+            }
+        }
 
         val popupMenuElse = PopupMenu(context, addCommand)
         popupMenuElse.inflate(R.menu.menu_blocks_plus)
@@ -375,11 +386,6 @@ class MainActivity : AppCompatActivity() {
         val operation = While("")
         val binding = WhileStartViewBinding.bind(view)
 
-        container.setOnViewSwapListener { _, _, _, secondPosition ->
-            code.remove(operation)
-            code.add(secondPosition, operation)
-        }
-
         val delete:Button = binding.delete
         delete.setOnClickListener{
             container.removeView(view)
@@ -402,6 +408,14 @@ class MainActivity : AppCompatActivity() {
         val addCommand: Button = binding.whilePlusCommand
         val inner_container = binding.whileContainer
 
+        inner_container.setOnViewSwapListener { firstView, firstPosition, secondView, secondPosition ->
+            if (firstView is Block) {
+                firstView.accessory.remove(firstView.command)
+                firstView.accessory.add(secondPosition, firstView.command)
+                println("${firstView.accessory}, ${firstView.command}")
+            }
+        }
+
         val popup = PopupMenu(context, addCommand)
         popup.inflate(R.menu.menu_blocks_plus)
         popup.setOnMenuItemClickListener {
@@ -413,11 +427,6 @@ class MainActivity : AppCompatActivity() {
                 operation.inside
             )
 
-            inner_container.setOnViewSwapListener { _, _, _, secondPosition ->
-                operation.inside.remove(op)
-                operation.inside.add(secondPosition, op)
-            }
-
             operation.inside.add(op)
 
             true
@@ -427,6 +436,8 @@ class MainActivity : AppCompatActivity() {
             popup.show()
         }
 
+        view.command = operation
+        view.accessory = list
         operation.pos = container.indexOfChild(view)
         return operation
     }
@@ -442,11 +453,6 @@ class MainActivity : AppCompatActivity() {
 
         val operation = MyArray("")
         val binding = ArrayViewBinding.bind(view)
-
-        container.setOnViewSwapListener { _, _, _, secondPosition ->
-            code.remove(operation)
-            code.add(secondPosition, operation)
-        }
 
         val delete:Button = binding.delete
         delete.setOnClickListener{
@@ -493,6 +499,8 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        view.command = operation
+        view.accessory = list
         operation.pos = container.indexOfChild(view)
         return operation
     }
@@ -510,11 +518,6 @@ class MainActivity : AppCompatActivity() {
 
         val operation = Print(toPrintFunction)
         val binding = PrintViewBinding.bind(view)
-
-        container.setOnViewSwapListener { _, _, _, secondPosition ->
-            code.remove(operation)
-            code.add(secondPosition, operation)
-        }
 
         val delete:Button = binding.delete
         delete.setOnClickListener{
@@ -547,6 +550,9 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
+        view.command = operation
+        view.accessory = list
 
         operation.pos = container.indexOfChild(view)
         return operation
