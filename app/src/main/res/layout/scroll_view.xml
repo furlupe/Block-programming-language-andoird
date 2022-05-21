@@ -6,9 +6,7 @@
 
     <HorizontalScrollView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:background="@drawable/dot_grid">
+        android:layout_height="wrap_content">
 
         <com.jmedeisis.draglinearlayout.DragLinearLayout
             android:id="@+id/container"
@@ -17,7 +15,8 @@
             android:importantForAutofill="auto"
             android:orientation="vertical"
             android:paddingEnd="7dp"
-            android:paddingStart="7dp">
+            android:paddingStart="7dp"
+            android:background="@drawable/dot_grid">
         </com.jmedeisis.draglinearlayout.DragLinearLayout>
 
     </HorizontalScrollView>
