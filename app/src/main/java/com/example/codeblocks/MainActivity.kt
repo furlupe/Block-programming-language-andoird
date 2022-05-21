@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -18,7 +19,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.example.codeblocks.databinding.ActivityMainBinding
 import com.example.codeblocks.model.Command
-import com.example.codeblocks.model.If
 import com.example.codeblocks.model.Input
 import com.example.codeblocks.model.Interpretator
 import com.example.codeblocks.views.blocks.*
@@ -69,16 +69,16 @@ class MainActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener {
 
             code.add(
-                when (it.itemId) {
-                    R.id.nav_create_var -> addCreateVariableBlock(this)
-                    R.id.nav_assign_var -> addAssignVariableBlock(this)
-                    R.id.nav_if -> addIfBlock(this)
-                    R.id.nav_while -> addWhileBlock(this)
-                    R.id.nav_array -> addArrayBlock(this)
-                    R.id.nav_print -> addPrintBlock(this)
-                    R.id.nav_input -> addInputBlock(this)
+                whichCommandToAdd(when (it.itemId) {
+                    R.id.nav_create_var -> CreateVariableView(this)
+                    R.id.nav_assign_var -> AssignVariableView(this)
+                    R.id.nav_if -> IfStartView(this)
+                    R.id.nav_while -> WhileStartView(this)
+                    R.id.nav_array -> ArrayView(this)
+                    R.id.nav_print -> PrintView(this)
+                    R.id.nav_input -> InputView(this)
                     else -> throw Exception("wtf")
-                }
+                } as Block, )
             )
             true
         }
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         val scroll = findViewById<ScrollView>(R.id.scroll_view)
         container.setContainerScrollView(scroll)
 
-        container.setOnViewSwapListener { firstView, firstPosition, secondView, secondPosition ->
+        container.setOnViewSwapListener { firstView, _, _, secondPosition ->
             if (firstView is Block) {
                 firstView.accessory.remove(firstView.command)
                 firstView.accessory.add(secondPosition, firstView.command)
@@ -142,484 +142,36 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    @SuppressLint("WrongViewCast")
-    private fun addCreateVariableBlock(
-        context: Context,
+    private fun whichCommandToAdd(
+        block: Block,
         container: DragLinearLayout = findViewById(R.id.container),
         list: MutableList<Command> = code
     ): Command {
-        val view = CreateVariableView(context)
+        container.addView(block as View)
+        container.setViewDraggable(block, block)
 
-        container.addView(view)
-        container.setViewDraggable(view, view)
+        block.prntFun = toPrintFunction
+        block.inputD = inputDialog
 
-        val binding = view.binding
-        val operation = view.command
+        block.init(container, list)
 
-        val delete: Button = binding.delete
-        delete.setOnClickListener {
-            container.removeView(view)
-            list.remove(view.command)
-        }
-
-        binding.variableName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                operation.name = binding.variableName.text.toString()
-            }
-
-        })
-        binding.variableValue.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                operation.value = binding.variableValue.text.toString()
-            }
-
-        })
-
-        view.accessory = list
-        view.command.pos = container.indexOfChild(view)
-
-        return operation
+        return block.command
     }
 
-    private fun addAssignVariableBlock(
-        context: Context,
-        container: DragLinearLayout = findViewById(R.id.container),
-        list: MutableList<Command> = code
-    ): Command {
-        val view = AssignVariableView(context)
-
-        container.addView(view)
-        container.setViewDraggable(view, view)
-
-        val operation = view.command
-        val binding = view.binding
-
-        val delete: Button = binding.delete
-        delete.setOnClickListener {
-            container.removeView(view)
-            list.remove(operation)
-        }
-
-        binding.variableName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                operation.name = binding.variableName.text.toString()
-            }
-
-        })
-        binding.variableValue.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                operation.value = binding.variableValue.text.toString()
-            }
-
-        })
-
-        view.accessory = list
-        operation.pos = container.indexOfChild(view)
-
-        return operation
-    }
-
-    private fun addIfBlock(
-        context: Context,
-        container: DragLinearLayout = findViewById(R.id.container),
-        list: MutableList<Command> = code
-    ): Command {
-        val view = IfStartView(context)
-
-        container.addView(view)
-        container.setViewDraggable(view, view)
-
-        val operation = view.command
-        val binding = view.binding
-
-        val delete: Button = binding.delete
-        delete.setOnClickListener {
-            container.removeView(view)
-            list.remove(operation)
-        }
-
-        binding.condition.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                operation.condition = binding.condition.text.toString()
-            }
-
-        })
-
-        val inner_container = binding.ifContainer
-        inner_container.setOnViewSwapListener { firstView, firstPosition, secondView, secondPosition ->
-            if (firstView is Block) {
-                firstView.accessory.remove(firstView.command)
-                firstView.accessory.add(secondPosition, firstView.command)
-                println("${firstView.accessory}, ${firstView.command}")
-            }
-        }
-
-        val addCommand: Button = binding.ifPlusCommand
-
-        val popup = PopupMenu(context, addCommand)
-
-        popup.inflate(R.menu.menu_plus_command_if)
-        popup.setOnMenuItemClickListener {
-
-            if (it.itemId == R.id.else_block) {
-                if (!operation.elseExists) {
-                    operation.elseExists = true
-                    addElseToIf(
-                        this,
-                        operation
-                    )
-                }
-
-            } else {
-                val op = whichCommandToAdd(
-                    it,
-                    this,
-                    inner_container,
-                    operation.insideMainBlock
-                )
-
-                operation.insideMainBlock.add(op)
-            }
-            true
-        }
-
-        addCommand.setOnClickListener {
-            popup.show()
-        }
-
-        view.accessory = list
-        operation.pos = container.indexOfChild(view)
-        return operation
-    }
-
-    private fun addElseToIf(
-        context: Context, myIf: If,
-        container: RelativeLayout = findViewById(R.id.if_for_else_container),
-        list: MutableList<Command> = code
-    ) {
-        val view = IfElseView(context)
-        container.addView(view)
-
-        val binding = view.binding
-
-        val addCommand: Button = binding.elsePlusCommand
-
-        val inner_container = binding.elseContainer
-        inner_container.setOnViewSwapListener { firstView, firstPosition, secondView, secondPosition ->
-            if (firstView is Block) {
-                firstView.accessory.remove(firstView.command)
-                firstView.accessory.add(secondPosition, firstView.command)
-                println("${firstView.accessory}, ${firstView.command}")
-            }
-        }
-
-        val popupMenuElse = PopupMenu(context, addCommand)
-        popupMenuElse.inflate(R.menu.menu_blocks_plus)
-        popupMenuElse.setOnMenuItemClickListener {
-
-            val op = whichCommandToAdd(
-                it,
-                this,
-                inner_container,
-                myIf.insideElseBlock
-            )
-
-            val delete: Button = binding.delete
-            delete.setOnClickListener {
-                myIf.elseExists = false
-                container.removeView(view)
-                myIf.insideElseBlock.clear()
-            }
-
-            myIf.insideElseBlock.add(op)
-            true
-        }
-
-        addCommand.setOnClickListener {
-            popupMenuElse.show()
-        }
-
-        view.accessory = list
-    }
-
-    fun addWhileBlock(
-        context: Context,
-        container: DragLinearLayout = findViewById(R.id.container),
-        list: MutableList<Command> = code
-    ): Command {
-        val view = WhileStartView(context)
-
-        container.addView(view)
-        container.setViewDraggable(view, view)
-
-        val operation = view.command
-        val binding = view.binding
-
-        val delete: Button = binding.delete
-        delete.setOnClickListener {
-            container.removeView(view)
-            list.remove(operation)
-        }
-
-        binding.condition.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                operation.condition = binding.condition.text.toString()
-            }
-
-        })
-
-        val addCommand: Button = binding.whilePlusCommand
-        val inner_container = binding.whileContainer
-
-        inner_container.setOnViewSwapListener { firstView, firstPosition, secondView, secondPosition ->
-            if (firstView is Block) {
-                firstView.accessory.remove(firstView.command)
-                firstView.accessory.add(secondPosition, firstView.command)
-                println("${firstView.accessory}, ${firstView.command}")
-            }
-        }
-
-        val popup = PopupMenu(context, addCommand)
-        popup.inflate(R.menu.menu_blocks_plus)
-        popup.setOnMenuItemClickListener {
-
-            val op = whichCommandToAdd(
-                it,
-                this,
-                inner_container,
-                operation.inside
-            )
-
-            operation.inside.add(op)
-
-            true
-        }
-
-        addCommand.setOnClickListener {
-            popup.show()
-        }
-
-        view.accessory = list
-        operation.pos = container.indexOfChild(view)
-        return operation
-    }
-
-    fun addArrayBlock(
-        context: Context,
-        container: DragLinearLayout = findViewById(R.id.container),
-        list: MutableList<Command> = code
-    ): Command {
-        val view = ArrayView(context)
-        container.addView(view)
-        container.setViewDraggable(view, view)
-
-        val operation = view.command
-        val binding = view.binding
-
-        val delete: Button = binding.delete
-        delete.setOnClickListener {
-            container.removeView(view)
-            list.remove(operation)
-        }
-
-        binding.arrayName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                operation.name = binding.arrayName.text.toString()
-            }
-
-        })
-
-        binding.size.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                operation.size = binding.size.text.toString()
-            }
-
-        })
-
-        binding.arrayValue.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                operation.inside = binding.arrayValue.text.toString()
-            }
-
-        })
-
-        view.accessory = list
-        operation.pos = container.indexOfChild(view)
-        return operation
-    }
-
-    fun addPrintBlock(
-        context: Context,
-        container: DragLinearLayout = findViewById(R.id.container),
-        list: MutableList<Command> = code
-    ): Command {
-        val view = PrintView(context)
-        container.addView(view)
-        container.setViewDraggable(view, view)
-
-        val operation = view.command
-        operation.showText = toPrintFunction
-
-        val binding = view.binding
-
-        val delete: Button = binding.delete
-        delete.setOnClickListener {
-            container.removeView(view)
-            list.remove(operation)
-        }
-
-        binding.printTo.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                operation.print = binding.printTo.text.toString()
-            }
-
-        })
-
-        binding.printEnd.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                operation.end = binding.printEnd.text.toString()
-            }
-
-        })
-
-        view.accessory = list
-        operation.pos = container.indexOfChild(view)
-
-        return operation
-    }
-
-    fun addInputBlock(
-        context: Context,
-        container: DragLinearLayout = findViewById(R.id.container),
-        list: MutableList<Command> = code
-    ): Command {
-        val view = InputView(context)
-        container.addView(view)
-        container.setViewDraggable(view, view)
-
-        val operation = view.command
-        val binding = view.binding
-
+    val inputDialog = {command: Input ->
         val dialog = LayoutInflater.from(this).inflate(R.layout.input_dialog, null)
         val builder = AlertDialog.Builder(this)
             .setView(dialog)
             .setTitle(R.string.input)
 
         val dialogShow = builder.show()
+        var out = ""
 
         dialog.findViewById<Button>(R.id.inputSend).setOnClickListener {
-            operation.value = dialog.findViewById<EditText>(R.id.input).text.toString()
+            command.value = dialog.findViewById<EditText>(R.id.input).text.toString()
             dialogShow.dismiss()
         }
-
-        val delete: Button = binding.delete
-        delete.setOnClickListener {
-            container.removeView(view)
-            list.remove(operation)
-        }
-
-        binding.inputTo.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                operation.toInput = binding.inputTo.text.toString()
-            }
-
-        })
-
-        view.accessory = list
-        operation.pos = container.indexOfChild(view)
-
-        return operation
     }
 
-    private fun whichCommandToAdd(
-        it: MenuItem,
-        context: Context,
-        container: DragLinearLayout,
-        list: MutableList<Command>
-    ) =
-        when (it.itemId) {
-            R.id.create_var -> addCreateVariableBlock(context, container, list)
-            R.id.assign_var -> addAssignVariableBlock(context, container, list)
-            R.id.if_block -> addIfBlock(context, container, list)
-            R.id.while_block -> addWhileBlock(context, container, list)
-            R.id.array_block -> addArrayBlock(context, container, list)
-            R.id.print_block -> addPrintBlock(context, container, list)
-            R.id.input_block -> addInputBlock(context, container, list)
-            else -> throw Exception("wtf")
-        }
 }
 

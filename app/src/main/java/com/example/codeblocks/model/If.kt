@@ -29,7 +29,7 @@ open class If(
                 _arrays
             )
         ) insideMainBlock else insideElseBlock
-
+        println(toExecute)
         for (command in toExecute)
             command.execute(_variables, _arrays)
     }

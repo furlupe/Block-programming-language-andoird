@@ -1,6 +1,6 @@
 package com.example.codeblocks.model
 
-class Assign(_name: String, _value: String) : Command {
+class Assign(_name: String, _value: String = "0") : Command {
     override var name: String = _name
     override var pos = 0
 
